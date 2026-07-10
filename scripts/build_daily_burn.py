@@ -20,6 +20,7 @@ ESTIMATES.md and must be updated there if changed here.
 Driver labels and evidence notes are generic by design (no project or
 client names) so the output is safe to share or deploy.
 """
+from __future__ import annotations  # allow X | Y union syntax on Python 3.9
 
 import json
 from datetime import date, datetime, timedelta, timezone
