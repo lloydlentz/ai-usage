@@ -74,9 +74,11 @@ def extract_claude_code():
 def extract_codex():
     """Per-day exact tokens from ~/.codex session rollouts.
 
-    token_count events carry a cumulative total per session, so each
-    session contributes its final total, bucketed to the day of its
-    last token_count event.
+    token_count events carry a cumulative running total per session.
+    We attribute the *delta* between consecutive events to the day of
+    each event, so a multi-day session correctly spreads its token burn
+    across the days work actually happened rather than dumping the whole
+    accumulated total onto the day the session finally closed.
     """
     daily_tokens = defaultdict(int)
     session_dirs = [HOME / ".codex" / "sessions", HOME / ".codex" / "archived_sessions"]
@@ -85,8 +87,7 @@ def extract_codex():
         if not root.exists():
             continue
         for path in root.rglob("*.jsonl"):
-            last_total = 0
-            last_ts = None
+            prev_total = 0
             with open(path) as fh:
                 for line in fh:
                     try:
@@ -98,11 +99,16 @@ def extract_codex():
                         continue
                     info = payload.get("info") or {}
                     total = (info.get("total_token_usage") or {}).get("total_tokens")
-                    if total is not None:
-                        last_total = total
-                        last_ts = entry.get("timestamp")
-            if last_total and last_ts:
-                daily_tokens[local_date(last_ts)] += last_total
+                    ts = entry.get("timestamp")
+                    if total is None or not ts:
+                        continue
+                    delta = total - prev_total
+                    if delta > 0:
+                        daily_tokens[local_date(ts)] += delta
+                    elif delta < 0:
+                        # Session counter reset (new context window); treat as fresh start.
+                        daily_tokens[local_date(ts)] += total
+                    prev_total = total
 
     return daily_tokens
 
