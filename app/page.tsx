@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import rawRows from "../data/daily-burn.json";
+import meta from "../data/meta.json";
 import { normalizeRows, sourceColumns, sumSource } from "../lib/burn-data";
 import { getWindowRows, type WindowKey, windows } from "../lib/date-windows";
 import {
@@ -225,9 +226,10 @@ export default function TokenBurnDashboard() {
       </section>
 
       <p className="footerNote">
-        Replace <code>data/daily-burn.sample.json</code> with your normalized
-        daily rows. Keep raw exports and private project names out of anything
-        you deploy or share.
+        Last refreshed: {new Date(meta.refreshed_at).toLocaleString("en-US", {
+          month: "short", day: "numeric", year: "numeric",
+          hour: "numeric", minute: "2-digit", timeZoneName: "short",
+        })}
       </p>
     </main>
   );

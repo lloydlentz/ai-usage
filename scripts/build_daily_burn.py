@@ -22,8 +22,9 @@ client names) so the output is safe to share or deploy.
 """
 
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -170,8 +171,14 @@ def main():
     with open(out_path, "w") as fh:
         json.dump(rows, fh, indent=2)
 
+    now = datetime.now(ZoneInfo("America/Chicago"))
+    meta = {"refreshed_at": now.isoformat(timespec="seconds")}
+    with open(DATA / "meta.json", "w") as fh:
+        json.dump(meta, fh)
+
     print(f"wrote {len(rows)} rows  ({frozen_count} frozen from previous capture, {new_count} live/new)")
     print(f"grand total: {sum(r['total'] for r in rows):,} tokens")
+    print(f"refreshed_at: {meta['refreshed_at']}")
 
 
 if __name__ == "__main__":
