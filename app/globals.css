@@ -387,11 +387,11 @@ h1 {
 
 .miniGaugeValue {
   text-align: center;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
-  margin-top: -8px;
+  margin-top: 2px;
   padding-bottom: 4px;
 }
 

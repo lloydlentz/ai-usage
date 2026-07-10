@@ -343,29 +343,41 @@ function BurnGauges({ selectedRows, windowKey }: { selectedRows: typeof rows; wi
 }
 
 function MiniGauge({ value, fill, color }: { value: number; fill: number; color: string }) {
-  const cx = 80, cy = 76, ro = 64, ri = 44;
+  const cx = 80, cy = 76, r = 58, sw = 11;
+  const circ = Math.PI * r;
+  // Semicircle from left (180°) clockwise through top to right (0°)
+  const arcD = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
 
   const toRad = (d: number) => (d * Math.PI) / 180;
-  const pt = (r: number, deg: number) => ({
-    x: +(cx + r * Math.cos(toRad(deg))).toFixed(2),
-    y: +(cy - r * Math.sin(toRad(deg))).toFixed(2),
-  });
-  const ringPath = (startDeg: number, endDeg: number) => {
-    if (startDeg - endDeg < 0.2) return "";
-    const large = startDeg - endDeg > 180 ? 1 : 0;
-    const os = pt(ro, startDeg), oe = pt(ro, endDeg);
-    const is = pt(ri, endDeg), ie = pt(ri, startDeg);
-    return `M ${os.x} ${os.y} A ${ro} ${ro} 0 ${large} 0 ${oe.x} ${oe.y} L ${is.x} ${is.y} A ${ri} ${ri} 0 ${large} 0 ${ie.x} ${ie.y} Z`;
-  };
+  const needleDeg = 180 - fill * 180; // 180=left (empty), 0=right (full)
+  const needleLen = r - sw / 2 - 3;
+  const nx = +(cx + needleLen * Math.cos(toRad(needleDeg))).toFixed(2);
+  const ny = +(cy - needleLen * Math.sin(toRad(needleDeg))).toFixed(2);
 
-  const bgPath = ringPath(180, 0);
-  const fillPath = fill > 0.005 ? ringPath(180, 180 - fill * 180) : "";
+  // Tick mark spanning the full track width at the 50% (top) position
+  const innerR = r - sw / 2, outerR = r + sw / 2;
+  const tick = {
+    x1: cx.toFixed(2), y1: +(cy - innerR).toFixed(2),
+    x2: cx.toFixed(2), y2: +(cy - outerR).toFixed(2),
+  };
 
   return (
     <div className="miniGauge">
-      <svg viewBox="0 0 160 88" aria-hidden="true">
-        <path d={bgPath} fill="rgba(240,236,228,0.07)" />
-        {fillPath && <path d={fillPath} fill={color} opacity={0.9} />}
+      <svg viewBox="0 0 160 90" aria-hidden="true">
+        {/* track */}
+        <path d={arcD} fill="none" stroke="rgba(240,236,228,0.11)" strokeWidth={sw} strokeLinecap="round" />
+        {/* fill */}
+        <path
+          d={arcD} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" opacity={0.88}
+          strokeDasharray={`${circ} ${circ}`}
+          strokeDashoffset={circ - fill * circ}
+        />
+        {/* mid tick */}
+        <line {...tick} stroke="rgba(240,236,228,0.35)" strokeWidth="1.5" />
+        {/* needle */}
+        <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="var(--ink)" strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
+        {/* hub */}
+        <circle cx={cx} cy={cy} r={4.5} fill="var(--bg)" stroke="var(--ink)" strokeWidth="1.5" opacity="0.9" />
       </svg>
       <div className="miniGaugeValue">{formatTokens(value)}</div>
     </div>
