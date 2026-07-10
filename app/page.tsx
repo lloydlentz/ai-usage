@@ -40,10 +40,10 @@ export default function TokenBurnDashboard() {
       <section className="hero">
         <div>
           <p className="eyebrow">Token burn dashboard</p>
-          <h1>AI usage by day, source, and work driver.</h1>
+          <h1>Lloyd's token usage.</h1>
           <p className="lead">
-            This starter reads one normalized file, labels exact and estimated values, and
-            keeps the question pointed at the work: what should the computer do next?
+            Exact logs from Claude Code and Codex, plus labeled estimates for chat tools.
+            Updated hourly. What should the computer do next?
           </p>
         </div>
         <div className="range" aria-label="Select time range">
@@ -65,6 +65,10 @@ export default function TokenBurnDashboard() {
         <Metric label="Peak day" value={formatTokens(peakDay?.total || 0)} note={peakDay?.date || "n/a"} />
         <Metric label="7d average" value={formatTokens(lastAverage)} note="moving average" />
         <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
+      </section>
+
+      <section className="gaugeRow">
+        <SpeedometerDial selectedRows={selectedRows} />
       </section>
 
       <section className="grid">
@@ -266,6 +270,123 @@ function Panel({
         <p>{note}</p>
       </div>
       {children}
+    </article>
+  );
+}
+
+function SpeedometerDial({ selectedRows }: { selectedRows: typeof rows }) {
+  const codexTotal = sumSource(selectedRows, "codex_tokens");
+  const claudeTotal = sumSource(selectedRows, "claude_code_tokens");
+  const exactTotal = codexTotal + claudeTotal;
+  const codexPct = exactTotal > 0 ? codexTotal / exactTotal : 0;
+  const claudePct = 1 - codexPct;
+
+  // Geometry: semicircle arc from 180° (left) to 0° (right) through top
+  const cx = 220, cy = 192, ro = 152, ri = 104;
+  const GAP = 2; // degrees of space between segments at the split
+
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const pt = (r: number, deg: number) => ({
+    x: +(cx + r * Math.cos(toRad(deg))).toFixed(2),
+    y: +(cy - r * Math.sin(toRad(deg))).toFixed(2),
+  });
+
+  // Ring wedge from startDeg down to endDeg (startDeg > endDeg),
+  // tracing outer arc then inner arc back, both with sweep=0 (counter-CW in SVG = through the top).
+  const ringPath = (startDeg: number, endDeg: number) => {
+    if (startDeg - endDeg < 0.3) return "";
+    const large = startDeg - endDeg > 180 ? 1 : 0;
+    const os = pt(ro, startDeg), oe = pt(ro, endDeg);
+    const is = pt(ri, endDeg), ie = pt(ri, startDeg);
+    return `M ${os.x} ${os.y} A ${ro} ${ro} 0 ${large} 0 ${oe.x} ${oe.y} L ${is.x} ${is.y} A ${ri} ${ri} 0 ${large} 0 ${ie.x} ${ie.y} Z`;
+  };
+
+  // Split angle: 180°=all Codex edge, 0°=all Claude edge
+  const splitDeg = 180 - codexPct * 180;
+
+  const bgPath = ringPath(180, 0);
+  const codexPath = codexPct > 0.005 ? ringPath(180, splitDeg + GAP / 2) : "";
+  const claudePath = claudePct > 0.005 ? ringPath(splitDeg - GAP / 2, 0) : "";
+
+  // Needle: triangle from center, tip pointing to inner-edge at splitDeg
+  const tip = pt(ri - 10, splitDeg);
+  const perpRad = toRad(splitDeg + 90);
+  const hw = 6;
+  const nb1 = { x: +(cx + hw * Math.cos(perpRad)).toFixed(2), y: +(cy - hw * Math.sin(perpRad)).toFixed(2) };
+  const nb2 = { x: +(cx - hw * Math.cos(perpRad)).toFixed(2), y: +(cy + hw * Math.sin(perpRad)).toFixed(2) };
+
+  // Midpoint label positions (inside the arc band)
+  const midR = (ro + ri) / 2;
+  const codexMidDeg = 180 - codexPct * 90;
+  const claudeMidDeg = splitDeg / 2;
+
+  return (
+    <article className="panel gaugePanel">
+      <div className="panelHeader">
+        <div>
+          <p className="label">Exact source split</p>
+          <h2>Claude Code vs Codex</h2>
+        </div>
+        <p>Only exact-measured sources — chat estimates excluded.</p>
+      </div>
+      <div className="gaugeWrap">
+        <svg viewBox="0 0 440 215" aria-label="Speedometer dial showing Claude Code vs Codex token split">
+          {/* background track */}
+          <path d={bgPath} fill="rgba(240,236,228,0.07)" />
+          {/* Codex segment — green */}
+          {codexPath && <path d={codexPath} fill="var(--good)" />}
+          {/* Claude Code segment — teal */}
+          {claudePath && <path d={claudePath} fill="var(--accent)" />}
+          {/* percentage inside arc — only when segment is wide enough */}
+          {codexPct > 0.14 && (
+            <text
+              x={+(cx + midR * Math.cos(toRad(codexMidDeg))).toFixed(1)}
+              y={+(cy - midR * Math.sin(toRad(codexMidDeg)) + 5).toFixed(1)}
+              textAnchor="middle" fontSize={13} fontWeight={700}
+              fill="var(--bg)" fontFamily="inherit"
+            >
+              {Math.round(codexPct * 100)}%
+            </text>
+          )}
+          {claudePct > 0.14 && (
+            <text
+              x={+(cx + midR * Math.cos(toRad(claudeMidDeg))).toFixed(1)}
+              y={+(cy - midR * Math.sin(toRad(claudeMidDeg)) + 5).toFixed(1)}
+              textAnchor="middle" fontSize={13} fontWeight={700}
+              fill="var(--bg)" fontFamily="inherit"
+            >
+              {Math.round(claudePct * 100)}%
+            </text>
+          )}
+          {/* needle */}
+          <polygon
+            points={`${tip.x},${tip.y} ${nb1.x},${nb1.y} ${nb2.x},${nb2.y}`}
+            fill="var(--ink)" opacity={0.85}
+          />
+          <circle cx={cx} cy={cy} r={7} fill="var(--bg)" stroke="var(--ink)" strokeWidth={1.5} opacity={0.85} />
+          {/* end labels */}
+          <text x={68} y={211} textAnchor="middle" fill="var(--good)"
+            fontSize={10} fontWeight={800} letterSpacing="0.09em" fontFamily="inherit">
+            CODEX
+          </text>
+          <text x={372} y={211} textAnchor="middle" fill="var(--accent)"
+            fontSize={10} fontWeight={800} letterSpacing="0.09em" fontFamily="inherit">
+            CLAUDE CODE
+          </text>
+        </svg>
+        <div className="gaugeReadouts">
+          <div className="gaugeReadout">
+            <span className="label" style={{ color: "var(--accent)" }}>Claude Code</span>
+            <strong style={{ color: "var(--accent)" }}>{formatTokens(claudeTotal)}</strong>
+            <span className="muted">exact · {Math.round(claudePct * 100)}%</span>
+          </div>
+          <div className="gaugeReadout">
+            <span className="label" style={{ color: "var(--good)" }}>Codex</span>
+            <strong style={{ color: "var(--good)" }}>{formatTokens(codexTotal)}</strong>
+            <span className="muted">exact · {Math.round(codexPct * 100)}%</span>
+          </div>
+        </div>
+      </div>
     </article>
   );
 }
