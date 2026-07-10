@@ -13,13 +13,15 @@ echo "=== $(date) ==="
 python3 scripts/extract_exact.py
 python3 scripts/build_daily_burn.py
 
-# Only commit and push if data changed.
-if git diff --quiet data/daily-burn.json; then
-  echo "no changes to data/daily-burn.json, skipping push"
+# Stage both — meta.json always gets a fresh refreshed_at timestamp.
+git add data/daily-burn.json data/meta.json
+
+# Only push if something actually changed.
+if git diff --cached --quiet; then
+  echo "no changes, skipping push"
   exit 0
 fi
 
-git add data/daily-burn.json
 git commit -m "data: daily refresh $(date +%Y-%m-%d)"
 git push
 echo "pushed — GitHub Actions will deploy"

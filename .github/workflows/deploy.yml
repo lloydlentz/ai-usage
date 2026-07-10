@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "data/daily-burn.json"
+      - "data/meta.json"
       - "app/**"
       - "lib/**"
       - "public/**"
