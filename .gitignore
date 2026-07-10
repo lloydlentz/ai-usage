@@ -1,0 +1,6 @@
+node_modules/
+.next/
+out/
+data/private/
+data/exact-daily.json
+.claude/settings.local.json
