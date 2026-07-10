@@ -326,12 +326,12 @@
   {
     "date": "2026-06-10",
     "codex_tokens": 4566913,
-    "claude_code_tokens": 4024995,
-    "claude_code_calls": 71,
+    "claude_code_tokens": 2679005,
+    "claude_code_calls": 44,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 0,
-    "total": 8636908,
+    "total": 7290918,
     "driver": "research",
     "evidence": "AI usage analysis and site updates (exact logs)"
   },
@@ -613,13 +613,13 @@
   },
   {
     "date": "2026-07-10",
-    "codex_tokens": 1443094,
-    "claude_code_tokens": 156930437,
-    "claude_code_calls": 485,
+    "codex_tokens": 15698523,
+    "claude_code_tokens": 169314462,
+    "claude_code_calls": 566,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 158426531,
+    "total": 185065985,
     "driver": "shipping",
     "evidence": "web app feature work (exact logs)"
   }
