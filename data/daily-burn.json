@@ -622,5 +622,17 @@
     "total": 263264238,
     "driver": "shipping",
     "evidence": "web app feature work (exact logs)"
+  },
+  {
+    "date": "2026-07-11",
+    "codex_tokens": 613563,
+    "claude_code_tokens": 0,
+    "claude_code_calls": 0,
+    "claude_chat_est": 0,
+    "chatgpt_est": 0,
+    "gemini_est": 0,
+    "total": 613563,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day"
   }
 ]
