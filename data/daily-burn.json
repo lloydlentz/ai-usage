@@ -338,12 +338,12 @@
   {
     "date": "2026-06-11",
     "codex_tokens": 4198053,
-    "claude_code_tokens": 481728,
-    "claude_code_calls": 15,
+    "claude_code_tokens": 460742,
+    "claude_code_calls": 14,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 4759781,
+    "total": 4738795,
     "driver": "shipping",
     "evidence": "personal site updates (exact logs)"
   },
@@ -632,6 +632,18 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 613563,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day"
+  },
+  {
+    "date": "2026-07-12",
+    "codex_tokens": 0,
+    "claude_code_tokens": 11604434,
+    "claude_code_calls": 15,
+    "claude_chat_est": 0,
+    "chatgpt_est": 0,
+    "gemini_est": 0,
+    "total": 11604434,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
