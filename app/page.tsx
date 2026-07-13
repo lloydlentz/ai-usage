@@ -77,21 +77,45 @@ export default function TokenBurnDashboard() {
           title="Heatmap"
           note="Log color scale so quiet days and spikes can share one surface."
         >
-          <div className="heatmap" aria-label="Daily token burn heatmap">
-            {selectedRows.map((row) => (
-              <span
-                key={row.date}
-                className={`cell heat${logHeatLevel(row.total, maxDay)}`}
-                title={`${row.date}: ${formatTokens(row.total)} tokens, ${row.driver}`}
-              />
-            ))}
+          <div className="heatmapTimeframe">
+            {selectedRows.length > 0 && (
+              <span>
+                {selectedRows[0].date} – {selectedRows[selectedRows.length - 1].date}
+              </span>
+            )}
           </div>
-          <div className="legend" aria-hidden>
-            <span>less</span>
-            {[0, 1, 2, 3, 4, 5].map((level) => (
-              <i key={level} className={`heat${level}`} />
-            ))}
-            <span>more</span>
+          <div className="heatmapContainer">
+            <div className="heatmapRows">
+              {["Total", "Claude Code", "Codex"].map((label, rowIdx) => (
+                <div key={label} className="heatmapRow">
+                  <span className="heatmapRowLabel">{label}</span>
+                  <div className="heatmap" aria-label={`${label} daily breakdown`}>
+                    {selectedRows.map((row) => {
+                      const value =
+                        rowIdx === 0
+                          ? row.total
+                          : rowIdx === 1
+                            ? row.claude_code_tokens
+                            : row.codex_tokens;
+                      return (
+                        <span
+                          key={`${label}-${row.date}`}
+                          className={`cell heat${logHeatLevel(value, maxDay)}`}
+                          title={`${row.date} ${label}: ${formatTokens(value)}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="heatmapLegend">
+              <span>less</span>
+              {[0, 1, 2, 3, 4, 5].map((level) => (
+                <i key={level} className={`heat${level}`} />
+              ))}
+              <span>more</span>
+            </div>
           </div>
         </Panel>
 

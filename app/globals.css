@@ -169,11 +169,44 @@ h1 {
   font-size: 13px;
 }
 
+.heatmapTimeframe {
+  padding: 8px 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.heatmapContainer {
+  padding: 16px;
+}
+
+.heatmapRows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.heatmapRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.heatmapRowLabel {
+  min-width: 80px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+  padding-top: 2px;
+}
+
 .heatmap {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15px, 1fr));
   gap: 5px;
-  padding: 16px;
+  flex: 1;
 }
 
 .cell {
@@ -190,16 +223,15 @@ h1 {
 .heat4 { background: rgba(24, 193, 232, 0.66); }
 .heat5 { background: var(--accent); }
 
-.legend {
+.heatmapLegend {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 0 16px 16px;
   color: var(--muted);
   font-size: 12px;
 }
 
-.legend i {
+.heatmapLegend i {
   width: 16px;
   height: 16px;
   border-radius: 3px;
