@@ -74,7 +74,7 @@ export default function TokenBurnDashboard() {
       <section className="grid">
         <Panel
           label="Daily burn"
-          title="Heatmap"
+          title="Activity calendar"
           note="Log color scale so quiet days and spikes can share one surface."
         >
           <div className="heatmapTimeframe">
@@ -85,30 +85,15 @@ export default function TokenBurnDashboard() {
             )}
           </div>
           <div className="heatmapContainer">
-            <div className="heatmapRows">
-              {["Total", "Claude Code", "Codex"].map((label, rowIdx) => (
-                <div key={label} className="heatmapRow">
-                  <span className="heatmapRowLabel">{label}</span>
-                  <div className="heatmap" aria-label={`${label} daily breakdown`}>
-                    {selectedRows.map((row) => {
-                      const value =
-                        rowIdx === 0
-                          ? row.total
-                          : rowIdx === 1
-                            ? row.claude_code_tokens
-                            : row.codex_tokens;
-                      return (
-                        <span
-                          key={`${label}-${row.date}`}
-                          className={`cell heat${logHeatLevel(value, maxDay)}`}
-                          title={`${row.date} ${label}: ${formatTokens(value)}`}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {["Total", "Claude Code", "Codex"].map((label, idx) => (
+              <GitHubHeatmap
+                key={label}
+                label={label}
+                rows={selectedRows}
+                valueKey={idx === 0 ? "total" : idx === 1 ? "claude_code_tokens" : "codex_tokens"}
+                maxDay={maxDay}
+              />
+            ))}
             <div className="heatmapLegend">
               <span>less</span>
               {[0, 1, 2, 3, 4, 5].map((level) => (
@@ -441,4 +426,80 @@ function buildTrendPath(values: number[]) {
   });
 
   return `M${points.join(" L")}`;
+}
+
+function GitHubHeatmap({
+  label,
+  rows,
+  valueKey,
+  maxDay,
+}: {
+  label: string;
+  rows: typeof rows;
+  valueKey: keyof (typeof rows)[0];
+  maxDay: number;
+}) {
+  // Build a map of date → value
+  const dateValues = new Map(rows.map((r) => [r.date, r[valueKey] as number]));
+
+  if (rows.length === 0) return null;
+
+  const startDate = new Date(rows[0].date);
+  const endDate = new Date(rows[rows.length - 1].date);
+  const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // Build weeks and days grid (Sunday = 0 .. Saturday = 6, but GitHub starts Mon = 0)
+  const weeks: (string | null)[][] = [];
+  let currentWeek: (string | null)[] = [];
+
+  // Fill leading nulls for the starting day of week (GitHub style: Mon = 0)
+  const startDayOfWeek = startDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const gitHubStartDay = (startDayOfWeek + 6) % 7; // Convert to Monday = 0
+  for (let i = 0; i < gitHubStartDay; i++) {
+    currentWeek.push(null);
+  }
+
+  // Fill in all dates
+  for (let i = 0; i <= daysDiff; i++) {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + i);
+    const dateStr = d.toISOString().slice(0, 10);
+    currentWeek.push(dateStr);
+
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+  if (currentWeek.length > 0) {
+    weeks.push(currentWeek);
+  }
+
+  return (
+    <div className="gitHubHeatmapSection">
+      <div className="gitHubHeatmapLabel">{label}</div>
+      <div className="gitHubHeatmap">
+        {["Mon", "Wed", "Fri"].map((dayLabel) => (
+          <div key={dayLabel} className="gitHubHeatmapAxisLabel">
+            {dayLabel}
+          </div>
+        ))}
+        <div className="gitHubHeatmapGrid">
+          {weeks.map((week, weekIdx) =>
+            week.map((dateStr, dayIdx) => {
+              const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
+              const level = dateStr ? logHeatLevel(value, maxDay) : -1;
+              return (
+                <span
+                  key={`${weekIdx}-${dayIdx}`}
+                  className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
+                  title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
+                />
+              );
+            }),
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

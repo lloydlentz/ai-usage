@@ -177,43 +177,60 @@ h1 {
 
 .heatmapContainer {
   padding: 16px;
-}
-
-.heatmapRows {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 24px;
 }
 
-.heatmapRow {
+.gitHubHeatmapSection {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.heatmapRowLabel {
-  min-width: 80px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.gitHubHeatmapLabel {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--soft);
-  padding-top: 2px;
 }
 
-.heatmap {
+.gitHubHeatmap {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15px, 1fr));
-  gap: 5px;
-  flex: 1;
+  grid-template-columns: 24px 1fr;
+  gap: 6px;
+  align-items: start;
 }
 
-.cell {
-  aspect-ratio: 1 / 1;
-  min-width: 12px;
-  border: 1px solid rgba(240, 236, 228, 0.1);
-  border-radius: 3px;
+.gitHubHeatmapAxisLabel {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.gitHubHeatmapGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 14px);
+  grid-template-rows: repeat(7, 14px);
+  gap: 3px;
+}
+
+.gitHubCell {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(240, 236, 228, 0.08);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.gitHubCell:hover {
+  opacity: 0.8;
+  border-color: rgba(240, 236, 228, 0.3);
+}
+
+.gitHubCell.empty {
+  background: transparent;
+  border: none;
 }
 
 .heat0 { background: rgba(24, 193, 232, 0.08); }
@@ -229,12 +246,13 @@ h1 {
   gap: 7px;
   color: var(--muted);
   font-size: 12px;
+  margin-top: 8px;
 }
 
 .heatmapLegend i {
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
 }
 
 .trend {
