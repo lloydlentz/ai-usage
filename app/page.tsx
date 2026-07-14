@@ -428,6 +428,13 @@ function buildTrendPath(values: number[]) {
   return `M${points.join(" L")}`;
 }
 
+interface HeatmapRow {
+  date: string;
+  total: number;
+  claude_code_tokens: number;
+  codex_tokens: number;
+}
+
 function GitHubHeatmap({
   label,
   rows,
@@ -435,8 +442,8 @@ function GitHubHeatmap({
   maxDay,
 }: {
   label: string;
-  rows: typeof rows;
-  valueKey: keyof (typeof rows)[0];
+  rows: HeatmapRow[];
+  valueKey: keyof HeatmapRow;
   maxDay: number;
 }) {
   // Build a map of date → value
