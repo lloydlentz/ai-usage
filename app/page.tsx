@@ -476,36 +476,68 @@ function GitHubHeatmap({
 
   const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+  // Track month starts: which week index has the first of the month
+  const monthStarts = new Map<number, string>(); // weekIdx -> month name
+  weeks.forEach((week, weekIdx) => {
+    week.forEach((dateStr) => {
+      if (dateStr) {
+        const date = new Date(dateStr);
+        if (date.getDate() <= 7) {
+          const monthName = date.toLocaleDateString("en-US", { month: "short" });
+          if (!monthStarts.has(weekIdx)) {
+            monthStarts.set(weekIdx, monthName);
+          }
+        }
+      }
+    });
+  });
+
   return (
     <div className="gitHubHeatmapSection">
       <div className="gitHubHeatmapLabel">{label}</div>
-      <div className="gitHubHeatmapOuter">
-        {/* Day labels on the left */}
-        <div className="gitHubHeatmapAxisLabels">
-          {dayLabels.map((day) => (
-            <div key={day} className="gitHubHeatmapAxisLabel">
-              {day}
-            </div>
-          ))}
+      <div className="gitHubHeatmapContainer">
+        {/* Month labels above the grid */}
+        <div className="gitHubHeatmapMonths">
+          <div className="gitHubMonthSpacer" />
+          <div className="gitHubMonthRow">
+            {weeks.map((_, weekIdx) => (
+              <div key={`month-${weekIdx}`} className="gitHubMonthCell">
+                {monthStarts.has(weekIdx) && (
+                  <span className="gitHubMonthLabel">{monthStarts.get(weekIdx)}</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Grid of weeks */}
-        <div className="gitHubHeatmapGrid">
-          {weeks.map((week, weekIdx) => (
-            <div key={weekIdx} className="gitHubWeekColumn">
-              {week.map((dateStr, dayIdx) => {
-                const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
-                const level = value > 0 ? logHeatLevel(value, maxDay) : -1;
-                return (
-                  <span
-                    key={`${weekIdx}-${dayIdx}`}
-                    className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
-                    title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
-                  />
-                );
-              })}
-            </div>
-          ))}
+        <div className="gitHubHeatmapOuter">
+          {/* Day labels on the left */}
+          <div className="gitHubHeatmapAxisLabels">
+            {dayLabels.map((day) => (
+              <div key={day} className="gitHubHeatmapAxisLabel">
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Grid of weeks */}
+          <div className="gitHubHeatmapGrid">
+            {weeks.map((week, weekIdx) => (
+              <div key={weekIdx} className="gitHubWeekColumn">
+                {week.map((dateStr, dayIdx) => {
+                  const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
+                  const level = value > 0 ? logHeatLevel(value, maxDay) : -1;
+                  return (
+                    <span
+                      key={`${weekIdx}-${dayIdx}`}
+                      className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
+                      title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

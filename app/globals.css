@@ -194,6 +194,45 @@ h1 {
   color: var(--soft);
 }
 
+.gitHubHeatmapContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gitHubHeatmapMonths {
+  display: flex;
+  gap: 8px;
+}
+
+.gitHubMonthSpacer {
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.gitHubMonthRow {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.gitHubMonthCell {
+  width: 14px;
+  min-height: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1;
+  text-align: center;
+  overflow: visible;
+}
+
+.gitHubMonthLabel {
+  display: block;
+  white-space: nowrap;
+}
+
 .gitHubHeatmapOuter {
   display: flex;
   gap: 8px;
