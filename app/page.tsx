@@ -476,16 +476,19 @@ function GitHubHeatmap({
 
   const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  // Track month starts: which week index has the first of the month
+  // Track month starts: which week index has the 1st of a month
   const monthStarts = new Map<number, string>(); // weekIdx -> month name
+  const seenMonths = new Set<string>(); // "YYYY-MM" to avoid duplicates
   weeks.forEach((week, weekIdx) => {
     week.forEach((dateStr) => {
       if (dateStr) {
         const date = new Date(dateStr);
-        if (date.getDate() <= 7) {
-          const monthName = date.toLocaleDateString("en-US", { month: "short" });
-          if (!monthStarts.has(weekIdx)) {
+        if (date.getDate() === 1) {
+          const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+          if (!seenMonths.has(monthKey)) {
+            const monthName = date.toLocaleDateString("en-US", { month: "short" });
             monthStarts.set(weekIdx, monthName);
+            seenMonths.add(monthKey);
           }
         }
       }
