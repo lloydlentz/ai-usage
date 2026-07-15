@@ -662,12 +662,12 @@
   {
     "date": "2026-07-14",
     "codex_tokens": 6119082,
-    "claude_code_tokens": 37810854,
-    "claude_code_calls": 163,
+    "claude_code_tokens": 43983462,
+    "claude_code_calls": 187,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 44009936,
+    "total": 50182544,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
