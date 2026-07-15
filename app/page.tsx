@@ -446,65 +446,66 @@ function GitHubHeatmap({
   valueKey: keyof HeatmapRow;
   maxDay: number;
 }) {
+  if (rows.length === 0) return null;
+
   // Build a map of date → value
   const dateValues = new Map(rows.map((r) => [r.date, r[valueKey] as number]));
 
-  if (rows.length === 0) return null;
-
   const startDate = new Date(rows[0].date);
   const endDate = new Date(rows[rows.length - 1].date);
-  const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-  // Build weeks and days grid (Sunday = 0 .. Saturday = 6, but GitHub starts Mon = 0)
+  // Adjust start date to the Monday of that week
+  const dayOfWeek = startDate.getDay();
+  const daysToMonday = (dayOfWeek + 6) % 7; // Convert Sun=0 to Mon=0
+  const adjustedStart = new Date(startDate);
+  adjustedStart.setDate(adjustedStart.getDate() - daysToMonday);
+
+  // Build a 2D grid: rows = days of week (Mon-Sun), columns = weeks
   const weeks: (string | null)[][] = [];
-  let currentWeek: (string | null)[] = [];
+  let currentDate = new Date(adjustedStart);
 
-  // Fill leading nulls for the starting day of week (GitHub style: Mon = 0)
-  const startDayOfWeek = startDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const gitHubStartDay = (startDayOfWeek + 6) % 7; // Convert to Monday = 0
-  for (let i = 0; i < gitHubStartDay; i++) {
-    currentWeek.push(null);
-  }
-
-  // Fill in all dates
-  for (let i = 0; i <= daysDiff; i++) {
-    const d = new Date(startDate);
-    d.setDate(d.getDate() + i);
-    const dateStr = d.toISOString().slice(0, 10);
-    currentWeek.push(dateStr);
-
-    if (currentWeek.length === 7) {
-      weeks.push(currentWeek);
-      currentWeek = [];
+  while (currentDate <= endDate) {
+    const week: (string | null)[] = [];
+    for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+      const dateStr = currentDate.toISOString().slice(0, 10);
+      week.push(dateStr);
+      currentDate.setDate(currentDate.getDate() + 1);
     }
+    weeks.push(week);
   }
-  if (currentWeek.length > 0) {
-    weeks.push(currentWeek);
-  }
+
+  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
     <div className="gitHubHeatmapSection">
       <div className="gitHubHeatmapLabel">{label}</div>
-      <div className="gitHubHeatmap">
-        {["Mon", "Wed", "Fri"].map((dayLabel) => (
-          <div key={dayLabel} className="gitHubHeatmapAxisLabel">
-            {dayLabel}
-          </div>
-        ))}
+      <div className="gitHubHeatmapOuter">
+        {/* Day labels on the left */}
+        <div className="gitHubHeatmapAxisLabels">
+          {dayLabels.map((day) => (
+            <div key={day} className="gitHubHeatmapAxisLabel">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Grid of weeks */}
         <div className="gitHubHeatmapGrid">
-          {weeks.map((week, weekIdx) =>
-            week.map((dateStr, dayIdx) => {
-              const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
-              const level = dateStr ? logHeatLevel(value, maxDay) : -1;
-              return (
-                <span
-                  key={`${weekIdx}-${dayIdx}`}
-                  className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
-                  title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
-                />
-              );
-            }),
-          )}
+          {weeks.map((week, weekIdx) => (
+            <div key={weekIdx} className="gitHubWeekColumn">
+              {week.map((dateStr, dayIdx) => {
+                const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
+                const level = value > 0 ? logHeatLevel(value, maxDay) : -1;
+                return (
+                  <span
+                    key={`${weekIdx}-${dayIdx}`}
+                    className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
+                    title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>

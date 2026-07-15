@@ -194,23 +194,39 @@ h1 {
   color: var(--soft);
 }
 
-.gitHubHeatmap {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 6px;
-  align-items: start;
+.gitHubHeatmapOuter {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.gitHubHeatmapAxisLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3px;
+  padding-top: 2px;
 }
 
 .gitHubHeatmapAxisLabel {
   font-size: 11px;
   color: var(--muted);
-  text-align: center;
+  width: 30px;
+  text-align: right;
+  height: 14px;
+  line-height: 14px;
 }
 
 .gitHubHeatmapGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 14px);
-  grid-template-rows: repeat(7, 14px);
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.gitHubWeekColumn {
+  display: flex;
+  flex-direction: column;
   gap: 3px;
 }
 
@@ -229,8 +245,8 @@ h1 {
 }
 
 .gitHubCell.empty {
-  background: transparent;
-  border: none;
+  background: rgba(240, 236, 228, 0.03);
+  border-color: rgba(240, 236, 228, 0.05);
 }
 
 .heat0 { background: rgba(24, 193, 232, 0.08); }
