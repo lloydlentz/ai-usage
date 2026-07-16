@@ -38,26 +38,12 @@ export default function TokenBurnDashboard() {
   return (
     <main className="page">
       <section className="hero">
-        <div>
-          <p className="eyebrow">Token burn dashboard</p>
-          <h1>Lloyd's token usage.</h1>
-          <p className="lead">
-            Exact logs from Claude Code and Codex, plus labeled estimates for chat tools.
-            Updated hourly. What should the computer do next?
-          </p>
-        </div>
-        <div className="range" aria-label="Select time range">
-          {windows.map((windowOption) => (
-            <button
-              key={windowOption.key}
-              type="button"
-              aria-pressed={windowKey === windowOption.key}
-              onClick={() => setWindowKey(windowOption.key)}
-            >
-              {windowOption.label}
-            </button>
-          ))}
-        </div>
+        <p className="eyebrow">Token burn dashboard</p>
+        <h1>Lloyd's token usage.</h1>
+        <p className="lead">
+          Exact logs from Claude Code and Codex, plus labeled estimates for chat tools.
+          Updated hourly. What should the computer do next?
+        </p>
       </section>
 
       <section className="stats" aria-label="Token burn summary">
@@ -67,11 +53,10 @@ export default function TokenBurnDashboard() {
         <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
       </section>
 
-      <section className="gaugeRow">
-        <BurnGauges selectedRows={selectedRows} windowKey={windowKey} />
-      </section>
-
-      <section className="grid">
+      <section className="gaugeAndCalendarRow">
+        <div className="gaugePanelContainer">
+          <BurnGauges selectedRows={selectedRows} windowKey={windowKey} />
+        </div>
         <Panel
           label="Daily burn"
           title="Activity calendar"
@@ -101,19 +86,6 @@ export default function TokenBurnDashboard() {
               ))}
               <span>more</span>
             </div>
-          </div>
-        </Panel>
-
-        <Panel
-          label="Weekly trend"
-          title="Log-scaled trend"
-          note="A smooth read on whether usage is getting sharper or merely larger."
-        >
-          <div className="trend">
-            <svg viewBox="0 0 720 260" role="img" aria-label="Weekly token burn trend line">
-              <path d="M30 40H690M30 120H690M30 200H690" stroke="rgba(240,236,228,0.12)" />
-              <path d={path} fill="none" stroke="var(--accent)" strokeWidth="5" strokeLinecap="round" />
-            </svg>
           </div>
         </Panel>
       </section>

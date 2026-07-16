@@ -37,12 +37,9 @@ textarea {
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  gap: 32px;
-  align-items: end;
   border-bottom: 1px solid var(--line);
-  padding-bottom: 28px;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .eyebrow,
@@ -429,6 +426,24 @@ h1 {
 
 .gaugeRow {
   margin-top: 18px;
+}
+
+.gaugeAndCalendarRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.gaugePanelContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1200px) {
+  .gaugeAndCalendarRow {
+    grid-template-columns: 1fr;
+  }
 }
 
 .burnGaugesWrap {
