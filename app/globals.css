@@ -432,13 +432,21 @@ h1 {
 
 .burnGaugesWrap {
   padding: 0 16px 16px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .burnGaugesSourceGroup {
   border-top: 1px solid var(--line);
   padding: 14px 0 6px;
+}
+
+@media (max-width: 768px) {
+  .burnGaugesWrap {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .burnGaugesSourceLabel {
@@ -482,6 +490,7 @@ h1 {
 
 .miniGauge {
   width: 100%;
+  max-width: 120px;
 }
 
 .miniGauge svg {
@@ -492,7 +501,7 @@ h1 {
 
 .miniGaugeValue {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
