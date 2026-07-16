@@ -436,21 +436,16 @@ h1 {
 }
 
 .gaugeAndCalendarRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin-top: 18px;
 }
 
 .gaugePanelContainer {
   display: flex;
   flex-direction: column;
-}
-
-@media (max-width: 1200px) {
-  .gaugeAndCalendarRow {
-    grid-template-columns: 1fr;
-  }
+  width: 100%;
 }
 
 .burnGaugesWrap {
