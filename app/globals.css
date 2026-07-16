@@ -175,9 +175,16 @@ h1 {
 
 .heatmapContainer {
   padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+
+@media (max-width: 1400px) {
+  .heatmapContainer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 .gitHubHeatmapSection {
