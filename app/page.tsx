@@ -284,12 +284,12 @@ function Panel({
 }
 
 function BurnGauges({ selectedRows, windowKey }: { selectedRows: typeof rows; windowKey: WindowKey }) {
-  const latestDate = selectedRows.at(-1)?.date ?? "";
-  const weekStart = latestDate
-    ? new Date(new Date(latestDate).getTime() - 6 * 86400000).toISOString().slice(0, 10)
-    : "";
+  // Use actual current date for "today", not just the last row date
+  const today = new Date().toISOString().slice(0, 10);
+  const latestDate = selectedRows.at(-1)?.date ?? today;
+  const weekStart = new Date(new Date(today).getTime() - 6 * 86400000).toISOString().slice(0, 10);
 
-  const todayRows = selectedRows.filter((r) => r.date === latestDate);
+  const todayRows = selectedRows.filter((r) => r.date === today);
   const weekRows = selectedRows.filter((r) => r.date >= weekStart);
 
   const fmtDate = (d: string) =>
