@@ -455,9 +455,11 @@ function GitHubHeatmap({
   const endDate = new Date(rows[rows.length - 1].date);
 
   // Adjust start date to the Monday of that week
-  const dayOfWeek = startDate.getDay();
+  // Use noon to avoid timezone ambiguity when parsing date strings
+  const startDateNoon = new Date(rows[0].date + "T12:00:00");
+  const dayOfWeek = startDateNoon.getDay();
   const daysToMonday = (dayOfWeek + 6) % 7; // Convert Sun=0 to Mon=0
-  const adjustedStart = new Date(startDate);
+  const adjustedStart = new Date(startDateNoon);
   adjustedStart.setDate(adjustedStart.getDate() - daysToMonday);
 
   // Build a 2D grid: rows = days of week (Mon-Sun), columns = weeks
