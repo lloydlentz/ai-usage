@@ -374,12 +374,12 @@
   {
     "date": "2026-06-16",
     "codex_tokens": 1832150,
-    "claude_code_tokens": 3252047,
-    "claude_code_calls": 66,
+    "claude_code_tokens": 2269878,
+    "claude_code_calls": 43,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 5164197,
+    "total": 4182028,
     "driver": "admin",
     "evidence": "personal finance tooling (exact logs)"
   },
@@ -685,13 +685,13 @@
   },
   {
     "date": "2026-07-16",
-    "codex_tokens": 10812551,
-    "claude_code_tokens": 12763834,
-    "claude_code_calls": 76,
+    "codex_tokens": 10918990,
+    "claude_code_tokens": 17641474,
+    "claude_code_calls": 102,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 23656385,
+    "total": 28640464,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
