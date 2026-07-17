@@ -92,6 +92,7 @@ export default function TokenBurnDashboard() {
                 valueKey={idx === 0 ? "total" : idx === 1 ? "claude_code_tokens" : "codex_tokens"}
                 maxDay={maxDay}
                 dominantToolMap={idx === 0 ? dominantToolMap : undefined}
+                toolColor={idx === 1 ? "claude" : idx === 2 ? "chatgpt" : undefined}
               />
             ))}
             <div className="heatmapLegend">
@@ -437,12 +438,14 @@ function GitHubHeatmap({
   valueKey,
   maxDay,
   dominantToolMap,
+  toolColor,
 }: {
   label: string;
   rows: HeatmapRow[];
   valueKey: keyof HeatmapRow;
   maxDay: number;
   dominantToolMap?: Map<string, "claude" | "chatgpt">;
+  toolColor?: "claude" | "chatgpt";
 }) {
   if (rows.length === 0) return null;
 
@@ -534,6 +537,8 @@ function GitHubHeatmap({
                   const heatClass = level >= 0
                     ? dominantTool
                       ? `heat${dominantTool}${level}`
+                      : toolColor
+                      ? `heat${toolColor}${level}`
                       : `heat${level}`
                     : "empty";
                   return (
