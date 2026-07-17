@@ -41,7 +41,7 @@ export default function TokenBurnDashboard() {
         <p className="eyebrow">Token burn dashboard</p>
         <h1>Lloyd's token usage.</h1>
         <p className="lead">
-          Exact logs from Claude Code and Codex, plus labeled estimates for chat tools.
+          Exact logs from Claude and ChatGPT, plus labeled estimates for chat tools.
           Updated hourly. What should the computer do next?
         </p>
       </section>
@@ -70,7 +70,7 @@ export default function TokenBurnDashboard() {
             )}
           </div>
           <div className="heatmapContainer">
-            {["Total", "Claude Code", "Codex"].map((label, idx) => (
+            {["Total", "Claude", "ChatGPT"].map((label, idx) => (
               <GitHubHeatmap
                 key={label}
                 label={label}
@@ -176,8 +176,8 @@ export default function TokenBurnDashboard() {
                 <th>Date</th>
                 <th>Total</th>
                 <th>7d avg</th>
-                <th>Codex exact</th>
-                <th>Claude Code exact</th>
+                <th>ChatGPT exact</th>
+                <th>Claude exact</th>
                 <th>Calls</th>
                 <th>Claude chat est.</th>
                 <th>ChatGPT est.</th>
@@ -256,66 +256,52 @@ function Panel({
 }
 
 function BurnGauges({ selectedRows, windowKey }: { selectedRows: typeof rows; windowKey: WindowKey }) {
-  // Use actual current date for "today", not just the last row date
   const today = new Date().toISOString().slice(0, 10);
-  const latestDate = selectedRows.at(-1)?.date ?? today;
   const weekStart = new Date(new Date(today).getTime() - 6 * 86400000).toISOString().slice(0, 10);
 
   const todayRows = selectedRows.filter((r) => r.date === today);
   const weekRows = selectedRows.filter((r) => r.date >= weekStart);
 
-  const fmtDate = (d: string) =>
-    d ? new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+  // Calculate max daily usage for each source to scale gauges
+  const claudeMaxDaily = Math.max(...selectedRows.map((r) => r.claude_code_tokens), 1);
+  const codexMaxDaily = Math.max(...selectedRows.map((r) => r.codex_tokens), 1);
 
-  const claudeAll = sumSource(selectedRows, "claude_code_tokens");
-  const codexAll = sumSource(selectedRows, "codex_tokens");
-  const scaleMax = Math.max(claudeAll, codexAll, 1);
-  const logFill = (v: number) => (v > 0 ? Math.log10(v + 1) / Math.log10(scaleMax + 1) : 0);
+  const claudeToday = sumSource(todayRows, "claude_code_tokens");
+  const codexToday = sumSource(todayRows, "codex_tokens");
+  const claudeWeek = sumSource(weekRows, "claude_code_tokens");
+  const codexWeek = sumSource(weekRows, "codex_tokens");
+  const claudeTotal = sumSource(selectedRows, "claude_code_tokens");
+  const codexTotal = sumSource(selectedRows, "codex_tokens");
 
-  const rangeLabel = windows.find((w) => w.key === windowKey)?.label ?? "Range";
-  const weekLabel =
-    weekRows.length > 0
-      ? `${fmtDate(weekRows[0].date)} – ${fmtDate(weekRows.at(-1)!.date)}`
-      : "no data";
+  const claudeFill = claudeToday / claudeMaxDaily;
+  const codexFill = codexToday / codexMaxDaily;
 
-  const periods = [
-    { label: "Today", sublabel: fmtDate(latestDate), rows: todayRows },
-    { label: "This week", sublabel: weekLabel, rows: weekRows },
-    { label: rangeLabel, sublabel: `${selectedRows.length} days`, rows: selectedRows },
-  ];
+  const claudeHistory = selectedRows.map((r) => r.claude_code_tokens);
+  const codexHistory = selectedRows.map((r) => r.codex_tokens);
 
-  const sources: Array<{ key: "claude_code_tokens" | "codex_tokens"; label: string; color: string }> = [
-    { key: "claude_code_tokens", label: "Claude Code", color: "var(--accent)" },
-    { key: "codex_tokens", label: "Codex", color: "var(--good)" },
+  const sources = [
+    { label: "Claude", color: "var(--accent)", today: claudeToday, week: claudeWeek, total: claudeTotal, fill: claudeFill, history: claudeHistory },
+    { label: "ChatGPT", color: "var(--good)", today: codexToday, week: codexWeek, total: codexTotal, fill: codexFill, history: codexHistory },
   ];
 
   return (
     <article className="panel">
       <div className="panelHeader">
         <div>
-          <p className="label">Exact sources · by period</p>
-          <h2>Today · Week · Range</h2>
+          <p className="label">Tool use</p>
         </div>
-        <p>Arc fills log-scaled to peak exact usage in selected range. Chat estimates excluded.</p>
+        <p>Today's token usage as a percentage of each tool's peak daily usage.</p>
       </div>
-      <div className="burnGaugesWrap">
-        {sources.map(({ key, label, color }) => (
-          <div key={label} className="burnGaugesSourceGroup">
-            <p className="burnGaugesSourceLabel" style={{ color }}>{label}</p>
-            <div className="burnGaugesCells">
-              {periods.map((period) => {
-                const value = period.rows.reduce((s, r) => s + r[key], 0);
-                return (
-                  <div key={period.label} className="burnGaugesCell">
-                    <div className="burnGaugesPeriodLabel">
-                      <strong>{period.label}</strong>
-                      <span>{period.sublabel}</span>
-                    </div>
-                    <MiniGauge value={value} fill={logFill(value)} color={color} />
-                  </div>
-                );
-              })}
+      <div className="toolGaugesWrap">
+        {sources.map(({ label, color, today, week, total, fill, history }) => (
+          <div key={label} className="toolGaugeGroup">
+            <p className="toolGaugeLabel" style={{ color }}>{label}</p>
+            <MiniGauge value={today} fill={fill} color={color} />
+            <div className="toolGaugeSummary">
+              <div>This week: <strong>{formatTokens(week)}</strong></div>
+              <div>Total: <strong>{formatTokens(total)}</strong></div>
             </div>
+            <Sparkline data={history} color={color} />
           </div>
         ))}
       </div>
@@ -361,6 +347,29 @@ function MiniGauge({ value, fill, color }: { value: number; fill: number; color:
         <circle cx={cx} cy={cy} r={4.5} fill="var(--bg)" stroke="var(--ink)" strokeWidth="1.5" opacity="0.9" />
       </svg>
       <div className="miniGaugeValue">{formatTokens(value)}</div>
+    </div>
+  );
+}
+
+function Sparkline({ data, color }: { data: number[]; color: string }) {
+  if (data.length < 2) return null;
+
+  const width = 120, height = 24;
+  const padding = 1;
+  const max = Math.max(...data, 1);
+  const min = 0;
+
+  const points = data.map((v, i) => {
+    const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
+    const y = height - padding - ((v - min) / (max - min)) * (height - 2 * padding);
+    return `${x},${y}`;
+  }).join(' ');
+
+  return (
+    <div className="sparkline">
+      <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+        <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" opacity="0.6" />
+      </svg>
     </div>
   );
 }

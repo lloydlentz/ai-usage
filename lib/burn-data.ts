@@ -1,6 +1,6 @@
 export const sourceColumns = [
-  { key: "codex_tokens", label: "Codex", fidelity: "exact" },
-  { key: "claude_code_tokens", label: "Claude Code", fidelity: "exact" },
+  { key: "codex_tokens", label: "ChatGPT", fidelity: "exact" },
+  { key: "claude_code_tokens", label: "Claude", fidelity: "exact" },
   { key: "claude_chat_est", label: "Claude chat", fidelity: "estimated" },
   { key: "chatgpt_est", label: "ChatGPT", fidelity: "estimated" },
   { key: "gemini_est", label: "Gemini", fidelity: "estimated" },
