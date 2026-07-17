@@ -178,12 +178,25 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
+  grid-column: span 10;
 }
 
 @media (max-width: 1400px) {
   .heatmapContainer {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .gaugeAndCalendarRow {
+    grid-template-columns: 1fr;
+  }
+
+  .gaugePanelContainer {
+    grid-column: span 1;
+  }
+
+  .heatmapContainer {
+    grid-column: span 1;
   }
 }
 
@@ -436,16 +449,18 @@ h1 {
 }
 
 .gaugeAndCalendarRow {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 24px;
   margin-top: 18px;
 }
 
 .gaugePanelContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  grid-column: span 4;
+}
+
+.gaugeAndCalendarRow > .panel {
+  grid-column: span 8;
 }
 
 .burnGaugesWrap {
@@ -453,6 +468,55 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+}
+
+.toolGaugesWrap {
+  padding: 0 16px 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.toolGaugeGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolGaugeLabel {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.toolGaugeSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.toolGaugeSummary strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sparkline {
+  width: 100%;
+  max-width: 120px;
+  height: 24px;
+  margin-top: 8px;
+}
+
+.sparkline svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .burnGaugesSourceGroup {
