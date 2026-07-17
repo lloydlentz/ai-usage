@@ -55,16 +55,8 @@ export default function TokenBurnDashboard() {
         <p className="eyebrow">Token burn dashboard</p>
         <h1>Lloyd's token usage.</h1>
         <p className="lead">
-          Exact logs from Claude and ChatGPT, plus labeled estimates for chat tools.
-          Updated hourly. What should the computer do next?
+          Data from Claude and ChatGPT logs. Updated hourly.
         </p>
-      </section>
-
-      <section className="stats" aria-label="Token burn summary">
-        <Metric label="Total burn" value={formatTokens(total)} note="selected window" />
-        <Metric label="Peak day" value={formatTokens(peakDay?.total || 0)} note={peakDay?.date || "n/a"} />
-        <Metric label="7d average" value={formatTokens(lastAverage)} note="moving average" />
-        <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
       </section>
 
       <section className="gaugeAndCalendarRow">
@@ -104,6 +96,13 @@ export default function TokenBurnDashboard() {
             </div>
           </div>
         </Panel>
+      </section>
+
+      <section className="stats" aria-label="Token burn summary">
+        <Metric label="Total burn" value={formatTokens(total)} note="selected window" />
+        <Metric label="Peak day" value={formatTokens(peakDay?.total || 0)} note={peakDay?.date || "n/a"} />
+        <Metric label="7d average" value={formatTokens(lastAverage)} note="moving average" />
+        <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
       </section>
 
       <section className="grid">
