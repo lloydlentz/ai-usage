@@ -23,6 +23,20 @@ export default function TokenBurnDashboard() {
   const selectedRows = useMemo(() => getWindowRows(rows, windowKey), [windowKey]);
   const total = sumTokens(selectedRows);
   const maxDay = Math.max(...selectedRows.map((row) => row.total), 0);
+
+  // Calculate dominant tool per day for Total calendar coloring
+  const dominantToolMap = useMemo(() => {
+    const map = new Map<string, "claude" | "chatgpt">();
+    selectedRows.forEach((row) => {
+      if (row.claude_code_tokens > row.codex_tokens) {
+        map.set(row.date, "claude");
+      } else if (row.codex_tokens > row.claude_code_tokens) {
+        map.set(row.date, "chatgpt");
+      }
+    });
+    return map;
+  }, [selectedRows]);
+
   const peakDay = selectedRows.reduce(
     (peak, row) => (row.total > peak.total ? row : peak),
     selectedRows[0] || rows[0],
@@ -77,6 +91,7 @@ export default function TokenBurnDashboard() {
                 rows={selectedRows}
                 valueKey={idx === 0 ? "total" : idx === 1 ? "claude_code_tokens" : "codex_tokens"}
                 maxDay={maxDay}
+                dominantToolMap={idx === 0 ? dominantToolMap : undefined}
               />
             ))}
             <div className="heatmapLegend">
@@ -421,11 +436,13 @@ function GitHubHeatmap({
   rows,
   valueKey,
   maxDay,
+  dominantToolMap,
 }: {
   label: string;
   rows: HeatmapRow[];
   valueKey: keyof HeatmapRow;
   maxDay: number;
+  dominantToolMap?: Map<string, "claude" | "chatgpt">;
 }) {
   if (rows.length === 0) return null;
 
@@ -513,10 +530,16 @@ function GitHubHeatmap({
                 {week.map((dateStr, dayIdx) => {
                   const value = dateStr ? (dateValues.get(dateStr) as number) || 0 : 0;
                   const level = value > 0 ? logHeatLevel(value, maxDay) : -1;
+                  const dominantTool = dateStr ? dominantToolMap?.get(dateStr) : undefined;
+                  const heatClass = level >= 0
+                    ? dominantTool
+                      ? `heat${dominantTool}${level}`
+                      : `heat${level}`
+                    : "empty";
                   return (
                     <span
                       key={`${weekIdx}-${dayIdx}`}
-                      className={`gitHubCell ${level >= 0 ? `heat${level}` : "empty"}`}
+                      className={`gitHubCell ${heatClass}`}
                       title={dateStr ? `${dateStr}: ${formatTokens(value)}` : ""}
                     />
                   );

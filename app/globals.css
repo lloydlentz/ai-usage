@@ -53,7 +53,10 @@ textarea {
   text-transform: uppercase;
 }
 
-.eyebrow,
+.eyebrow {
+  color: var(--muted);
+}
+
 .label {
   color: var(--accent);
 }
@@ -312,6 +315,22 @@ h1 {
 .heat3 { background: rgba(24, 193, 232, 0.48); }
 .heat4 { background: rgba(24, 193, 232, 0.66); }
 .heat5 { background: var(--accent); }
+
+/* Claude (orange) heat levels */
+.heatclaude0 { background: rgba(255, 140, 66, 0.08); }
+.heatclaude1 { background: rgba(255, 140, 66, 0.18); }
+.heatclaude2 { background: rgba(255, 140, 66, 0.31); }
+.heatclaude3 { background: rgba(255, 140, 66, 0.48); }
+.heatclaude4 { background: rgba(255, 140, 66, 0.66); }
+.heatclaude5 { background: #FF8C42; }
+
+/* ChatGPT (purple) heat levels */
+.heatchatgpt0 { background: rgba(137, 87, 229, 0.08); }
+.heatchatgpt1 { background: rgba(137, 87, 229, 0.18); }
+.heatchatgpt2 { background: rgba(137, 87, 229, 0.31); }
+.heatchatgpt3 { background: rgba(137, 87, 229, 0.48); }
+.heatchatgpt4 { background: rgba(137, 87, 229, 0.66); }
+.heatchatgpt5 { background: #8957E5; }
 
 .heatmapLegend {
   display: flex;
