@@ -1,24 +1,71 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import rawRows from "../data/daily-burn.json";
 import meta from "../data/meta.json";
 import { normalizeRows, sourceColumns, sumSource } from "../lib/burn-data";
-import { getWindowRows, type WindowKey, windows } from "../lib/date-windows";
+import { getWindowRows, type WindowKey } from "../lib/date-windows";
 import {
   fermiScale,
   formatTokens,
   logHeatLevel,
   movingAverage7,
   sumTokens,
-  weeklyTotals,
 } from "../lib/token-math";
 
 const rows = normalizeRows(rawRows);
 
+type Theme = "ticker" | "printrun";
+const THEME_STORAGE_KEY = "dashboard-theme";
+
+type ToolSource = {
+  key: "claude" | "chatgpt";
+  label: string;
+  ticker: string;
+  color: string;
+  today: number;
+  yesterday: number;
+  week: number;
+  total: number;
+  fill: number;
+  history: number[];
+};
+
+function pctDelta(curr: number, prev: number) {
+  if (prev === 0) return curr === 0 ? 0 : 100;
+  return ((curr - prev) / prev) * 100;
+}
+
+function formatRefreshed(iso: string) {
+  return new Date(iso).toLocaleString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export default function TokenBurnDashboard() {
-  const [windowKey, setWindowKey] = useState<WindowKey>("180");
+  const [windowKey] = useState<WindowKey>("180");
+  const [theme, setTheme] = useState<Theme>("ticker");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === "ticker" || saved === "printrun") setTheme(saved);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme, mounted]);
+
+  // Mirror the theme onto <html> so body background (outside .page) matches too.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   const selectedRows = useMemo(() => getWindowRows(rows, windowKey), [windowKey]);
   const total = sumTokens(selectedRows);
@@ -44,29 +91,79 @@ export default function TokenBurnDashboard() {
   const lastAverage =
     selectedRows.length > 0 ? movingAverage7(selectedRows, selectedRows.length - 1) : 0;
   const drivers = buildDriverRows(selectedRows, total);
-  const weekly = weeklyTotals(selectedRows);
-  const path = buildTrendPath(weekly.map((week) => week.total));
   const sourceTotal = sourceColumns.reduce((sum, source) => sum + sumSource(selectedRows, source.key), 0);
   const tableRows = selectedRows.slice(-30).reverse();
 
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(new Date(today).getTime() - 86400000).toISOString().slice(0, 10);
+  const weekStart = new Date(new Date(today).getTime() - 6 * 86400000).toISOString().slice(0, 10);
+
+  const todayRows = selectedRows.filter((r) => r.date === today);
+  const yesterdayRows = selectedRows.filter((r) => r.date === yesterday);
+  const weekRows = selectedRows.filter((r) => r.date >= weekStart);
+
+  const claudeMaxDaily = Math.max(...selectedRows.map((r) => r.claude_code_tokens), 1);
+  const codexMaxDaily = Math.max(...selectedRows.map((r) => r.codex_tokens), 1);
+
+  const claudeToday = sumSource(todayRows, "claude_code_tokens");
+  const codexToday = sumSource(todayRows, "codex_tokens");
+  const claudeYesterday = sumSource(yesterdayRows, "claude_code_tokens");
+  const codexYesterday = sumSource(yesterdayRows, "codex_tokens");
+  const claudeWeek = sumSource(weekRows, "claude_code_tokens");
+  const codexWeek = sumSource(weekRows, "codex_tokens");
+  const claudeTotal = sumSource(selectedRows, "claude_code_tokens");
+  const codexTotal = sumSource(selectedRows, "codex_tokens");
+
+  const totalToday = todayRows.reduce((sum, r) => sum + r.total, 0);
+  const totalYesterday = yesterdayRows.reduce((sum, r) => sum + r.total, 0);
+
+  const toolSources: ToolSource[] = [
+    {
+      key: "claude", label: "Claude", ticker: "CLDE", color: "var(--accent)",
+      today: claudeToday, yesterday: claudeYesterday, week: claudeWeek, total: claudeTotal,
+      fill: claudeToday / claudeMaxDaily, history: selectedRows.map((r) => r.claude_code_tokens),
+    },
+    {
+      key: "chatgpt", label: "ChatGPT", ticker: "CGPT", color: "var(--good)",
+      today: codexToday, yesterday: codexYesterday, week: codexWeek, total: codexTotal,
+      fill: codexToday / codexMaxDaily, history: selectedRows.map((r) => r.codex_tokens),
+    },
+  ];
+
   return (
-    <main className="page">
-      <section className="hero">
-        <p className="eyebrow">Token burn dashboard</p>
-        <h1>Lloyd's token usage.</h1>
-        <p className="lead">
-          Data from Claude and ChatGPT logs. Updated hourly.
-        </p>
-      </section>
+    <main className="page" data-theme={theme}>
+      <ThemeToggle theme={theme} onChange={setTheme} />
+
+      {theme === "ticker" ? (
+        <TickerHero
+          toolSources={toolSources}
+          totalToday={totalToday}
+          totalYesterday={totalYesterday}
+          total={total}
+          peakDay={peakDay}
+          lastAverage={lastAverage}
+          refreshedAt={meta.refreshed_at}
+        />
+      ) : (
+        <PrintRunHero issueNo={selectedRows.length} />
+      )}
 
       <section className="gaugeAndCalendarRow">
         <div className="gaugePanelContainer">
-          <BurnGauges selectedRows={selectedRows} windowKey={windowKey} />
+          {theme === "ticker" ? (
+            <TickerToolUse sources={toolSources} />
+          ) : (
+            <PrintRunToolUse sources={toolSources} />
+          )}
         </div>
         <Panel
           label="Daily burn"
-          title="Activity calendar"
-          note="Log color scale so quiet days and spikes can share one surface."
+          title={theme === "ticker" ? "Trading calendar" : "Activity calendar"}
+          note={
+            theme === "ticker"
+              ? "Tile color marks the day's leading tool."
+              : "Log color scale so quiet days and spikes can share one surface."
+          }
         >
           <div className="heatmapTimeframe">
             {selectedRows.length > 0 && (
@@ -226,12 +323,29 @@ export default function TokenBurnDashboard() {
       </section>
 
       <p className="footerNote">
-        Last refreshed: {new Date(meta.refreshed_at).toLocaleString("en-US", {
+        {theme === "ticker"
+          ? "● Live · refreshed hourly · "
+          : "Run on a laser printer that pretends to be a riso · "}
+        Last refreshed:{" "}
+        {new Date(meta.refreshed_at).toLocaleString("en-US", {
           month: "short", day: "numeric", year: "numeric",
           hour: "numeric", minute: "2-digit", timeZoneName: "short",
         })}
       </p>
     </main>
+  );
+}
+
+function ThemeToggle({ theme, onChange }: { theme: Theme; onChange: (t: Theme) => void }) {
+  return (
+    <div className="themeToggle" role="group" aria-label="Dashboard style">
+      <button type="button" aria-pressed={theme === "ticker"} onClick={() => onChange("ticker")}>
+        Ticker
+      </button>
+      <button type="button" aria-pressed={theme === "printrun"} onClick={() => onChange("printrun")}>
+        Print Run
+      </button>
+    </div>
   );
 }
 
@@ -270,53 +384,194 @@ function Panel({
   );
 }
 
-function BurnGauges({ selectedRows, windowKey }: { selectedRows: typeof rows; windowKey: WindowKey }) {
-  const today = new Date().toISOString().slice(0, 10);
-  const weekStart = new Date(new Date(today).getTime() - 6 * 86400000).toISOString().slice(0, 10);
+// --- Ticker theme: hero + tool-use quote board -----------------------------
 
-  const todayRows = selectedRows.filter((r) => r.date === today);
-  const weekRows = selectedRows.filter((r) => r.date >= weekStart);
+function TickerHero({
+  toolSources,
+  totalToday,
+  totalYesterday,
+  total,
+  peakDay,
+  lastAverage,
+  refreshedAt,
+}: {
+  toolSources: ToolSource[];
+  totalToday: number;
+  totalYesterday: number;
+  total: number;
+  peakDay: (typeof rows)[number] | undefined;
+  lastAverage: number;
+  refreshedAt: string;
+}) {
+  const totalDelta = pctDelta(totalToday, totalYesterday);
 
-  // Calculate max daily usage for each source to scale gauges
-  const claudeMaxDaily = Math.max(...selectedRows.map((r) => r.claude_code_tokens), 1);
-  const codexMaxDaily = Math.max(...selectedRows.map((r) => r.codex_tokens), 1);
-
-  const claudeToday = sumSource(todayRows, "claude_code_tokens");
-  const codexToday = sumSource(todayRows, "codex_tokens");
-  const claudeWeek = sumSource(weekRows, "claude_code_tokens");
-  const codexWeek = sumSource(weekRows, "codex_tokens");
-  const claudeTotal = sumSource(selectedRows, "claude_code_tokens");
-  const codexTotal = sumSource(selectedRows, "codex_tokens");
-
-  const claudeFill = claudeToday / claudeMaxDaily;
-  const codexFill = codexToday / codexMaxDaily;
-
-  const claudeHistory = selectedRows.map((r) => r.claude_code_tokens);
-  const codexHistory = selectedRows.map((r) => r.codex_tokens);
-
-  const sources = [
-    { label: "Claude", color: "var(--accent)", today: claudeToday, week: claudeWeek, total: claudeTotal, fill: claudeFill, history: claudeHistory },
-    { label: "ChatGPT", color: "var(--good)", today: codexToday, week: codexWeek, total: codexTotal, fill: codexFill, history: codexHistory },
-  ];
+  const tapeItems = (
+    <>
+      {toolSources.map((s) => {
+        const d = pctDelta(s.today, s.yesterday);
+        return (
+          <span className="tkTapeItem" key={s.ticker}>
+            {s.ticker} <b>{formatTokens(s.today)}</b>{" "}
+            <span className={d >= 0 ? "tkUp" : "tkDown"}>
+              {d >= 0 ? "▲" : "▼"} {Math.abs(d).toFixed(1)}%
+            </span>
+          </span>
+        );
+      })}
+      <span className="tkTapeItem">
+        TOTAL <b>{formatTokens(total)}</b>{" "}
+        <span className={totalDelta >= 0 ? "tkUp" : "tkDown"}>
+          {totalDelta >= 0 ? "▲" : "▼"} {Math.abs(totalDelta).toFixed(1)}%
+        </span>
+      </span>
+      <span className="tkTapeItem">
+        PEAK <b>{formatTokens(peakDay?.total || 0)}</b> · {peakDay?.date}
+      </span>
+      <span className="tkTapeItem">
+        7D AVG <b>{formatTokens(lastAverage)}</b>
+      </span>
+    </>
+  );
 
   return (
-    <article className="panel">
+    <>
+      <div className="tkTape" aria-hidden="true">
+        <div className="tkTapeTrack">
+          <span className="tkTapeGroup">{tapeItems}</span>
+          <span className="tkTapeGroup">{tapeItems}</span>
+        </div>
+      </div>
+      <section className="hero tkHero">
+        <div className="tkHeroRow">
+          <div>
+            <p className="eyebrow">Token Burn — Daily Sheet</p>
+            <h1>Lloyd&apos;s token usage.</h1>
+          </div>
+          <div className="tkAsOf">
+            <span className="tkLive">● LIVE</span> · refreshed hourly
+            <br />
+            last tick {formatRefreshed(refreshedAt)}
+          </div>
+        </div>
+        <p className="lead">
+          Data from Claude and ChatGPT logs, quoted like a burn rate — because that&apos;s exactly what it is.
+        </p>
+      </section>
+    </>
+  );
+}
+
+function TickerToolUse({ sources }: { sources: ToolSource[] }) {
+  return (
+    <article className="panel tkToolUse">
       <div className="panelHeader">
         <div>
           <p className="label">Tool use</p>
         </div>
-        <p>Today's token usage as a percentage of each tool's peak daily usage.</p>
+        <p>Quoted against each tool&apos;s all-time daily peak.</p>
       </div>
-      <div className="toolGaugesWrap">
-        {sources.map(({ label, color, today, week, total, fill, history }) => (
-          <div key={label} className="toolGaugeGroup">
-            <p className="toolGaugeLabel" style={{ color }}>{label}</p>
-            <MiniGauge value={today} fill={fill} color={color} />
-            <div className="toolGaugeSummary">
-              <div>This week: <strong>{formatTokens(week)}</strong></div>
-              <div>Total: <strong>{formatTokens(total)}</strong></div>
+      <div className="tkQuoteBoard">
+        {sources.map((s) => {
+          const d = pctDelta(s.today, s.yesterday);
+          return (
+            <div key={s.key} className="tkQuoteEntry">
+              <div className="tkQuoteRow">
+                <div className="tkSym">
+                  <span className="tkSymTicker" style={{ color: s.color }}>
+                    {s.ticker}
+                  </span>
+                  <span className="tkSymName">{s.label}</span>
+                </div>
+                <CandleSpark data={s.history} color={s.color} />
+                <div className="tkQuoteRight">
+                  <span className="tkLast">{Math.round(s.fill * 100)}%</span>
+                  <span className={`tkDelta ${d >= 0 ? "tkUp" : "tkDown"}`}>
+                    {d >= 0 ? "▲" : "▼"} vs yesterday
+                  </span>
+                </div>
+              </div>
+              <div className="tkQuoteSub">
+                <span>
+                  WEEK <b>{formatTokens(s.week)}</b>
+                </span>
+                <span>
+                  TOTAL <b>{formatTokens(s.total)}</b>
+                </span>
+              </div>
             </div>
-            <Sparkline data={history} color={color} />
+          );
+        })}
+      </div>
+    </article>
+  );
+}
+
+function CandleSpark({ data, color }: { data: number[]; color: string }) {
+  const recent = data.slice(-14);
+  if (recent.length < 2) return null;
+  const max = Math.max(...recent, 1);
+  return (
+    <div className="tkCandles">
+      {recent.map((v, i) => (
+        <span
+          key={i}
+          className="tkCandle"
+          style={{ height: `${(v / max) * 100}%`, background: color }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// --- Print Run theme: hero + tool-use ring gauges ---------------------------
+
+function PrintRunHero({ issueNo }: { issueNo: number }) {
+  return (
+    <section className="hero prHero">
+      <span className="prStamp">Issue {String(issueNo).padStart(3, "0")} · Personal Zine</span>
+      <div className="prH1Wrap">
+        <p className="prGhost" aria-hidden="true">
+          Lloyd&apos;s
+          <br />
+          token usage.
+        </p>
+        <h1 className="prH1">
+          Lloyd&apos;s
+          <br />
+          token usage.
+        </h1>
+      </div>
+      <p className="lead">
+        Data from Claude and ChatGPT logs. Printed hourly, one run at a time — this is issue{" "}
+        {String(issueNo).padStart(3, "0")} off the press.
+      </p>
+    </section>
+  );
+}
+
+function PrintRunToolUse({ sources }: { sources: ToolSource[] }) {
+  return (
+    <article className="panel prToolUse">
+      <span className="prTapeCorner" aria-hidden="true" />
+      <div className="panelHeader">
+        <div>
+          <p className="label">Tool use</p>
+        </div>
+        <p>Today&apos;s token usage as a percentage of each tool&apos;s peak daily usage.</p>
+      </div>
+      <div className="prTools">
+        {sources.map((s) => (
+          <div key={s.key} className="prToolBlock">
+            <RingGauge fill={s.fill} color={s.color} />
+            <p className="prToolName" style={{ color: s.color }}>
+              {s.label}
+            </p>
+            <p className="prToolSub">
+              of peak day
+              <br />
+              week <b>{formatTokens(s.week)}</b> · total <b>{formatTokens(s.total)}</b>
+            </p>
+            <Sparkline data={s.history} color={s.color} />
           </div>
         ))}
       </div>
@@ -324,44 +579,22 @@ function BurnGauges({ selectedRows, windowKey }: { selectedRows: typeof rows; wi
   );
 }
 
-function MiniGauge({ value, fill, color }: { value: number; fill: number; color: string }) {
-  const cx = 80, cy = 76, r = 58, sw = 11;
-  const circ = Math.PI * r;
-  // Semicircle from left (180°) clockwise through top to right (0°)
-  const arcD = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
-
-  const toRad = (d: number) => (d * Math.PI) / 180;
-  const needleDeg = 180 - fill * 180; // 180=left (empty), 0=right (full)
-  const needleLen = r - sw / 2 - 3;
-  const nx = +(cx + needleLen * Math.cos(toRad(needleDeg))).toFixed(2);
-  const ny = +(cy - needleLen * Math.sin(toRad(needleDeg))).toFixed(2);
-
-  // Tick mark spanning the full track width at the 50% (top) position
-  const innerR = r - sw / 2, outerR = r + sw / 2;
-  const tick = {
-    x1: cx.toFixed(2), y1: +(cy - innerR).toFixed(2),
-    x2: cx.toFixed(2), y2: +(cy - outerR).toFixed(2),
-  };
-
+function RingGauge({ fill, color }: { fill: number; color: string }) {
+  const r = 46;
+  const circ = 2 * Math.PI * r;
+  const clamped = Math.min(Math.max(fill, 0), 1);
+  const offset = circ * (1 - clamped);
   return (
-    <div className="miniGauge">
-      <svg viewBox="0 0 160 90" aria-hidden="true">
-        {/* track */}
-        <path d={arcD} fill="none" stroke="rgba(240,236,228,0.11)" strokeWidth={sw} strokeLinecap="round" />
-        {/* fill */}
-        <path
-          d={arcD} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" opacity={0.88}
-          strokeDasharray={`${circ} ${circ}`}
-          strokeDashoffset={circ - fill * circ}
+    <div className="prRingWrap">
+      <svg viewBox="0 0 108 108" width="108" height="108" aria-hidden="true">
+        <circle cx="54" cy="54" r={r} fill="none" stroke="var(--line)" strokeWidth="2.5" opacity="0.3" />
+        <circle
+          cx="54" cy="54" r={r} fill="none" stroke={color} strokeWidth="7"
+          strokeDasharray={`${circ} ${circ}`} strokeDashoffset={offset} strokeLinecap="butt"
+          transform="rotate(-90 54 54)"
         />
-        {/* mid tick */}
-        <line {...tick} stroke="rgba(240,236,228,0.35)" strokeWidth="1.5" />
-        {/* needle */}
-        <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="var(--ink)" strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
-        {/* hub */}
-        <circle cx={cx} cy={cy} r={4.5} fill="var(--bg)" stroke="var(--ink)" strokeWidth="1.5" opacity="0.9" />
       </svg>
-      <div className="miniGaugeValue">{formatTokens(value)}</div>
+      <span className="prRingPct">{Math.round(clamped * 100)}%</span>
     </div>
   );
 }
@@ -405,25 +638,6 @@ function buildDriverRows(selectedRows: typeof rows, total: number) {
     .slice(0, 6);
 }
 
-function buildTrendPath(values: number[]) {
-  if (values.length === 0) return "";
-
-  const width = 660;
-  const height = 190;
-  const left = 30;
-  const top = 35;
-  const max = Math.max(...values, 1);
-
-  const points = values.map((value, index) => {
-    const x = left + (values.length === 1 ? width / 2 : (index / (values.length - 1)) * width);
-    const normalized = Math.log10(value + 1) / Math.log10(max + 1);
-    const y = top + height - normalized * height;
-    return `${x.toFixed(1)} ${y.toFixed(1)}`;
-  });
-
-  return `M${points.join(" L")}`;
-}
-
 interface HeatmapRow {
   date: string;
   total: number;
@@ -451,7 +665,6 @@ function GitHubHeatmap({
   // Build a map of date → value
   const dateValues = new Map(rows.map((r) => [r.date, r[valueKey] as number]));
 
-  const startDate = new Date(rows[0].date);
   const endDate = new Date(rows[rows.length - 1].date);
 
   // Adjust start date to the Monday of that week
