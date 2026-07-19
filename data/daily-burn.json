@@ -709,13 +709,13 @@
   },
   {
     "date": "2026-07-18",
-    "codex_tokens": 0,
+    "codex_tokens": 3658582,
     "claude_code_tokens": 52312006,
     "claude_code_calls": 131,
     "claude_chat_est": 0,
     "chatgpt_est": 0,
     "gemini_est": 0,
-    "total": 52312006,
+    "total": 55970588,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
