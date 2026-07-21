@@ -733,13 +733,13 @@
   },
   {
     "date": "2026-07-20",
-    "codex_tokens": 2125320,
+    "codex_tokens": 3008479,
     "claude_code_tokens": 183942253,
     "claude_code_calls": 250,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 186120573,
+    "total": 187003732,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
