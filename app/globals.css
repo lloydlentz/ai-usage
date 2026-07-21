@@ -519,7 +519,7 @@ h1 {
   grid-column: span 8;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 800px) {
   .heatmapContainer {
     grid-template-columns: 1fr;
     gap: 24px;
