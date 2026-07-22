@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import rawRows from "../data/daily-burn.json";
 import meta from "../data/meta.json";
@@ -156,6 +156,16 @@ export default function TokenBurnDashboard() {
             <PrintRunToolUse sources={toolSources} />
           )}
         </div>
+        <Panel
+          label="Daily burn"
+          title={theme === "ticker" ? "Burn history" : "Usage timeline"}
+          note="Claude and ChatGPT stacked by day — the combined height is the total."
+        >
+          <UsageTimeline rows={selectedRows} />
+        </Panel>
+      </section>
+
+      <section className="calendarRow">
         <Panel
           label="Daily burn"
           title={theme === "ticker" ? "Trading calendar" : "Activity calendar"}
@@ -612,6 +622,151 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
       <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" opacity="0.6" />
       </svg>
+    </div>
+  );
+}
+
+interface TimelineRow {
+  date: string;
+  claude_code_tokens: number;
+  codex_tokens: number;
+}
+
+function formatTimelineDate(dateStr: string) {
+  return new Date(dateStr + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+const TIMELINE_TOOLTIP_WIDTH = 176;
+
+function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+
+  const n = rows.length;
+  if (n === 0) return null;
+
+  const W = 760, H = 240;
+  const padL = 46, padR = 12, padT = 12, padB = 26;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const claude = rows.map((r) => r.claude_code_tokens);
+  const chatgpt = rows.map((r) => r.codex_tokens);
+  const totals = claude.map((v, i) => v + chatgpt[i]);
+  const yMax = Math.max(...totals, 1) * 1.08;
+
+  const step = n > 1 ? innerW / (n - 1) : 0;
+  const xAt = (i: number) => (n === 1 ? padL + innerW / 2 : padL + i * step);
+  const yAt = (v: number) => padT + innerH - (v / yMax) * innerH;
+  const baseline = padT + innerH;
+
+  const claudeTop = claude.map((v) => yAt(v));
+  const stackTop = totals.map((v) => yAt(v));
+
+  const topLine = (ys: number[]) => ys.map((y, i) => `${i === 0 ? "M" : "L"} ${xAt(i).toFixed(1)} ${y.toFixed(1)}`).join(" ");
+
+  const claudePath = `${topLine(claudeTop)} L ${xAt(n - 1).toFixed(1)} ${baseline} L ${xAt(0).toFixed(1)} ${baseline} Z`;
+  const chatgptPath =
+    `${topLine(stackTop)} L ${xAt(n - 1).toFixed(1)} ${claudeTop[n - 1].toFixed(1)} ` +
+    claudeTop
+      .map((y, i) => n - 1 - i)
+      .map((i) => `L ${xAt(i).toFixed(1)} ${claudeTop[i].toFixed(1)}`)
+      .join(" ") +
+    " Z";
+
+  const yTicks = [0, yMax / 2, yMax];
+  const xTickIdx = Array.from(
+    new Set([0, Math.round((n - 1) * 0.25), Math.round((n - 1) * 0.5), Math.round((n - 1) * 0.75), n - 1]),
+  );
+
+  const updateHover = (clientX: number) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const localX = ((clientX - rect.left) / rect.width) * W;
+    const idx = step > 0 ? Math.round((localX - padL) / step) : 0;
+    setHoverIdx(Math.min(n - 1, Math.max(0, idx)));
+  };
+
+  const hovered = hoverIdx !== null ? rows[hoverIdx] : null;
+
+  // Position the tooltip in real pixels (not a % of the container) so its
+  // fixed width never overflows a narrow container near either edge.
+  let tooltipLeftPx = 0;
+  if (hoverIdx !== null && containerRef.current && svgRef.current) {
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const svgRect = svgRef.current.getBoundingClientRect();
+    const scale = svgRect.width / W;
+    const pointPx = svgRect.left - containerRect.left + xAt(hoverIdx) * scale;
+    tooltipLeftPx = Math.min(
+      containerRect.width - TIMELINE_TOOLTIP_WIDTH - 4,
+      Math.max(4, pointPx - TIMELINE_TOOLTIP_WIDTH / 2),
+    );
+  }
+
+  return (
+    <div className="timeline" ref={containerRef}>
+      <svg
+        ref={svgRef}
+        className="timelineSvg"
+        viewBox={`0 0 ${W} ${H}`}
+        onMouseMove={(e) => updateHover(e.clientX)}
+        onMouseLeave={() => setHoverIdx(null)}
+        onTouchMove={(e) => e.touches[0] && updateHover(e.touches[0].clientX)}
+        onTouchEnd={() => setHoverIdx(null)}
+      >
+        {yTicks.map((v, i) => (
+          <g key={i}>
+            <line x1={padL} y1={yAt(v)} x2={W - padR} y2={yAt(v)} className="timelineGrid" />
+            <text x={padL - 8} y={yAt(v)} className="timelineAxisLabel" textAnchor="end" dominantBaseline="middle">
+              {v === 0 ? "0" : formatTokens(v)}
+            </text>
+          </g>
+        ))}
+
+        <path d={claudePath} className="timelineAreaClaude" />
+        <path d={chatgptPath} className="timelineAreaChatgpt" />
+
+        {xTickIdx.map((i) => (
+          <text key={i} x={xAt(i)} y={H - 6} className="timelineAxisLabel" textAnchor="middle">
+            {formatTimelineDate(rows[i].date)}
+          </text>
+        ))}
+
+        {hoverIdx !== null && (
+          <g>
+            <line
+              x1={xAt(hoverIdx)} y1={padT} x2={xAt(hoverIdx)} y2={baseline}
+              className="timelineCrosshair"
+            />
+            <circle cx={xAt(hoverIdx)} cy={claudeTop[hoverIdx]} r="3.5" className="timelineDotClaude" />
+            <circle cx={xAt(hoverIdx)} cy={stackTop[hoverIdx]} r="3.5" className="timelineDotChatgpt" />
+          </g>
+        )}
+      </svg>
+
+      {hovered && (
+        <div className="timelineTooltip" style={{ left: `${tooltipLeftPx}px` }}>
+          <div className="timelineTooltipDate">{formatTimelineDate(hovered.date)}</div>
+          <div className="timelineTooltipRow">
+            <span className="timelineSwatch timelineSwatchClaude" />
+            Claude <b>{formatTokens(hovered.claude_code_tokens)}</b>
+          </div>
+          <div className="timelineTooltipRow">
+            <span className="timelineSwatch timelineSwatchChatgpt" />
+            ChatGPT <b>{formatTokens(hovered.codex_tokens)}</b>
+          </div>
+          <div className="timelineTooltipRow timelineTooltipTotal">
+            Total <b>{formatTokens(hovered.claude_code_tokens + hovered.codex_tokens)}</b>
+          </div>
+        </div>
+      )}
+
+      <div className="timelineLegend">
+        <span><span className="timelineSwatch timelineSwatchClaude" /> Claude</span>
+        <span><span className="timelineSwatch timelineSwatchChatgpt" /> ChatGPT</span>
+      </div>
     </div>
   );
 }

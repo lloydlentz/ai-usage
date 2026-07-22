@@ -514,6 +514,125 @@ h1 {
   border: var(--cell-border);
 }
 
+/* --- Usage timeline chart --- */
+
+.timeline {
+  position: relative;
+  padding: 16px 16px 12px;
+}
+
+.timelineSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.timelineGrid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.timelineAxisLabel {
+  fill: var(--muted);
+  font-size: 10px;
+  font-family: var(--font-body);
+}
+
+.timelineAreaClaude {
+  fill: var(--accent);
+  opacity: 0.55;
+}
+
+.timelineAreaChatgpt {
+  fill: var(--good);
+  opacity: 0.55;
+}
+
+.timelineCrosshair {
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.timelineDotClaude,
+.timelineDotChatgpt {
+  stroke: var(--panel);
+  stroke-width: 1.5;
+}
+
+.timelineDotClaude { fill: var(--accent); }
+.timelineDotChatgpt { fill: var(--good); }
+
+.timelineTooltip {
+  position: absolute;
+  top: 8px;
+  width: 176px;
+  background: var(--bg);
+  border: var(--border-w) solid var(--line);
+  padding: 8px 10px;
+  font-size: 11.5px;
+  color: var(--soft);
+  pointer-events: none;
+  font-family: var(--font-body);
+}
+
+.timelineTooltipDate {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.timelineTooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.timelineTooltipRow b {
+  color: var(--ink);
+  margin-left: 2px;
+}
+
+.timelineTooltipTotal {
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.timelineSwatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+}
+
+.timelineSwatchClaude { background: var(--accent); }
+.timelineSwatchChatgpt { background: var(--good); }
+
+.timelineLegend {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.timelineLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- Activity calendar row (below Tool Use, full width) --- */
+
+.calendarRow {
+  margin-top: 24px;
+}
+
 /* --- Tool use: shared row/column scaffolding --- */
 
 .gaugeAndCalendarRow {
