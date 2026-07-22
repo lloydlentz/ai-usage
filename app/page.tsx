@@ -531,15 +531,9 @@ function PrintRunHero({ issueNo }: { issueNo: number }) {
       <span className="prStamp">Issue {String(issueNo).padStart(3, "0")} · Personal Zine</span>
       <div className="prH1Wrap">
         <p className="prGhost" aria-hidden="true">
-          Lloyd&apos;s
-          <br />
-          token usage.
+          Lloyd&apos;s token usage.
         </p>
-        <h1 className="prH1">
-          Lloyd&apos;s
-          <br />
-          token usage.
-        </h1>
+        <h1 className="prH1">Lloyd&apos;s token usage.</h1>
       </div>
       <p className="lead">
         Data from Claude and ChatGPT logs. Printed hourly, one run at a time — this is issue{" "}
