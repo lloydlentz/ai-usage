@@ -766,5 +766,17 @@
     "total": 110746871,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
+  },
+  {
+    "date": "2026-07-23",
+    "codex_tokens": 572463,
+    "claude_code_tokens": 0,
+    "claude_code_calls": 0,
+    "claude_chat_est": 30000,
+    "chatgpt_est": 0,
+    "gemini_est": 50000,
+    "total": 652463,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day"
   }
 ]
