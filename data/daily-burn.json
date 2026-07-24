@@ -770,12 +770,12 @@
   {
     "date": "2026-07-23",
     "codex_tokens": 7593001,
-    "claude_code_tokens": 13541406,
-    "claude_code_calls": 51,
+    "claude_code_tokens": 14331912,
+    "claude_code_calls": 56,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 21214407,
+    "total": 22004913,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
