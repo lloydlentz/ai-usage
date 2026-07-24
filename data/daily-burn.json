@@ -782,12 +782,12 @@
   {
     "date": "2026-07-24",
     "codex_tokens": 149286,
-    "claude_code_tokens": 22919189,
-    "claude_code_calls": 109,
+    "claude_code_tokens": 27345570,
+    "claude_code_calls": 125,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 23121475,
+    "total": 27547856,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
