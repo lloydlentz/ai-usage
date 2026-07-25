@@ -49,7 +49,7 @@ function formatRefreshed(iso: string) {
 
 export default function TokenBurnDashboard() {
   const [windowKey] = useState<WindowKey>("180");
-  const [theme, setTheme] = useState<Theme>("ticker");
+  const [theme, setTheme] = useState<Theme>("printrun");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -134,28 +134,33 @@ export default function TokenBurnDashboard() {
     <main className="page" data-theme={theme}>
       <ThemeToggle theme={theme} onChange={setTheme} />
 
-      {theme === "ticker" ? (
-        <TickerHero
+      {theme === "ticker" && (
+        <TickerTape
           toolSources={toolSources}
           totalToday={totalToday}
           totalYesterday={totalYesterday}
           total={total}
           peakDay={peakDay}
           lastAverage={lastAverage}
-          refreshedAt={meta.refreshed_at}
         />
-      ) : (
-        <PrintRunHero issueNo={selectedRows.length} />
       )}
 
-      <section className="gaugeAndCalendarRow">
-        <div className="gaugePanelContainer">
+      <section className="heroRow">
+        <div className="heroCol">
           {theme === "ticker" ? (
-            <TickerToolUse sources={toolSources} />
+            <TickerHeroContent refreshedAt={meta.refreshed_at} />
           ) : (
-            <PrintRunToolUse sources={toolSources} />
+            <PrintRunHero issueNo={selectedRows.length} refreshedAt={meta.refreshed_at} />
           )}
         </div>
+        {theme === "ticker" ? (
+          <TickerToolUse sources={toolSources} />
+        ) : (
+          <PrintRunToolUse sources={toolSources} />
+        )}
+      </section>
+
+      <section className="timelineRow">
         <Panel
           label="Daily burn"
           title={theme === "ticker" ? "Burn history" : "Usage timeline"}
@@ -396,14 +401,13 @@ function Panel({
 
 // --- Ticker theme: hero + tool-use quote board -----------------------------
 
-function TickerHero({
+function TickerTape({
   toolSources,
   totalToday,
   totalYesterday,
   total,
   peakDay,
   lastAverage,
-  refreshedAt,
 }: {
   toolSources: ToolSource[];
   totalToday: number;
@@ -411,7 +415,6 @@ function TickerHero({
   total: number;
   peakDay: (typeof rows)[number] | undefined;
   lastAverage: number;
-  refreshedAt: string;
 }) {
   const totalDelta = pctDelta(totalToday, totalYesterday);
 
@@ -444,30 +447,33 @@ function TickerHero({
   );
 
   return (
-    <>
-      <div className="tkTape" aria-hidden="true">
-        <div className="tkTapeTrack">
-          <span className="tkTapeGroup">{tapeItems}</span>
-          <span className="tkTapeGroup">{tapeItems}</span>
+    <div className="tkTape" aria-hidden="true">
+      <div className="tkTapeTrack">
+        <span className="tkTapeGroup">{tapeItems}</span>
+        <span className="tkTapeGroup">{tapeItems}</span>
+      </div>
+    </div>
+  );
+}
+
+function TickerHeroContent({ refreshedAt }: { refreshedAt: string }) {
+  return (
+    <section className="hero tkHero">
+      <div className="tkHeroRow">
+        <div>
+          <p className="eyebrow">Token Burn — Daily Sheet</p>
+          <h1>Lloyd&apos;s token usage.</h1>
+        </div>
+        <div className="tkAsOf">
+          <span className="tkLive">● LIVE</span> · refreshed hourly
+          <br />
+          last tick {formatRefreshed(refreshedAt)}
         </div>
       </div>
-      <section className="hero tkHero">
-        <div className="tkHeroRow">
-          <div>
-            <p className="eyebrow">Token Burn — Daily Sheet</p>
-            <h1>Lloyd&apos;s token usage.</h1>
-          </div>
-          <div className="tkAsOf">
-            <span className="tkLive">● LIVE</span> · refreshed hourly
-            <br />
-            last tick {formatRefreshed(refreshedAt)}
-          </div>
-        </div>
-        <p className="lead">
-          Data from Claude and ChatGPT logs, quoted like a burn rate — because that&apos;s exactly what it is.
-        </p>
-      </section>
-    </>
+      <p className="lead">
+        Data from Claude and ChatGPT logs, quoted like a burn rate — because that&apos;s exactly what it is.
+      </p>
+    </section>
   );
 }
 
@@ -535,10 +541,13 @@ function CandleSpark({ data, color }: { data: number[]; color: string }) {
 
 // --- Print Run theme: hero + tool-use ring gauges ---------------------------
 
-function PrintRunHero({ issueNo }: { issueNo: number }) {
+function PrintRunHero({ issueNo, refreshedAt }: { issueNo: number; refreshedAt: string }) {
   return (
     <section className="hero prHero">
-      <span className="prStamp">Issue {String(issueNo).padStart(3, "0")} · Personal Zine</span>
+      <div className="prStampRow">
+        <span className="prStamp">Issue {String(issueNo).padStart(3, "0")} · Personal Zine</span>
+        <span className="prMeta">Updated {formatRefreshed(refreshedAt)}</span>
+      </div>
       <div className="prH1Wrap">
         <p className="prGhost" aria-hidden="true">
           Lloyd&apos;s token usage.
@@ -646,8 +655,8 @@ function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
   const n = rows.length;
   if (n === 0) return null;
 
-  const W = 760, H = 240;
-  const padL = 46, padR = 12, padT = 12, padB = 26;
+  const W = 1400, H = 300;
+  const padL = 52, padR = 16, padT = 12, padB = 28;
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 

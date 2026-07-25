@@ -234,6 +234,14 @@ h1 {
   position: relative;
 }
 
+.prStampRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
 .prStamp {
   display: inline-block;
   font-family: var(--font-body);
@@ -245,7 +253,13 @@ h1 {
   color: var(--bg);
   padding: 4px 10px;
   transform: rotate(-1deg);
-  margin-bottom: 18px;
+}
+
+.prMeta {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 .prH1Wrap {
@@ -627,27 +641,28 @@ h1 {
   gap: 6px;
 }
 
-/* --- Activity calendar row (below Tool Use, full width) --- */
+/* --- Timeline / calendar rows (both full width, stacked below hero) --- */
 
+.timelineRow,
 .calendarRow {
   margin-top: 24px;
 }
 
-/* --- Tool use: shared row/column scaffolding --- */
+/* --- Hero row: title/subhead on the left, Tool Use on the right --- */
 
-.gaugeAndCalendarRow {
+.heroRow {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 24px;
-  margin-top: 18px;
+  align-items: stretch;
 }
 
-.gaugePanelContainer {
-  grid-column: span 4;
-}
-
-.gaugeAndCalendarRow > .panel {
+.heroCol {
   grid-column: span 8;
+}
+
+.heroRow > .panel {
+  grid-column: span 4;
 }
 
 @media (max-width: 800px) {
@@ -657,15 +672,15 @@ h1 {
     grid-column: span 1;
   }
 
-  .gaugeAndCalendarRow {
+  .heroRow {
     grid-template-columns: 1fr;
   }
 
-  .gaugePanelContainer {
+  .heroCol {
     grid-column: span 1;
   }
 
-  .gaugeAndCalendarRow > .panel {
+  .heroRow > .panel {
     grid-column: span 1;
   }
 }
