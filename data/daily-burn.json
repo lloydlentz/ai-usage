@@ -818,12 +818,12 @@
   {
     "date": "2026-07-27",
     "codex_tokens": 1635980,
-    "claude_code_tokens": 85215679,
-    "claude_code_calls": 286,
+    "claude_code_tokens": 94768115,
+    "claude_code_calls": 319,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 86904659,
+    "total": 96457095,
     "driver": "shipping",
     "evidence": "web portal work (exact logs)"
   }
