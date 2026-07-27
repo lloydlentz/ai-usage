@@ -817,13 +817,13 @@
   },
   {
     "date": "2026-07-27",
-    "codex_tokens": 0,
-    "claude_code_tokens": 48768415,
-    "claude_code_calls": 210,
+    "codex_tokens": 1635980,
+    "claude_code_tokens": 58810094,
+    "claude_code_calls": 227,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 48821415,
+    "total": 60499074,
     "driver": "shipping",
     "evidence": "web portal work (exact logs)"
   }
