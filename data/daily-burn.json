@@ -818,12 +818,12 @@
   {
     "date": "2026-07-27",
     "codex_tokens": 0,
-    "claude_code_tokens": 43188042,
-    "claude_code_calls": 196,
+    "claude_code_tokens": 48768415,
+    "claude_code_calls": 210,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 43241042,
+    "total": 48821415,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day"
   }
