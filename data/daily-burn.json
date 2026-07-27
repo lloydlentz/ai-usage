@@ -404,8 +404,8 @@
     "chatgpt_est": 0,
     "gemini_est": 50000,
     "total": 7655356,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "research",
+    "evidence": "evaluating Codex (exact logs)"
   },
   {
     "date": "2026-06-19",
@@ -512,8 +512,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 0,
     "total": 178203,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web portal work (exact logs)"
   },
   {
     "date": "2026-07-02",
@@ -632,8 +632,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 613563,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "admin",
+    "evidence": "ad hoc scripting (exact logs)"
   },
   {
     "date": "2026-07-12",
@@ -728,8 +728,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 4593436,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "admissions AI project work (exact logs)"
   },
   {
     "date": "2026-07-20",
@@ -818,12 +818,12 @@
   {
     "date": "2026-07-27",
     "codex_tokens": 1635980,
-    "claude_code_tokens": 58810094,
-    "claude_code_calls": 227,
+    "claude_code_tokens": 85215679,
+    "claude_code_calls": 286,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 60499074,
+    "total": 86904659,
     "driver": "shipping",
     "evidence": "web portal work (exact logs)"
   }

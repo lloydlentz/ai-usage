@@ -3,8 +3,11 @@
 
 Outputs:
   data/exact-daily.json   - scrubbed daily totals (safe to feed the dashboard)
-  data/private/day-detail.json - per-project breakdown for driver labeling.
-                                 Stays local; never ship or deploy this file.
+  data/private/day-detail.json - per-project breakdown for driver labeling,
+                                 combining both Claude Code (keyed by project
+                                 directory) and Codex (keyed by session cwd)
+                                 usage. Stays local; never ship or deploy this
+                                 file.
 
 Day bucketing uses America/Chicago.
 """
@@ -79,8 +82,15 @@ def extract_codex():
     each event, so a multi-day session correctly spreads its token burn
     across the days work actually happened rather than dumping the whole
     accumulated total onto the day the session finally closed.
+
+    Each rollout's first line is a session_meta event carrying the
+    working directory (payload.cwd) the session was started in. We key
+    that the same way Claude Code project directories are keyed (slashes
+    replaced with dashes) so a project worked on with both tools rolls
+    up under one key in day_projects for driver labeling.
     """
     daily_tokens = defaultdict(int)
+    day_projects = defaultdict(lambda: defaultdict(int))
     session_dirs = [HOME / ".codex" / "sessions", HOME / ".codex" / "archived_sessions"]
 
     for root in session_dirs:
@@ -88,6 +98,7 @@ def extract_codex():
             continue
         for path in root.rglob("*.jsonl"):
             prev_total = 0
+            project = None
             with open(path) as fh:
                 for line in fh:
                     try:
@@ -95,6 +106,13 @@ def extract_codex():
                     except json.JSONDecodeError:
                         continue
                     payload = entry.get("payload") or {}
+
+                    if entry.get("type") == "session_meta" and project is None:
+                        cwd = payload.get("cwd")
+                        if cwd:
+                            project = cwd.replace("/", "-")
+                        continue
+
                     if payload.get("type") != "token_count":
                         continue
                     info = payload.get("info") or {}
@@ -104,18 +122,28 @@ def extract_codex():
                         continue
                     delta = total - prev_total
                     if delta > 0:
-                        daily_tokens[local_date(ts)] += delta
+                        day = local_date(ts)
+                        daily_tokens[day] += delta
+                        if project:
+                            day_projects[day][project] += delta
                     elif delta < 0:
                         # Session counter reset (new context window); treat as fresh start.
-                        daily_tokens[local_date(ts)] += total
+                        day = local_date(ts)
+                        daily_tokens[day] += total
+                        if project:
+                            day_projects[day][project] += total
                     prev_total = total
 
-    return daily_tokens
+    return daily_tokens, day_projects
 
 
 def main():
     cc_tokens, cc_calls, day_projects = extract_claude_code()
-    codex_tokens = extract_codex()
+    codex_tokens, codex_day_projects = extract_codex()
+
+    for day, projects in codex_day_projects.items():
+        for project, tokens in projects.items():
+            day_projects[day][project] += tokens
 
     all_days = sorted(set(cc_tokens) | set(codex_tokens))
     rows = [
