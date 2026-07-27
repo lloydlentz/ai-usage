@@ -74,6 +74,21 @@ DRIVERS = {
     "2026-07-08": ("shipping", "web app feature work (exact logs)"),
     "2026-07-09": ("shipping", "web app feature work (exact logs)"),
     "2026-07-10": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-12": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-13": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-14": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-15": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-16": ("research", "dashboard redesign work (exact logs)"),
+    "2026-07-17": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-18": ("research", "dashboard redesign work (exact logs)"),
+    "2026-07-20": ("shipping", "heavy web app build day (exact logs)"),
+    "2026-07-21": ("research", "dashboard redesign work (exact logs)"),
+    "2026-07-22": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-23": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-24": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-25": ("research", "dashboard redesign work (exact logs)"),
+    "2026-07-26": ("shipping", "web app feature work (exact logs)"),
+    "2026-07-27": ("shipping", "web portal work (exact logs)"),
 }
 
 CHAT_ONLY = ("research", "chat-only day; all values estimated")

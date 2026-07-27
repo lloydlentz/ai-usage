@@ -644,8 +644,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 37637455,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-13",
@@ -656,8 +656,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 8000,
     "total": 97491923,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-14",
@@ -668,8 +668,8 @@
     "chatgpt_est": 0,
     "gemini_est": 50000,
     "total": 50182544,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-15",
@@ -680,8 +680,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 0,
     "total": 83313071,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-16",
@@ -692,8 +692,8 @@
     "chatgpt_est": 0,
     "gemini_est": 50000,
     "total": 41067443,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "research",
+    "evidence": "dashboard redesign work (exact logs)"
   },
   {
     "date": "2026-07-17",
@@ -704,8 +704,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 8000,
     "total": 105983186,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-18",
@@ -716,8 +716,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 59206256,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "research",
+    "evidence": "dashboard redesign work (exact logs)"
   },
   {
     "date": "2026-07-19",
@@ -740,8 +740,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 8000,
     "total": 187003732,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "heavy web app build day (exact logs)"
   },
   {
     "date": "2026-07-21",
@@ -752,8 +752,8 @@
     "chatgpt_est": 0,
     "gemini_est": 50000,
     "total": 11278532,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "research",
+    "evidence": "dashboard redesign work (exact logs)"
   },
   {
     "date": "2026-07-22",
@@ -764,8 +764,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 0,
     "total": 110746871,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-23",
@@ -776,8 +776,8 @@
     "chatgpt_est": 0,
     "gemini_est": 50000,
     "total": 22004913,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-24",
@@ -788,8 +788,8 @@
     "chatgpt_est": 15000,
     "gemini_est": 8000,
     "total": 45567878,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-25",
@@ -800,8 +800,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 38282699,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "research",
+    "evidence": "dashboard redesign work (exact logs)"
   },
   {
     "date": "2026-07-26",
@@ -812,8 +812,8 @@
     "chatgpt_est": 0,
     "gemini_est": 0,
     "total": 1155059,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web app feature work (exact logs)"
   },
   {
     "date": "2026-07-27",
@@ -824,7 +824,7 @@
     "chatgpt_est": 15000,
     "gemini_est": 8000,
     "total": 48821415,
-    "driver": "unlabeled",
-    "evidence": "exact logs; add a driver label for this day"
+    "driver": "shipping",
+    "evidence": "web portal work (exact logs)"
   }
 ]
