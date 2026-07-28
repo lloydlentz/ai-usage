@@ -826,5 +826,17 @@
     "total": 181393627,
     "driver": "shipping",
     "evidence": "web portal work (exact logs)"
+  },
+  {
+    "date": "2026-07-28",
+    "codex_tokens": 0,
+    "claude_code_tokens": 9318493,
+    "claude_code_calls": 75,
+    "claude_chat_est": 30000,
+    "chatgpt_est": 0,
+    "gemini_est": 50000,
+    "total": 9398493,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day"
   }
 ]
