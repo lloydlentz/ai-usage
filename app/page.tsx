@@ -732,6 +732,13 @@ type ShiftSegment = {
 };
 
 const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
+const typeInkVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")}-ink)`;
+
+/* A band only names itself when it is wide enough to hold the text without
+   clipping. In practice this labels exactly the areas big enough to be
+   ambiguous — cache read on both bars, cache write 1h on the cost bar — and
+   leaves the slivers to the legend. */
+const SEG_LABEL_MIN_PCT = 14;
 
 /**
  * Geometry-only percentages. A segment worth 0.17% of the volume would render
@@ -790,9 +797,21 @@ function ShapeShift({
             <span
               key={seg.type}
               className="shiftSeg"
-              style={{ width: `${tokenW[i]}%`, background: typeVar(seg.type), opacity: dim(seg.type) }}
+              style={{
+                width: `${tokenW[i]}%`,
+                background: typeVar(seg.type),
+                opacity: dim(seg.type),
+                ["--seg-ink" as string]: typeInkVar(seg.type),
+              }}
               title={`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)})`}
-            />
+            >
+              {tokenW[i] >= SEG_LABEL_MIN_PCT && (
+                <span className="shiftSegLabel">
+                  {seg.label}
+                  <b>{formatPct(seg.tokenPct)}</b>
+                </span>
+              )}
+            </span>
           ) : null,
         )}
       </div>
@@ -832,9 +851,21 @@ function ShapeShift({
             <span
               key={seg.type}
               className="shiftSeg"
-              style={{ width: `${costW[i]}%`, background: typeVar(seg.type), opacity: dim(seg.type) }}
+              style={{
+                width: `${costW[i]}%`,
+                background: typeVar(seg.type),
+                opacity: dim(seg.type),
+                ["--seg-ink" as string]: typeInkVar(seg.type),
+              }}
               title={`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)})`}
-            />
+            >
+              {costW[i] >= SEG_LABEL_MIN_PCT && (
+                <span className="shiftSegLabel">
+                  {seg.label}
+                  <b>{formatPct(seg.costPct)}</b>
+                </span>
+              )}
+            </span>
           ) : null,
         )}
       </div>

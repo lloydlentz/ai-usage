@@ -19,15 +19,27 @@
   --cell-border: none;
 
   /* Token-type ramp. Deliberately not the tool colours (orange/purple), which
-     already mean "Claude" and "Codex" elsewhere on the page. The ramp encodes
-     the thesis: the huge, cheap type is the quietest colour on the page and the
-     tiny, expensive ones are the loudest, so the volume bar reads as a dull
-     slab and the cost bar lights up. */
+     already mean "Claude" and "Codex" elsewhere on the page. The ramp still
+     encodes the thesis — the huge, cheap type is the calmest colour and the
+     tiny, expensive ones are the loudest — but calm has a floor. Cache read
+     was previously so quiet (1.8:1 on this panel) that the widest band on the
+     chart read as empty track rather than data, and readers asked what the
+     grey area was. Every swatch now clears ~3.5:1 against the panel and every
+     pair is at least 20 dE apart. The two cache-write types are deliberately
+     one hue at two strengths, since they are the same thing at two durations. */
   --t-input: #e8a33d;
-  --t-cache-write-5m: #6d8a99;
-  --t-cache-write-1h: #4fd1c5;
-  --t-cache-read: #333e47;
+  --t-cache-write-5m: #2f9c93;
+  --t-cache-write-1h: #5fe3d6;
+  --t-cache-read: #8a97a3;
   --t-output: #ff4f7b;
+
+  /* Ink for labels printed inside a band. Chosen per swatch for contrast, not
+     inherited, since the ramp spans very light and very dark fills. */
+  --t-input-ink: #12100c;
+  --t-cache-write-5m-ink: #12100c;
+  --t-cache-write-1h-ink: #12100c;
+  --t-cache-read-ink: #12100c;
+  --t-output-ink: #12100c;
 
   --basis: #59a5ff;
   --seam: var(--bg);
@@ -53,13 +65,22 @@
   --border-w: 2.5px;
   --cell-border: 1.5px solid var(--ink);
 
-  /* Riso spot inks: flat, slightly impure, with the cheap-and-huge type mixed
-     down toward the paper itself and the expensive one on fluorescent pink. */
-  --t-input: #e9a227;
-  --t-cache-write-5m: #8697a0;
-  --t-cache-write-1h: #0e9c93;
-  --t-cache-read: #cfc8b8;
-  --t-output: #ff3e9a;
+  /* Riso spot inks: flat and slightly impure. The cheap-and-huge type is a
+     mixed khaki — calm, but pulled far enough off the paper to read as a
+     printed band rather than as the sheet showing through (it used to sit at
+     1.5:1 against the panel, which is why it looked like empty space). The
+     expensive one stays on fluorescent pink. */
+  --t-input: #c8830f;
+  --t-cache-write-5m: #7ba69d;
+  --t-cache-write-1h: #0b7c74;
+  --t-cache-read: #a89566;
+  --t-output: #e5217f;
+
+  --t-input-ink: #12100c;
+  --t-cache-write-5m-ink: #12100c;
+  --t-cache-write-1h-ink: #f6f4ee;
+  --t-cache-read-ink: #12100c;
+  --t-output-ink: #12100c;
 
   --basis: #1f5fbf;
   --seam: var(--ink);
@@ -1145,12 +1166,47 @@ h1 {
 }
 
 .shiftSeg {
-  display: block;
+  display: flex;
+  align-items: center;
   height: 100%;
+  /* A flex item defaults to min-width:auto, which would let an in-band label
+     force a segment wider than its share and silently break the one thing this
+     chart must get right. Pin it to 0 and clip instead. */
+  min-width: 0;
+  overflow: hidden;
   /* An inset shadow separates segments without taking layout width, so the
      rendered widths stay exactly proportional. */
   box-shadow: inset -1px 0 0 var(--seam);
   transition: opacity 160ms ease;
+}
+
+/* Printed inside the band itself, so the largest areas of the chart are
+   self-labelling and do not depend on matching a swatch to a legend. Narrow
+   bands omit it and fall back to the legend. */
+.shiftSegLabel {
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--seg-ink);
+  pointer-events: none;
+}
+
+.shiftSegLabel b {
+  font-weight: 700;
+  opacity: 0.72;
+  margin-left: 6px;
+}
+
+@media (max-width: 900px) {
+  /* Below this the widest band is too narrow to hold its own name without
+     clipping mid-word, which would be worse than no label. Legend takes over. */
+  .shiftSegLabel {
+    display: none;
+  }
 }
 
 .shiftSeg:last-child {
