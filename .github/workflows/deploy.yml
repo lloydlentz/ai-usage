@@ -6,6 +6,10 @@ on:
     paths:
       - "data/daily-burn.json"
       - "data/meta.json"
+      # Costs are precomputed into daily-burn.json, so a rate change normally
+      # arrives with a data refresh. Listed anyway so a pricing-only correction
+      # (edit the rate card, re-run the build, commit) still triggers a deploy.
+      - "data/pricing.json"
       - "app/**"
       - "lib/**"
       - "public/**"

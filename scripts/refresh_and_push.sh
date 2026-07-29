@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Daily refresh: re-extract logs, rebuild data, commit, push.
+# Hourly refresh: re-extract logs, rebuild data, commit, push.
 # GitHub Actions then builds and deploys to Pages automatically.
 #
 # Add to crontab with: crontab -e
-#   0 6 * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh >> /tmp/token-burn-refresh.log 2>&1
+#   0 * * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh >> /tmp/token-burn-refresh.log 2>&1
 
 set -euo pipefail
 REPO=/Users/lentz/code/ai-usage-claude
