@@ -1,14 +1,30 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import rawRows from "../data/daily-burn.json";
 import meta from "../data/meta.json";
-import { normalizeRows, sourceColumns, sumSource } from "../lib/burn-data";
+import {
+  emptyByType,
+  normalizeRows,
+  sourceColumns,
+  sumByModel,
+  sumCost,
+  sumSource,
+  sumTokensByType,
+  tokenTypeLabels,
+  tokenTypes,
+  toolLabels,
+  type CostKnowledge,
+  type TokenType,
+  type ToolKey,
+} from "../lib/burn-data";
 import { getWindowRows, type WindowKey } from "../lib/date-windows";
 import {
   fermiScale,
+  formatPct,
   formatTokens,
+  formatUsd,
   logHeatLevel,
   movingAverage7,
   sumTokens,
@@ -37,13 +53,36 @@ function pctDelta(curr: number, prev: number) {
   return ((curr - prev) / prev) * 100;
 }
 
+// Every row in daily-burn.json is bucketed to an America/Chicago day by the
+// Python pipeline, so the UI has to ask for dates in that same zone.
+const DATA_TIME_ZONE = "America/Chicago";
+
+// en-CA formats as YYYY-MM-DD, the shape the row dates already use. Reading the
+// day with toISOString() instead would answer in UTC, which is already tomorrow
+// from 7pm Chicago onward.
+function chicagoDay(instant: Date) {
+  return instant.toLocaleDateString("en-CA", { timeZone: DATA_TIME_ZONE });
+}
+
+// Step whole days off a YYYY-MM-DD string. The anchor is deliberately UTC: UTC
+// days are always exactly 24h, so a DST transition cannot slide the result the
+// way subtracting milliseconds from a local-midnight Date would.
+function addDays(day: string, delta: number) {
+  const anchor = new Date(`${day}T00:00:00Z`);
+  anchor.setUTCDate(anchor.getUTCDate() + delta);
+  return anchor.toISOString().slice(0, 10);
+}
+
 function formatRefreshed(iso: string) {
+  // Zone is pinned so the prerendered HTML (built in UTC CI) and the viewer's
+  // browser produce the same string instead of mismatching on hydration.
   return new Date(iso).toLocaleString("en-US", {
     month: "2-digit",
     day: "2-digit",
     year: "2-digit",
     hour: "numeric",
     minute: "2-digit",
+    timeZone: DATA_TIME_ZONE,
   });
 }
 
@@ -52,9 +91,24 @@ export default function TokenBurnDashboard() {
   const [theme, setTheme] = useState<Theme>("printrun");
   const [mounted, setMounted] = useState(false);
 
+  // "Today" depends on when the page is viewed, but this page is statically
+  // exported: computing it during render would bake the CI build machine's date
+  // into the markup and disagree with the browser's first render. Seed from the
+  // data's own refresh stamp — a static import, so both passes agree, and
+  // normally the same Chicago day — then correct it to the viewer's real day
+  // once mounted.
+  const [today, setToday] = useState(() => chicagoDay(new Date(meta.refreshed_at)));
+
   useEffect(() => {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    // SSR-safe hydration correction: this page is a static export, so the first
+    // client render must be byte-identical to the prerendered HTML. The stored
+    // theme and the viewer's real Chicago day are only knowable on the client,
+    // so they can only be applied after mount. Restructuring this to avoid
+    // setState-in-effect would reintroduce a hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved === "ticker" || saved === "printrun") setTheme(saved);
+    setToday(chicagoDay(new Date()));
     setMounted(true);
   }, []);
 
@@ -94,9 +148,8 @@ export default function TokenBurnDashboard() {
   const sourceTotal = sourceColumns.reduce((sum, source) => sum + sumSource(selectedRows, source.key), 0);
   const tableRows = selectedRows.slice(-30).reverse();
 
-  const today = new Date().toISOString().slice(0, 10);
-  const yesterday = new Date(new Date(today).getTime() - 86400000).toISOString().slice(0, 10);
-  const weekStart = new Date(new Date(today).getTime() - 6 * 86400000).toISOString().slice(0, 10);
+  const yesterday = addDays(today, -1);
+  const weekStart = addDays(today, -6);
 
   const todayRows = selectedRows.filter((r) => r.date === today);
   const yesterdayRows = selectedRows.filter((r) => r.date === yesterday);
@@ -117,6 +170,35 @@ export default function TokenBurnDashboard() {
   const totalToday = todayRows.reduce((sum, r) => sum + r.total, 0);
   const totalYesterday = yesterdayRows.reduce((sum, r) => sum + r.total, 0);
 
+  // The cost side of the ledger. Only measured tokens are ever priced, so the
+  // token figure shown beside the dollars counts the same universe — pairing
+  // dollars with the all-sources total (which folds in unpriced chat estimates)
+  // would make the two numbers describe different things.
+  const measured = useMemo(() => sumTokensByType(selectedRows), [selectedRows]);
+  const cost = useMemo(() => sumCost(selectedRows), [selectedRows]);
+  const modelTotals = useMemo(() => sumByModel(selectedRows), [selectedRows]);
+  const measuredTokens = measured.typed + measured.unattributed;
+  const costByType = cost.kind === "priced" || cost.kind === "lower-bound" ? cost.byType : emptyByType();
+  const costTotal = cost.kind === "priced" || cost.kind === "lower-bound" ? cost.usd : 0;
+
+  const shiftSegments: ShiftSegment[] = tokenTypes.map((type) => ({
+    type,
+    label: tokenTypeLabels[type],
+    tokens: measured.byType[type],
+    tokenPct: measured.typed ? (measured.byType[type] / measured.typed) * 100 : 0,
+    cost: costByType[type],
+    costPct: costTotal ? (costByType[type] / costTotal) * 100 : 0,
+  }));
+
+  const cacheReadSeg = shiftSegments.find((s) => s.type === "cache_read");
+  // The headline divergence is whichever type gains the most share moving from
+  // the volume bar to the cost bar. Read from the data so the sentence stays
+  // true if the mix shifts.
+  const widestGap = shiftSegments.reduce(
+    (best, seg) => (seg.costPct - seg.tokenPct > best.costPct - best.tokenPct ? seg : best),
+    shiftSegments[0],
+  );
+
   const toolSources: ToolSource[] = [
     {
       key: "claude", label: "Claude", ticker: "CLDE", color: "var(--accent)",
@@ -124,7 +206,10 @@ export default function TokenBurnDashboard() {
       fill: claudeToday / claudeMaxDaily, history: selectedRows.map((r) => r.claude_code_tokens),
     },
     {
-      key: "chatgpt", label: "ChatGPT", ticker: "CGPT", color: "var(--good)",
+      // Exact Codex CLI tokens. Labelled "Codex", not "ChatGPT": the ChatGPT app
+      // is a separate, estimated column and conflating the two made the exact
+      // number look like it counted chat usage.
+      key: "chatgpt", label: "Codex", ticker: "CDX", color: "var(--good)",
       today: codexToday, yesterday: codexYesterday, week: codexWeek, total: codexTotal,
       fill: codexToday / codexMaxDaily, history: selectedRows.map((r) => r.codex_tokens),
     },
@@ -160,11 +245,60 @@ export default function TokenBurnDashboard() {
         )}
       </section>
 
+      <section className="ledger" aria-label="Cost beside volume">
+        <div className="ledgerFigures">
+          <div className="ledgerFigure">
+            <p className="label">What it would have cost</p>
+            <CostAmount cost={cost} className="ledgerAmount" />
+            <p className="ledgerCaption">
+              <BasisPill /> Priced at public API rates. This usage ran on flat-rate
+              subscriptions, so no one was billed this.
+            </p>
+          </div>
+          <div className="ledgerFigure">
+            <p className="label">What it took to get there</p>
+            <p className="ledgerAmount">
+              <span className="ledgerAmountStack">
+                <span className="ledgerGhost" aria-hidden="true">
+                  {formatTokens(measuredTokens)}
+                </span>
+                <span className="ledgerAmountInk">{formatTokens(measuredTokens)}</span>
+              </span>
+              <span className="ledgerUnit">tokens</span>
+            </p>
+            <p className="ledgerCaption">
+              <span className="pill exact">exact</span> Measured from Claude Code and Codex
+              logs. {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} of them were cache
+              reads.
+            </p>
+          </div>
+        </div>
+
+        <ShapeShift
+          segments={shiftSegments}
+          tokenTotal={measured.typed}
+          costTotal={costTotal}
+          costKind={cost.kind}
+        />
+
+        <p className="ledgerNote">
+          <strong>Volume and cost are not the same shape.</strong> {widestGap.label} is{" "}
+          {formatPct(widestGap.tokenPct)} of the volume and{" "}
+          {formatPct(widestGap.costPct)} of the cost;{" "}
+          {cacheReadSeg
+            ? `cache read is ${formatPct(cacheReadSeg.tokenPct)} and ${formatPct(cacheReadSeg.costPct)}`
+            : ""}
+          . A cached token bills at a tenth of a fresh one, so a long session inflates the
+          token count far faster than the bill.
+        </p>
+        <UnpricedNote cost={cost} unattributed={measured.unattributed} />
+      </section>
+
       <section className="timelineRow">
         <Panel
           label="Daily burn"
           title={theme === "ticker" ? "Burn history" : "Usage timeline"}
-          note="Claude and ChatGPT stacked by day — the combined height is the total."
+          note="Claude Code and Codex CLI stacked by day — the combined height is the total."
         >
           <UsageTimeline rows={selectedRows} />
         </Panel>
@@ -188,7 +322,7 @@ export default function TokenBurnDashboard() {
             )}
           </div>
           <div className="heatmapContainer">
-            {["Total", "Claude", "ChatGPT"].map((label, idx) => (
+            {["Total", "Claude Code", "Codex CLI"].map((label, idx) => (
               <GitHubHeatmap
                 key={label}
                 label={label}
@@ -215,6 +349,79 @@ export default function TokenBurnDashboard() {
         <Metric label="Peak day" value={formatTokens(peakDay?.total || 0)} note={peakDay?.date || "n/a"} />
         <Metric label="7d average" value={formatTokens(lastAverage)} note="moving average" />
         <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
+      </section>
+
+      <section className="grid gridCost">
+        <Panel
+          label="Cost by model"
+          title="Where the money went"
+          note="Ranked by cost at API list prices, not by token count."
+        >
+          <div className="modelList">
+            {modelTotals.map((model) => {
+              const share = costTotal && model.costUsd !== null ? (model.costUsd / costTotal) * 100 : 0;
+              return (
+                <div key={`${model.tool}-${model.model}`} className="modelRow">
+                  <div className="modelName">
+                    <strong>{model.model}</strong>
+                    <span className="muted">{toolLabels[model.tool]}</span>
+                  </div>
+                  <span className="track">
+                    <i style={{ width: `${share}%` }} />
+                  </span>
+                  <div className="modelFigures">
+                    <strong>
+                      {model.costUsd === null ? "not priced" : formatUsd(model.costUsd)}
+                    </strong>
+                    <span className="muted">{formatTokens(model.tokens)} tokens</span>
+                  </div>
+                </div>
+              );
+            })}
+            {modelTotals.length === 0 && (
+              <p className="muted">No per-model split recorded in this window.</p>
+            )}
+          </div>
+          <p className="panelFoot">
+            <BasisPill /> Every figure in this panel is a counterfactual at API list prices.
+          </p>
+        </Panel>
+
+        <Panel
+          label="Cost by tool"
+          title="Which agent spent it"
+          note="Chat estimates are never priced — only exact logs carry a cost."
+        >
+          <div className="driverGrid">
+            {(["claude_code", "codex"] as ToolKey[]).map((tool) => {
+              const value =
+                cost.kind === "priced" || cost.kind === "lower-bound" ? cost.byTool[tool] : undefined;
+              const share = costTotal && value !== undefined ? (value / costTotal) * 100 : 0;
+              return (
+                <div key={tool} className="driver">
+                  <strong>{toolLabels[tool]}</strong>
+                  <span className="track">
+                    <i style={{ width: `${share}%` }} />
+                  </span>
+                  <span>{value === undefined ? "not priced" : formatUsd(value)}</span>
+                </div>
+              );
+            })}
+            {/* Named rather than omitted: the estimated columns are a real part
+                of the token total, and leaving them out of this panel would
+                imply the priced tools are all there is. */}
+            <div className="driver">
+              <strong>Chat, estimated</strong>
+              <span className="track" />
+              <span className="muted">not priced</span>
+            </div>
+          </div>
+          <p className="panelFoot">
+            <BasisPill /> Counterfactual at API list prices.{" "}
+            {measured.measuredDays} of {selectedRows.length} days in view carry a measured split;
+            the rest are estimates only and have nothing to cost.
+          </p>
+        </Panel>
       </section>
 
       <section className="grid">
@@ -262,11 +469,11 @@ export default function TokenBurnDashboard() {
       <section className="grid">
         <Panel
           label="Scale equivalents"
-          title="Make the number human"
-          note="Approximate comparisons are useful only when the math stays visible."
+          title="How much of it was writing"
+          note="Counted from output tokens — the only ones that became new text."
         >
           <div className="equivalents">
-            {fermiScale(total).map((item) => (
+            {fermiScale(measured.byType.output, measured.byType.input).map((item) => (
               <div key={item.label} className="equivalent">
                 <span className="muted">{item.label}</span>
                 <strong>{item.value}</strong>
@@ -274,6 +481,11 @@ export default function TokenBurnDashboard() {
               </div>
             ))}
           </div>
+          <p className="panelFoot">
+            The {formatTokens(measured.byType.cache_read)} of cache reads are deliberately left
+            out: they are the same context handed back to the model again, not words that were
+            written.
+          </p>
         </Panel>
 
         <Panel
@@ -284,6 +496,13 @@ export default function TokenBurnDashboard() {
           <div className="sourceGrid">
             <Metric label="Date" value={peakDay?.date || "n/a"} note="local bucket" />
             <Metric label="Burn" value={formatTokens(peakDay?.total || 0)} note="all sources" />
+            <div className="stat">
+              <span className="label">Cost</span>
+              <CostAmount cost={peakDay?.cost || { kind: "not-measured" }} className="statAmount" />
+              <span>
+                <BasisPill />
+              </span>
+            </div>
           </div>
         </Panel>
       </section>
@@ -302,9 +521,12 @@ export default function TokenBurnDashboard() {
               <tr>
                 <th>Date</th>
                 <th>Total</th>
+                <th>
+                  Cost <span className="thBasis">at API list</span>
+                </th>
                 <th>7d avg</th>
-                <th>ChatGPT exact</th>
-                <th>Claude exact</th>
+                <th>Codex CLI</th>
+                <th>Claude Code</th>
                 <th>Calls</th>
                 <th>Claude chat est.</th>
                 <th>ChatGPT est.</th>
@@ -321,6 +543,9 @@ export default function TokenBurnDashboard() {
                       <strong>{row.date}</strong>
                     </td>
                     <td>{formatTokens(row.total)}</td>
+                    <td>
+                      <CellCost cost={row.cost} />
+                    </td>
                     <td>{formatTokens(movingAverage7(selectedRows, originalIndex))}</td>
                     <td>{formatTokens(row.codex_tokens)}</td>
                     <td>{formatTokens(row.claude_code_tokens)}</td>
@@ -345,6 +570,9 @@ export default function TokenBurnDashboard() {
         {new Date(meta.refreshed_at).toLocaleString("en-US", {
           month: "short", day: "numeric", year: "numeric",
           hour: "numeric", minute: "2-digit", timeZoneName: "short",
+          // Without an explicit zone this renders as UTC in the CI prerender and
+          // in the viewer's own zone on hydration — two different strings.
+          timeZone: DATA_TIME_ZONE,
         })}
       </p>
     </main>
@@ -396,6 +624,256 @@ function Panel({
       </div>
       {children}
     </article>
+  );
+}
+
+// --- Cost: the basis qualifier and the four ways a day can be costed --------
+
+/**
+ * The qualifier that travels with every dollar figure on the page. It uses the
+ * same pill mechanism as the exact/estimated fidelity labels because it answers
+ * the same kind of question — how much to trust this number — and because a pill
+ * stays attached to the figure when someone crops a screenshot. A footnote
+ * would not.
+ */
+function BasisPill() {
+  return (
+    <span className="pill counterfactual" title={meta.cost.disclaimer}>
+      at API list
+    </span>
+  );
+}
+
+/** Large cost figure. Renders each CostKnowledge state as itself, never as $0. */
+function CostAmount({ cost, className }: { cost: CostKnowledge; className?: string }) {
+  if (cost.kind === "not-measured") {
+    return (
+      <p className={className}>
+        <span className="ledgerAmountInk costNil">&mdash;</span>
+        <span className="ledgerUnit">nothing measured to cost</span>
+      </p>
+    );
+  }
+
+  if (cost.kind === "unknown") {
+    return (
+      <p className={className}>
+        <span className="ledgerAmountInk costNil">Not priced</span>
+        <span className="ledgerUnit">
+          {cost.unpricedTokens.toLocaleString("en-US")} tokens with no rate
+        </span>
+      </p>
+    );
+  }
+
+  const text = formatUsd(cost.usd);
+  return (
+    <p className={className}>
+      {cost.kind === "lower-bound" && <span className="costBound">at least</span>}
+      <span className="ledgerAmountStack">
+        <span className="ledgerGhost" aria-hidden="true">
+          {text}
+        </span>
+        <span className="ledgerAmountInk">{text}</span>
+      </span>
+    </p>
+  );
+}
+
+/** Compact cost for table cells. Same four states, one line. */
+function CellCost({ cost }: { cost: CostKnowledge }) {
+  if (cost.kind === "not-measured") {
+    return <span className="muted" title="Estimates only — there was no measured usage to price">&mdash;</span>;
+  }
+  if (cost.kind === "unknown") {
+    return (
+      <span className="muted" title={`${cost.unpricedTokens.toLocaleString("en-US")} tokens with no rate card`}>
+        not priced
+      </span>
+    );
+  }
+  return (
+    <span title={cost.kind === "lower-bound" ? "Lower bound — some tokens on this day are unpriced" : undefined}>
+      {cost.kind === "lower-bound" ? "≥ " : ""}
+      {formatUsd(cost.usd)}
+    </span>
+  );
+}
+
+/** States plainly what the headline figure is missing, when it is missing any. */
+function UnpricedNote({ cost, unattributed }: { cost: CostKnowledge; unattributed: number }) {
+  const unpriced = cost.kind === "unknown" || cost.kind === "lower-bound" ? cost.unpricedTokens : 0;
+  if (unpriced === 0 && unattributed === 0) return null;
+
+  return (
+    <p className="ledgerWarn">
+      <span className="pill unpriced">lower bound</span>
+      {unpriced.toLocaleString("en-US")} tokens have no rate
+      {unattributed >= unpriced
+        ? " and no recorded model or type split"
+        : unattributed > 0
+        ? `, ${unattributed.toLocaleString("en-US")} of them with no recorded model or type split`
+        : ""}
+      . They count as nothing in the figures above, so the real cost is higher than the one
+      shown.
+    </p>
+  );
+}
+
+// --- The shape shift: the same five token types, weighted two ways ----------
+
+type ShiftSegment = {
+  type: TokenType;
+  label: string;
+  tokens: number;
+  tokenPct: number;
+  cost: number;
+  costPct: number;
+};
+
+const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
+
+/**
+ * Geometry-only percentages. A segment worth 0.17% of the volume would render
+ * sub-pixel and read as absent, so anything non-zero is floored to a visible
+ * sliver and the rest are scaled down to keep the row summing to 100. The
+ * printed numbers stay exact — only the widths are nudged.
+ */
+function displayWidths(values: number[], floor = 0.45) {
+  const total = values.reduce((sum, v) => sum + v, 0);
+  if (total <= 0) return values.map(() => 0);
+  const pcts = values.map((v) => (v / total) * 100);
+  const lifted = pcts.map((p) => (p > 0 && p < floor ? floor : p));
+  const added = lifted.reduce((s, v) => s + v, 0) - 100;
+  if (added <= 0) return lifted;
+  const shrinkable = lifted.reduce((s, v) => s + (v > floor ? v : 0), 0);
+  return lifted.map((v) => (v > floor ? v - (v / shrinkable) * added : v));
+}
+
+function ShapeShift({
+  segments,
+  tokenTotal,
+  costTotal,
+  costKind,
+}: {
+  segments: ShiftSegment[];
+  tokenTotal: number;
+  costTotal: number;
+  costKind: CostKnowledge["kind"];
+}) {
+  const [active, setActive] = useState<TokenType | null>(null);
+
+  const tokenW = displayWidths(segments.map((s) => s.tokens));
+  const costW = displayWidths(segments.map((s) => s.cost));
+
+  const cum = (widths: number[], i: number) => widths.slice(0, i).reduce((s, v) => s + v, 0);
+  const dim = (type: TokenType) => (active && active !== type ? 0.14 : 1);
+
+  const priced = costKind === "priced" || costKind === "lower-bound";
+
+  return (
+    <div className="shift">
+      <div className="shiftRowHead">
+        <span className="shiftRowName">By volume</span>
+        <span className="shiftRowValue">{formatTokens(tokenTotal)} tokens</span>
+      </div>
+
+      <div
+        className="shiftBar"
+        role="img"
+        aria-label={`Token volume by type: ${segments
+          .map((s) => `${s.label} ${formatPct(s.tokenPct)}`)
+          .join(", ")}`}
+      >
+        {segments.map((seg, i) =>
+          tokenW[i] > 0 ? (
+            <span
+              key={seg.type}
+              className="shiftSeg"
+              style={{ width: `${tokenW[i]}%`, background: typeVar(seg.type), opacity: dim(seg.type) }}
+              title={`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)})`}
+            />
+          ) : null,
+        )}
+      </div>
+
+      <svg className="shiftRibbons" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        {segments.map((seg, i) => {
+          if (tokenW[i] <= 0 && costW[i] <= 0) return null;
+          const x0t = cum(tokenW, i);
+          const x1t = x0t + tokenW[i];
+          const x0c = cum(costW, i);
+          const x1c = x0c + costW[i];
+          return (
+            <path
+              key={seg.type}
+              d={`M ${x0t} 0 C ${x0t} 42, ${x0c} 58, ${x0c} 100 L ${x1c} 100 C ${x1c} 58, ${x1t} 42, ${x1t} 0 Z`}
+              fill={typeVar(seg.type)}
+              className="shiftRibbon"
+              style={{ opacity: active && active !== seg.type ? 0.05 : undefined }}
+            />
+          );
+        })}
+      </svg>
+
+      <div
+        className="shiftBar"
+        role="img"
+        aria-label={
+          priced
+            ? `Cost by type at API list prices: ${segments
+                .map((s) => `${s.label} ${formatPct(s.costPct)}`)
+                .join(", ")}`
+            : "No cost recorded for this window"
+        }
+      >
+        {segments.map((seg, i) =>
+          costW[i] > 0 ? (
+            <span
+              key={seg.type}
+              className="shiftSeg"
+              style={{ width: `${costW[i]}%`, background: typeVar(seg.type), opacity: dim(seg.type) }}
+              title={`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)})`}
+            />
+          ) : null,
+        )}
+      </div>
+
+      <div className="shiftRowHead">
+        <span className="shiftRowName">By cost</span>
+        <span className="shiftRowValue">
+          {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+        </span>
+      </div>
+
+      <ul className="shiftLegend">
+        {segments.map((seg) => (
+          <li key={seg.type}>
+            <button
+              type="button"
+              className="shiftKey"
+              aria-pressed={active === seg.type}
+              onMouseEnter={() => setActive(seg.type)}
+              onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(seg.type)}
+              onBlur={() => setActive(null)}
+              onClick={() => setActive(active === seg.type ? null : seg.type)}
+            >
+              <i style={{ background: typeVar(seg.type) }} />
+              <span className="shiftKeyLabel">{seg.label}</span>
+              <span className="shiftKeyPct">{formatPct(seg.tokenPct)}</span>
+              <span className="shiftKeyArrow" aria-hidden="true">
+                →
+              </span>
+              <span className="shiftKeyPct shiftKeyCost">{priced ? formatPct(seg.costPct) : "—"}</span>
+            </button>
+          </li>
+        ))}
+        <li className="shiftLegendHead" aria-hidden="true">
+          share of volume → share of cost
+        </li>
+      </ul>
+    </div>
   );
 }
 
@@ -471,7 +949,7 @@ function TickerHeroContent({ refreshedAt }: { refreshedAt: string }) {
         </div>
       </div>
       <p className="lead">
-        Data from Claude and ChatGPT logs, quoted like a burn rate — because that&apos;s exactly what it is.
+        Data from Claude Code and Codex logs, quoted like a burn rate — because that&apos;s exactly what it is.
       </p>
     </section>
   );
@@ -555,7 +1033,7 @@ function PrintRunHero({ issueNo, refreshedAt }: { issueNo: number; refreshedAt: 
         <h1 className="prH1">Lloyd&apos;s token usage.</h1>
       </div>
       <p className="lead">
-        Data from Claude and ChatGPT logs. Printed hourly, one run at a time — this is issue{" "}
+        Data from Claude Code and Codex logs. Printed hourly, one run at a time — this is issue{" "}
         {String(issueNo).padStart(3, "0")} off the press.
       </p>
     </section>
@@ -639,6 +1117,7 @@ interface TimelineRow {
   date: string;
   claude_code_tokens: number;
   codex_tokens: number;
+  cost: CostKnowledge;
 }
 
 function formatTimelineDate(dateStr: string) {
@@ -651,22 +1130,58 @@ function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  const [tooltipLeftPx, setTooltipLeftPx] = useState(0);
 
   const n = rows.length;
-  if (n === 0) return null;
 
+  // Geometry is pure viewBox math, so it is safe to compute before the
+  // `n === 0` bail-out below — the measuring effect needs it, and every hook
+  // has to run before that early return.
   const W = 1400, H = 300;
   const padL = 52, padR = 16, padT = 12, padB = 28;
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
+
+  const step = n > 1 ? innerW / (n - 1) : 0;
+  const xAt = useCallback(
+    (i: number) => (n === 1 ? padL + innerW / 2 : padL + i * step),
+    [n, padL, innerW, step],
+  );
+
+  // Position the tooltip in real pixels (not a % of the container) so its
+  // fixed width never overflows a narrow container near either edge.
+  //
+  // The measurement has to come from the DOM, and refs must not be read during
+  // render (they are null on the first pass, and writing one never schedules a
+  // re-render — so rendering from them would position the tooltip using the
+  // *previous* layout). Measure in a layout effect instead: it runs after the
+  // hover commit but before paint, so the tooltip never visibly jumps. Deps are
+  // all numbers plus a memoized `xAt`, so this cannot re-fire on its own setState.
+  useLayoutEffect(() => {
+    if (hoverIdx === null) return;
+    const container = containerRef.current;
+    const svg = svgRef.current;
+    if (!container || !svg) return;
+    const containerRect = container.getBoundingClientRect();
+    const svgRect = svg.getBoundingClientRect();
+    // The SVG scales to its container, so map viewBox units into CSS pixels.
+    const scale = svgRect.width / W;
+    const pointPx = svgRect.left - containerRect.left + xAt(hoverIdx) * scale;
+    setTooltipLeftPx(
+      Math.min(
+        containerRect.width - TIMELINE_TOOLTIP_WIDTH - 4,
+        Math.max(4, pointPx - TIMELINE_TOOLTIP_WIDTH / 2),
+      ),
+    );
+  }, [hoverIdx, xAt, W]);
+
+  if (n === 0) return null;
 
   const claude = rows.map((r) => r.claude_code_tokens);
   const chatgpt = rows.map((r) => r.codex_tokens);
   const totals = claude.map((v, i) => v + chatgpt[i]);
   const yMax = Math.max(...totals, 1) * 1.08;
 
-  const step = n > 1 ? innerW / (n - 1) : 0;
-  const xAt = (i: number) => (n === 1 ? padL + innerW / 2 : padL + i * step);
   const yAt = (v: number) => padT + innerH - (v / yMax) * innerH;
   const baseline = padT + innerH;
 
@@ -699,20 +1214,6 @@ function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
   };
 
   const hovered = hoverIdx !== null ? rows[hoverIdx] : null;
-
-  // Position the tooltip in real pixels (not a % of the container) so its
-  // fixed width never overflows a narrow container near either edge.
-  let tooltipLeftPx = 0;
-  if (hoverIdx !== null && containerRef.current && svgRef.current) {
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const svgRect = svgRef.current.getBoundingClientRect();
-    const scale = svgRect.width / W;
-    const pointPx = svgRect.left - containerRect.left + xAt(hoverIdx) * scale;
-    tooltipLeftPx = Math.min(
-      containerRect.width - TIMELINE_TOOLTIP_WIDTH - 4,
-      Math.max(4, pointPx - TIMELINE_TOOLTIP_WIDTH / 2),
-    );
-  }
 
   return (
     <div className="timeline" ref={containerRef}>
@@ -760,21 +1261,27 @@ function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
           <div className="timelineTooltipDate">{formatTimelineDate(hovered.date)}</div>
           <div className="timelineTooltipRow">
             <span className="timelineSwatch timelineSwatchClaude" />
-            Claude <b>{formatTokens(hovered.claude_code_tokens)}</b>
+            Claude Code <b>{formatTokens(hovered.claude_code_tokens)}</b>
           </div>
           <div className="timelineTooltipRow">
             <span className="timelineSwatch timelineSwatchChatgpt" />
-            ChatGPT <b>{formatTokens(hovered.codex_tokens)}</b>
+            Codex <b>{formatTokens(hovered.codex_tokens)}</b>
           </div>
           <div className="timelineTooltipRow timelineTooltipTotal">
             Total <b>{formatTokens(hovered.claude_code_tokens + hovered.codex_tokens)}</b>
+          </div>
+          <div className="timelineTooltipRow timelineTooltipCost">
+            <span className="timelineTooltipCostLabel">Cost at API list</span>
+            <b>
+              <CellCost cost={hovered.cost} />
+            </b>
           </div>
         </div>
       )}
 
       <div className="timelineLegend">
-        <span><span className="timelineSwatch timelineSwatchClaude" /> Claude</span>
-        <span><span className="timelineSwatch timelineSwatchChatgpt" /> ChatGPT</span>
+        <span><span className="timelineSwatch timelineSwatchClaude" /> Claude Code</span>
+        <span><span className="timelineSwatch timelineSwatchChatgpt" /> Codex</span>
       </div>
     </div>
   );
@@ -823,26 +1330,26 @@ function GitHubHeatmap({
   // Build a map of date → value
   const dateValues = new Map(rows.map((r) => [r.date, r[valueKey] as number]));
 
-  const endDate = new Date(rows[rows.length - 1].date);
+  const endDate = new Date(`${rows[rows.length - 1].date}T00:00:00Z`);
 
-  // Adjust start date to the Monday of that week
-  // Use noon to avoid timezone ambiguity when parsing date strings
-  const startDateNoon = new Date(rows[0].date + "T12:00:00");
-  const dayOfWeek = startDateNoon.getDay();
-  const daysToMonday = (dayOfWeek + 6) % 7; // Convert Sun=0 to Mon=0
-  const adjustedStart = new Date(startDateNoon);
-  adjustedStart.setDate(adjustedStart.getDate() - daysToMonday);
+  // Walk the grid on UTC-anchored dates, and back up to the Monday of the first
+  // week. The cell keys below are produced with toISOString(), so a UTC anchor
+  // keeps weekday, month label and key reading off one clock; a local anchor
+  // makes all three depend on the viewer's zone and drift from the prerender.
+  const adjustedStart = new Date(`${rows[0].date}T00:00:00Z`);
+  const daysToMonday = (adjustedStart.getUTCDay() + 6) % 7; // Convert Sun=0 to Mon=0
+  adjustedStart.setUTCDate(adjustedStart.getUTCDate() - daysToMonday);
 
   // Build a 2D grid: rows = days of week (Mon-Sun), columns = weeks
   const weeks: (string | null)[][] = [];
-  let currentDate = new Date(adjustedStart);
+  const currentDate = new Date(adjustedStart);
 
   while (currentDate <= endDate) {
     const week: (string | null)[] = [];
     for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
       const dateStr = currentDate.toISOString().slice(0, 10);
       week.push(dateStr);
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
     }
     weeks.push(week);
   }
@@ -856,10 +1363,10 @@ function GitHubHeatmap({
     week.forEach((dateStr) => {
       if (dateStr) {
         const date = new Date(dateStr);
-        if (date.getDate() === 1) {
-          const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+        if (date.getUTCDate() === 1) {
+          const monthKey = `${date.getUTCFullYear()}-${date.getUTCMonth()}`;
           if (!seenMonths.has(monthKey)) {
-            const monthName = date.toLocaleDateString("en-US", { month: "short" });
+            const monthName = date.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" });
             monthStarts.set(weekIdx, monthName);
             seenMonths.add(monthKey);
           }
