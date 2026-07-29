@@ -1,0 +1,2 @@
+{"timestamp": "2026-07-21T14:00:00Z", "type": "session_meta", "payload": {"id": "sess-import", "cwd": "/Users/demo/project-a", "originator": "Codex Desktop", "cli_version": "0.137.0-alpha.4"}}
+{"timestamp": "2026-07-21T14:00:01Z", "type": "event_msg", "payload": {"type": "token_count", "info": {"total_token_usage": {"input_tokens": 0, "cached_input_tokens": 0, "output_tokens": 0, "reasoning_output_tokens": 0, "total_tokens": 9000}}}}

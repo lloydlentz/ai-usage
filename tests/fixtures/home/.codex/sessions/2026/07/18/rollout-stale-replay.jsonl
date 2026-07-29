@@ -1,0 +1,4 @@
+{"timestamp":"2026-07-18T14:59:00Z","type":"session_meta","payload":{"id":"sess-stale","cwd":"/Users/demo/project-b","originator":"codex_cli"}}
+{"timestamp":"2026-07-18T15:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":4000,"output_tokens":1000,"total_tokens":5000}}}}
+{"timestamp":"2026-07-18T16:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":1600,"output_tokens":400,"total_tokens":2000}}}}
+{"timestamp":"2026-07-18T17:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":4160,"output_tokens":1040,"total_tokens":5200}}}}

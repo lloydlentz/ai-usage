@@ -1,0 +1,8 @@
+{"timestamp":"2026-07-16T20:00:00Z","type":"session_meta","payload":{"id":"sess-multiday","cwd":"/Users/demo/project-a","originator":"codex_cli"}}
+{"timestamp":"2026-07-16T20:01:00Z","type":"response_item","payload":{"type":"message","role":"user","content":[{"type":"input_text","text":"hi"}]}}
+{"timestamp":"2026-07-16T20:05:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":800,"output_tokens":200,"total_tokens":1000}}}}
+{"timestamp":"2026-07-16T21:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":2400,"output_tokens":600,"total_tokens":3000}}}}
+{"timestamp":"2026-07-16T21:30:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":2400,
+{"timestamp":"2026-07-17T06:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":6400,"output_tokens":1600,"total_tokens":8000}}}}
+{"timestamp":"2026-07-17T07:00:00Z","type":"event_msg","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":6400,"output_tokens":1600,"total_tokens":8000}}}}
+{"timestamp":"2026-07-17T07:05:00Z","type":"event_msg","payload":{"type":"token_count","info":{}}}

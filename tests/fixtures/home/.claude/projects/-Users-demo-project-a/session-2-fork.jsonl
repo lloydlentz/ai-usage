@@ -1,0 +1,3 @@
+{"type":"assistant","requestId":"req_001","timestamp":"2026-07-16T14:00:00Z","message":{"id":"msg_001","role":"assistant","usage":{"input_tokens":10,"cache_creation_input_tokens":100,"cache_read_input_tokens":1000,"output_tokens":5}}}
+{"type":"assistant","timestamp":"2026-07-16T15:00:00Z","message":{"role":"assistant","usage":{"input_tokens":3,"output_tokens":4}}}
+{"type":"assistant","timestamp":"2026-07-16T15:01:00Z","message":{"role":"assistant","usage":{"input_tokens":4,"output_tokens":5}}}

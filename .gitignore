@@ -4,3 +4,5 @@ out/
 data/private/
 data/exact-daily.json
 .claude/settings.local.json
+__pycache__/
+*.pyc

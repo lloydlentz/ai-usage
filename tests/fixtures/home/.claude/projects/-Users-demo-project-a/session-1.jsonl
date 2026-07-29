@@ -1,0 +1,7 @@
+{"type":"user","timestamp":"2026-07-16T13:59:00Z","message":{"role":"user","content":"hello"}}
+{"type":"assistant","requestId":"req_001","timestamp":"2026-07-16T14:00:00Z","message":{"id":"msg_001","role":"assistant","usage":{"input_tokens":10,"cache_creation_input_tokens":100,"cache_read_input_tokens":1000,"output_tokens":5}}}
+{"type":"assistant","requestId":"req_no_usage","timestamp":"2026-07-16T14:05:00Z","message":{"id":"msg_no_usage","role":"assistant"}}
+{"type":"assistant","requestId":"req_no_ts","message":{"id":"msg_no_ts","role":"assistant","usage":{"input_tokens":999999,"output_tokens":999999}}}
+{"type":"assistant","requestId":"req_truncated","timestamp":"2026-07-16T14:07:00Z","message":{"id":"msg_trunc","usage":{"input_tokens":888
+{"type":"system","timestamp":"2026-07-16T14:10:00Z","message":{"id":"msg_system","usage":{"input_tokens":500000,"output_tokens":500000}}}
+{"type":"assistant","requestId":"req_002","timestamp":"2026-07-17T04:30:00Z","message":{"id":"msg_002","role":"assistant","usage":{"input_tokens":20,"output_tokens":30}}}

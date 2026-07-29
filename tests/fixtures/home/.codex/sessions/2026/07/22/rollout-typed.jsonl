@@ -1,0 +1,6 @@
+{"timestamp": "2026-07-22T14:00:00Z", "type": "session_meta", "payload": {"id": "sess-typed", "cwd": "/Users/demo/project-b", "originator": "Codex Desktop"}}
+{"timestamp": "2026-07-22T14:00:05Z", "type": "turn_context", "payload": {"turn_id": "t1", "cwd": "/Users/demo/project-b", "model": "gpt-5.6-terra", "effort": "medium"}}
+{"timestamp": "2026-07-22T14:10:00Z", "type": "event_msg", "payload": {"type": "token_count", "info": {"total_token_usage": {"input_tokens": 1000, "cached_input_tokens": 600, "output_tokens": 400, "reasoning_output_tokens": 250, "total_tokens": 1400}}}}
+{"timestamp": "2026-07-22T14:20:00Z", "type": "event_msg", "payload": {"type": "token_count", "info": {"total_token_usage": {"input_tokens": 400, "cached_input_tokens": 100, "output_tokens": 100, "reasoning_output_tokens": 50, "total_tokens": 500}}}}
+{"timestamp": "2026-07-22T14:25:00Z", "type": "turn_context", "payload": {"turn_id": "t2", "cwd": "/Users/demo/project-b", "model": "gpt-5.6-sol", "effort": "high"}}
+{"timestamp": "2026-07-22T14:30:00Z", "type": "event_msg", "payload": {"type": "token_count", "info": {"total_token_usage": {"input_tokens": 1500, "cached_input_tokens": 900, "output_tokens": 700, "reasoning_output_tokens": 400, "total_tokens": 2200}}}}
