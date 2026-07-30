@@ -1296,10 +1296,6 @@ h1 {
   letter-spacing: -0.02em;
 }
 
-[data-theme="ticker"] .shiftBar {
-  border-color: #1a1a1a;
-}
-
 /* --- Cost by model --- */
 
 .modelList {
@@ -1462,15 +1458,7 @@ h1 {
     padding-top: 20px;
   }
 
-  .shiftBar {
-    height: 26px;
-  }
-
-  .shiftRibbons {
-    height: 52px;
-  }
-
-  .shiftRowHead {
+  .shiftHeads {
     font-size: 10px;
     letter-spacing: 0.08em;
   }
