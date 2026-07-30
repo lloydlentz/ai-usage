@@ -33,14 +33,6 @@
   --t-cache-read: #8a97a3;
   --t-output: #ff4f7b;
 
-  /* Ink for labels printed inside a band. Chosen per swatch for contrast, not
-     inherited, since the ramp spans very light and very dark fills. */
-  --t-input-ink: #12100c;
-  --t-cache-write-5m-ink: #12100c;
-  --t-cache-write-1h-ink: #12100c;
-  --t-cache-read-ink: #12100c;
-  --t-output-ink: #12100c;
-
   --basis: #59a5ff;
   --seam: var(--bg);
 }
@@ -75,12 +67,6 @@
   --t-cache-write-1h: #0b7c74;
   --t-cache-read: #a89566;
   --t-output: #e5217f;
-
-  --t-input-ink: #12100c;
-  --t-cache-write-5m-ink: #12100c;
-  --t-cache-write-1h-ink: #f6f4ee;
-  --t-cache-read-ink: #12100c;
-  --t-output-ink: #12100c;
 
   --basis: #1f5fbf;
   --seam: var(--ink);
@@ -1130,12 +1116,14 @@ h1 {
   margin-top: 22px;
 }
 
-.shiftRowHead {
+/* Volume and cost are now columns, not rows, so their headings sit over the
+   ends of the flow rather than above and below it. */
+.shiftHeads {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 7px;
+  gap: 16px;
+  margin-bottom: 10px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 800;
@@ -1143,8 +1131,16 @@ h1 {
   text-transform: uppercase;
 }
 
-.shiftRowHead:last-of-type {
-  margin: 7px 0 0;
+.shiftHead {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.shiftHeadRight {
+  align-items: flex-end;
+  text-align: right;
 }
 
 .shiftRowName {
@@ -1157,70 +1153,37 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
-.shiftBar {
-  display: flex;
+.shiftFlow {
+  display: block;
   width: 100%;
-  height: 34px;
-  overflow: hidden;
-  border: var(--border-w) solid var(--line);
+  height: auto;
 }
 
-.shiftSeg {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  /* A flex item defaults to min-width:auto, which would let an in-band label
-     force a segment wider than its share and silently break the one thing this
-     chart must get right. Pin it to 0 and clip instead. */
-  min-width: 0;
-  overflow: hidden;
-  /* An inset shadow separates segments without taking layout width, so the
-     rendered widths stay exactly proportional. */
-  box-shadow: inset -1px 0 0 var(--seam);
-  transition: opacity 160ms ease;
-}
-
-/* Printed inside the band itself, so the largest areas of the chart are
-   self-labelling and do not depend on matching a swatch to a legend. Narrow
-   bands omit it and fall back to the legend. */
-.shiftSegLabel {
-  padding: 0 8px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.shiftNodeLabel {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  color: var(--seg-ink);
-  pointer-events: none;
+  fill: var(--ink);
 }
 
-.shiftSegLabel b {
+.shiftNodePct {
   font-weight: 700;
-  opacity: 0.72;
-  margin-left: 6px;
+  fill: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 900px) {
-  /* Below this the widest band is too narrow to hold its own name without
-     clipping mid-word, which would be worse than no label. Legend takes over. */
-  .shiftSegLabel {
+  /* The chart scales with its container, so below this the in-chart text is
+     too small to read honestly. The legend carries every number anyway. */
+  .shiftNodeLabel {
     display: none;
   }
 }
 
-.shiftSeg:last-child {
-  box-shadow: none;
-}
-
-.shiftRibbons {
-  display: block;
-  width: 100%;
-  height: 74px;
-}
-
 .shiftRibbon {
-  opacity: 0.34;
+  opacity: 0.42;
   transition: opacity 160ms ease;
 }
 

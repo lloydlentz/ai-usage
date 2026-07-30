@@ -245,6 +245,16 @@ export default function TokenBurnDashboard() {
         )}
       </section>
 
+      <section className="timelineRow">
+        <Panel
+          label="Daily burn"
+          title={theme === "ticker" ? "Burn history" : "Usage timeline"}
+          note="Claude Code and Codex CLI stacked by day — the combined height is the total."
+        >
+          <UsageTimeline rows={selectedRows} />
+        </Panel>
+      </section>
+
       <section className="ledger" aria-label="Cost beside volume">
         <div className="ledgerFigures">
           <div className="ledgerFigure">
@@ -292,16 +302,6 @@ export default function TokenBurnDashboard() {
           token count far faster than the bill.
         </p>
         <UnpricedNote cost={cost} unattributed={measured.unattributed} />
-      </section>
-
-      <section className="timelineRow">
-        <Panel
-          label="Daily burn"
-          title={theme === "ticker" ? "Burn history" : "Usage timeline"}
-          note="Claude Code and Codex CLI stacked by day — the combined height is the total."
-        >
-          <UsageTimeline rows={selectedRows} />
-        </Panel>
       </section>
 
       <section className="calendarRow">
@@ -732,13 +732,50 @@ type ShiftSegment = {
 };
 
 const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
-const typeInkVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")}-ink)`;
 
-/* A band only names itself when it is wide enough to hold the text without
-   clipping. In practice this labels exactly the areas big enough to be
-   ambiguous — cache read on both bars, cache write 1h on the cost bar — and
-   leaves the slivers to the legend. */
-const SEG_LABEL_MIN_PCT = 14;
+/* Sankey geometry, in viewBox units. Volume stacks on the left, cost on the
+   right, and each type's flow connects its two sizes — so a type that costs
+   more than its share of volume widens across the middle, and one that costs
+   less pinches in. `labelMinH` is the height a node needs before it can carry
+   its own name without colliding with its neighbours. */
+const SANKEY = {
+  w: 1000,
+  h: 454,
+  nodeW: 20,
+  gap: 5,
+  lx: 168,
+  rx: 812,
+  labelMinH: 15,
+  /* Keeps the first and last node — and their labels, which centre on the node
+     and so overhang it — off the edge of the viewBox. */
+  padY: 12,
+};
+
+type SankeyNode = { top: number; h: number };
+
+/** Stack percentage-sized nodes down a column, leaving a gap between each. */
+function stackNodes(pcts: number[]): SankeyNode[] {
+  const usable =
+    SANKEY.h - SANKEY.padY * 2 - SANKEY.gap * Math.max(0, pcts.length - 1);
+  let y = SANKEY.padY;
+  return pcts.map((p) => {
+    const h = (p / 100) * usable;
+    const node = { top: y, h };
+    y += h + SANKEY.gap;
+    return node;
+  });
+}
+
+/** A closed ribbon from a left node's span to a right node's span. */
+function flowPath(l: SankeyNode, r: SankeyNode) {
+  const x1 = SANKEY.lx + SANKEY.nodeW;
+  const x2 = SANKEY.rx;
+  const c = (x2 - x1) * 0.5;
+  return (
+    `M ${x1} ${l.top} C ${x1 + c} ${l.top}, ${x2 - c} ${r.top}, ${x2} ${r.top}` +
+    ` L ${x2} ${r.top + r.h} C ${x2 - c} ${r.top + r.h}, ${x1 + c} ${l.top + l.h}, ${x1} ${l.top + l.h} Z`
+  );
+}
 
 /**
  * Geometry-only percentages. A segment worth 0.17% of the volume would render
@@ -773,109 +810,104 @@ function ShapeShift({
   const tokenW = displayWidths(segments.map((s) => s.tokens));
   const costW = displayWidths(segments.map((s) => s.cost));
 
-  const cum = (widths: number[], i: number) => widths.slice(0, i).reduce((s, v) => s + v, 0);
   const dim = (type: TokenType) => (active && active !== type ? 0.14 : 1);
 
   const priced = costKind === "priced" || costKind === "lower-bound";
 
+  const left = stackNodes(tokenW);
+  const right = stackNodes(costW);
+
   return (
     <div className="shift">
-      <div className="shiftRowHead">
-        <span className="shiftRowName">By volume</span>
-        <span className="shiftRowValue">{formatTokens(tokenTotal)} tokens</span>
+      <div className="shiftHeads">
+        <div className="shiftHead">
+          <span className="shiftRowName">By volume</span>
+          <span className="shiftRowValue">{formatTokens(tokenTotal)} tokens</span>
+        </div>
+        <div className="shiftHead shiftHeadRight">
+          <span className="shiftRowName">By cost</span>
+          <span className="shiftRowValue">
+            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+          </span>
+        </div>
       </div>
 
-      <div
-        className="shiftBar"
+      <svg
+        className="shiftFlow"
+        viewBox={`0 0 ${SANKEY.w} ${SANKEY.h}`}
         role="img"
-        aria-label={`Token volume by type: ${segments
-          .map((s) => `${s.label} ${formatPct(s.tokenPct)}`)
-          .join(", ")}`}
+        aria-label={`Each token type sized twice: by share of volume on the left, by share of cost on the right. ${segments
+          .map(
+            (s) =>
+              `${s.label}, ${formatPct(s.tokenPct)} of volume and ${
+                priced ? formatPct(s.costPct) : "no recorded"
+              } cost`,
+          )
+          .join(". ")}`}
       >
-        {segments.map((seg, i) =>
-          tokenW[i] > 0 ? (
-            <span
-              key={seg.type}
-              className="shiftSeg"
-              style={{
-                width: `${tokenW[i]}%`,
-                background: typeVar(seg.type),
-                opacity: dim(seg.type),
-                ["--seg-ink" as string]: typeInkVar(seg.type),
-              }}
-              title={`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)})`}
-            >
-              {tokenW[i] >= SEG_LABEL_MIN_PCT && (
-                <span className="shiftSegLabel">
-                  {seg.label}
-                  <b>{formatPct(seg.tokenPct)}</b>
-                </span>
-              )}
-            </span>
-          ) : null,
-        )}
-      </div>
-
-      <svg className="shiftRibbons" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        {/* Flows first so the nodes and labels sit on top of them. */}
         {segments.map((seg, i) => {
-          if (tokenW[i] <= 0 && costW[i] <= 0) return null;
-          const x0t = cum(tokenW, i);
-          const x1t = x0t + tokenW[i];
-          const x0c = cum(costW, i);
-          const x1c = x0c + costW[i];
+          const l = left[i];
+          const r = right[i];
+          if (l.h <= 0 && r.h <= 0) return null;
           return (
             <path
               key={seg.type}
-              d={`M ${x0t} 0 C ${x0t} 42, ${x0c} 58, ${x0c} 100 L ${x1c} 100 C ${x1c} 58, ${x1t} 42, ${x1t} 0 Z`}
+              d={flowPath(l, r)}
               fill={typeVar(seg.type)}
               className="shiftRibbon"
               style={{ opacity: active && active !== seg.type ? 0.05 : undefined }}
             />
           );
         })}
-      </svg>
 
-      <div
-        className="shiftBar"
-        role="img"
-        aria-label={
-          priced
-            ? `Cost by type at API list prices: ${segments
-                .map((s) => `${s.label} ${formatPct(s.costPct)}`)
-                .join(", ")}`
-            : "No cost recorded for this window"
-        }
-      >
-        {segments.map((seg, i) =>
-          costW[i] > 0 ? (
-            <span
-              key={seg.type}
-              className="shiftSeg"
-              style={{
-                width: `${costW[i]}%`,
-                background: typeVar(seg.type),
-                opacity: dim(seg.type),
-                ["--seg-ink" as string]: typeInkVar(seg.type),
-              }}
-              title={`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)})`}
-            >
-              {costW[i] >= SEG_LABEL_MIN_PCT && (
-                <span className="shiftSegLabel">
-                  {seg.label}
-                  <b>{formatPct(seg.costPct)}</b>
-                </span>
+        {segments.map((seg, i) => {
+          const l = left[i];
+          const r = right[i];
+          return (
+            <g key={seg.type} opacity={dim(seg.type)}>
+              <rect x={SANKEY.lx} y={l.top} width={SANKEY.nodeW} height={l.h} fill={typeVar(seg.type)}>
+                <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
+              </rect>
+              <rect x={SANKEY.rx} y={r.top} width={SANKEY.nodeW} height={r.h} fill={typeVar(seg.type)}>
+                <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
+              </rect>
+
+              {/* A node names itself only when it is tall enough to hold the
+                  text. On this data that labels cache read on the left and the
+                  four that actually cost something on the right — which is the
+                  point of the chart. The legend carries the rest. */}
+              {l.h >= SANKEY.labelMinH && (
+                <text
+                  className="shiftNodeLabel"
+                  x={SANKEY.lx - 14}
+                  y={l.top + l.h / 2}
+                  textAnchor="end"
+                  dominantBaseline="middle"
+                >
+                  <tspan>{seg.label}</tspan>
+                  <tspan className="shiftNodePct" dx="8">
+                    {formatPct(seg.tokenPct)}
+                  </tspan>
+                </text>
               )}
-            </span>
-          ) : null,
-        )}
-      </div>
-
-      <div className="shiftRowHead">
-        <span className="shiftRowName">By cost</span>
-        <span className="shiftRowValue">
-          {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
-        </span>
-      </div>
+              {r.h >= SANKEY.labelMinH && (
+                <text
+                  className="shiftNodeLabel"
+                  x={SANKEY.rx + SANKEY.nodeW + 14}
+                  y={r.top + r.h / 2}
+                  dominantBaseline="middle"
+                >
+                  <tspan>{seg.label}</tspan>
+                  <tspan className="shiftNodePct" dx="8">
+                    {priced ? formatPct(seg.costPct) : "—"}
+                  </tspan>
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
 
       <ul className="shiftLegend">
         {segments.map((seg) => (
