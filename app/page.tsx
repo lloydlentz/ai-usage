@@ -255,16 +255,11 @@ export default function TokenBurnDashboard() {
         </Panel>
       </section>
 
-      <section className="ledger" aria-label="Cost beside volume">
+      <section className="ledger" aria-label="Volume beside cost">
+        {/* Volume first, cost second, matching the Sankey below: it flows
+            left-to-right from share of volume to share of cost, so the two
+            figures have to sit on the same sides as the ends of the flow. */}
         <div className="ledgerFigures">
-          <div className="ledgerFigure">
-            <p className="label">What it would have cost</p>
-            <CostAmount cost={cost} className="ledgerAmount" />
-            <p className="ledgerCaption">
-              <BasisPill /> Priced at public API rates. This usage ran on flat-rate
-              subscriptions, so no one was billed this.
-            </p>
-          </div>
           <div className="ledgerFigure">
             <p className="label">What it took to get there</p>
             <p className="ledgerAmount">
@@ -280,6 +275,14 @@ export default function TokenBurnDashboard() {
               <span className="pill exact">exact</span> Measured from Claude Code and Codex
               logs. {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} of them were cache
               reads.
+            </p>
+          </div>
+          <div className="ledgerFigure">
+            <p className="label">What it would have cost</p>
+            <CostAmount cost={cost} className="ledgerAmount" />
+            <p className="ledgerCaption">
+              <BasisPill /> Priced at public API rates. This usage ran on flat-rate
+              subscriptions, so no one was billed this.
             </p>
           </div>
         </div>
