@@ -1004,19 +1004,6 @@ h1 {
   padding: 22px 20px 18px;
 }
 
-.ledgerFigures {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 26px;
-}
-
-/* A hairline between the two figures, not a box around either: they are one
-   statement read across, not two competing stats. */
-.ledgerFigures > .ledgerFigure + .ledgerFigure {
-  border-left: 1px solid var(--line);
-  padding-left: 26px;
-}
-
 .ledgerAmount,
 .statAmount {
   position: relative;
@@ -1113,7 +1100,7 @@ h1 {
 /* The signature: the same five segments weighted twice, with ribbons showing
    each one widening or collapsing on the way from volume to cost. */
 .shift {
-  margin-top: 22px;
+  margin-top: 2px;
 }
 
 /* Volume and cost are now columns, not rows, so their headings sit over the
@@ -1121,9 +1108,9 @@ h1 {
 .shiftHeads {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  gap: 26px;
+  margin-bottom: 18px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 800;
@@ -1134,13 +1121,57 @@ h1 {
 .shiftHead {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
   min-width: 0;
+  max-width: 40ch;
+}
+
+/* The headline figure now sits on the end of the flow it describes, so it is
+   sized to lead the block without pushing the chart below the fold. */
+.shiftAmount {
+  position: relative;
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.4vw, 46px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.shiftAmountStack {
+  position: relative;
+  display: inline-block;
+}
+
+.shiftAmountUnit {
+  margin-left: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shiftHeadNote {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 .shiftHeadRight {
   align-items: flex-end;
   text-align: right;
+  /* Narrower than the left head: right-aligned prose goes ragged fast, and the
+     "at API list" pill runs inline with it. */
+  max-width: 32ch;
 }
 
 .shiftRowName {
@@ -1265,6 +1296,7 @@ h1 {
 /* Print Run: flat inks, hard keylines, and the registration-offset ghost the
    hero headline already uses — the ledger reads as another block on the sheet. */
 [data-theme="printrun"] .ledgerAmount,
+[data-theme="printrun"] .shiftAmount,
 [data-theme="printrun"] .statAmount {
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -1273,8 +1305,8 @@ h1 {
 [data-theme="printrun"] .ledgerGhost {
   display: block;
   position: absolute;
-  top: 3px;
-  left: 4px;
+  top: 2px;
+  left: 3px;
   z-index: 1;
   color: var(--accent);
   opacity: 0.85;
@@ -1291,7 +1323,8 @@ h1 {
 
 /* Ticker: hairline rules, monospace figures, ribbons kept dim so the two solid
    bars stay the brightest thing in the block. */
-[data-theme="ticker"] .ledgerAmount {
+[data-theme="ticker"] .ledgerAmount,
+[data-theme="ticker"] .shiftAmount {
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -1446,21 +1479,22 @@ h1 {
 
   /* The two figures stop reading as one line on a phone, so they stack with a
      rule between them instead of beside them. */
-  .ledgerFigures {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .ledgerFigures > .ledgerFigure + .ledgerFigure {
-    border-left: none;
-    border-top: 1px solid var(--line);
-    padding-left: 0;
-    padding-top: 20px;
-  }
-
   .shiftHeads {
+    display: block;
     font-size: 10px;
     letter-spacing: 0.08em;
+  }
+
+  .shiftHead {
+    max-width: none;
+  }
+
+  .shiftHead + .shiftHead {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    align-items: flex-start;
+    text-align: left;
   }
 
   /* The registration offset is tuned to the 64px desktop figure; at phone sizes

@@ -51,7 +51,7 @@ The choice persists to `localStorage` under `dashboard-theme`, and is applied bo
 **Sections, in render order:**
 1. `ThemeToggle`, then `TickerTape` (ticker theme only)
 2. **Hero row** (`.heroRow`): `TickerHeroContent` / `PrintRunHero` beside the **Tool use** panel (`TickerToolUse` / `PrintRunToolUse`)
-3. **Ledger** (`.ledger`): the counterfactual cost and the measured token volume side by side at equal weight, over the `ShapeShift` chart. See "The ledger" below
+3. **Ledger** (`.ledger`): the `ShapeShift` chart, whose own two heads *are* the headline figures — measured token volume over the left end of the flow, counterfactual cost over the right. See "The ledger" below
 4. **Usage timeline** (`.timelineRow`, titled "Burn history" in the ticker theme): stacked-area chart of Claude Code + Codex CLI per day; the tooltip carries that day's cost
 5. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
 6. **Stats**: total burn, peak day, 7d average, active days
@@ -65,6 +65,12 @@ The choice persists to `localStorage` under `dashboard-theme`, and is applied bo
 The headline used to be a single token count, which was 96% cache reads and so
 tracked session length more than work done. The ledger shows both numbers at
 equal weight and makes the gap between them explain itself.
+
+The two figures live in `ShapeShift`'s `.shiftHeads`, sitting directly over the
+ends of the flow they label — printed once, not once as a headline row and again
+as a chart axis label. Anything that needs to sit beside a figure (the `exact`
+pill, `BasisPill`, the "at least" qualifier) goes in that head, via the
+`volumeNote` / `costNote` props.
 
 - The token figure counts **measured** tokens only (exact logs), not the
   all-sources total: only measured tokens are ever priced, so pairing dollars

@@ -177,7 +177,6 @@ export default function TokenBurnDashboard() {
   const measured = useMemo(() => sumTokensByType(selectedRows), [selectedRows]);
   const cost = useMemo(() => sumCost(selectedRows), [selectedRows]);
   const modelTotals = useMemo(() => sumByModel(selectedRows), [selectedRows]);
-  const measuredTokens = measured.typed + measured.unattributed;
   const costByType = cost.kind === "priced" || cost.kind === "lower-bound" ? cost.byType : emptyByType();
   const costTotal = cost.kind === "priced" || cost.kind === "lower-bound" ? cost.usd : 0;
 
@@ -256,42 +255,26 @@ export default function TokenBurnDashboard() {
       </section>
 
       <section className="ledger" aria-label="Volume beside cost">
-        {/* Volume first, cost second, matching the Sankey below: it flows
-            left-to-right from share of volume to share of cost, so the two
-            figures have to sit on the same sides as the ends of the flow. */}
-        <div className="ledgerFigures">
-          <div className="ledgerFigure">
-            <p className="label">What it took to get there</p>
-            <p className="ledgerAmount">
-              <span className="ledgerAmountStack">
-                <span className="ledgerGhost" aria-hidden="true">
-                  {formatTokens(measuredTokens)}
-                </span>
-                <span className="ledgerAmountInk">{formatTokens(measuredTokens)}</span>
-              </span>
-              <span className="ledgerUnit">tokens</span>
-            </p>
-            <p className="ledgerCaption">
-              <span className="pill exact">exact</span> Measured from Claude Code and Codex
-              logs. {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} of them were cache
-              reads.
-            </p>
-          </div>
-          <div className="ledgerFigure">
-            <p className="label">What it would have cost</p>
-            <CostAmount cost={cost} className="ledgerAmount" />
-            <p className="ledgerCaption">
-              <BasisPill /> Priced at public API rates. This usage ran on flat-rate
-              subscriptions, so no one was billed this.
-            </p>
-          </div>
-        </div>
-
+        {/* The two headline figures are the Sankey's own end labels — volume on
+            the left, cost on the right — rather than a separate row above it.
+            Printed twice, they read as four competing stats instead of one
+            statement flowing from one end to the other. */}
         <ShapeShift
           segments={shiftSegments}
           tokenTotal={measured.typed}
           costTotal={costTotal}
           costKind={cost.kind}
+          volumeNote={
+            <>
+              <span className="pill exact">exact</span> Claude Code and Codex logs;{" "}
+              {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} cache reads.
+            </>
+          }
+          costNote={
+            <>
+              <BasisPill /> Flat-rate subscriptions — no one was billed this.
+            </>
+          }
         />
 
         <p className="ledgerNote">
@@ -743,11 +726,11 @@ const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
    its own name without colliding with its neighbours. */
 const SANKEY = {
   w: 1000,
-  h: 454,
+  h: 336,
   nodeW: 20,
   gap: 5,
   lx: 168,
-  rx: 812,
+  rx: 764,
   labelMinH: 15,
   /* Keeps the first and last node — and their labels, which centre on the node
      and so overhang it — off the edge of the viewBox. */
@@ -802,11 +785,15 @@ function ShapeShift({
   tokenTotal,
   costTotal,
   costKind,
+  volumeNote,
+  costNote,
 }: {
   segments: ShiftSegment[];
   tokenTotal: number;
   costTotal: number;
   costKind: CostKnowledge["kind"];
+  volumeNote?: React.ReactNode;
+  costNote?: React.ReactNode;
 }) {
   const [active, setActive] = useState<TokenType | null>(null);
 
@@ -824,14 +811,32 @@ function ShapeShift({
     <div className="shift">
       <div className="shiftHeads">
         <div className="shiftHead">
-          <span className="shiftRowName">By volume</span>
-          <span className="shiftRowValue">{formatTokens(tokenTotal)} tokens</span>
+          <span className="shiftRowName">What it took to get there</span>
+          <span className="shiftAmount">
+            <span className="shiftAmountStack">
+              <span className="ledgerGhost" aria-hidden="true">
+                {formatTokens(tokenTotal)}
+              </span>
+              <span className="ledgerAmountInk">{formatTokens(tokenTotal)}</span>
+            </span>
+            <span className="shiftAmountUnit">tokens</span>
+          </span>
+          {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
         </div>
         <div className="shiftHead shiftHeadRight">
-          <span className="shiftRowName">By cost</span>
-          <span className="shiftRowValue">
-            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+          <span className="shiftRowName">What it would have cost</span>
+          <span className="shiftAmount">
+            {costKind === "lower-bound" && <span className="costBound">at least</span>}
+            <span className="shiftAmountStack">
+              <span className="ledgerGhost" aria-hidden="true">
+                {priced ? formatUsd(costTotal) : "not priced"}
+              </span>
+              <span className="ledgerAmountInk">
+                {priced ? formatUsd(costTotal) : "not priced"}
+              </span>
+            </span>
           </span>
+          {costNote && <span className="shiftHeadNote">{costNote}</span>}
         </div>
       </div>
 
