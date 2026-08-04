@@ -1107,10 +1107,10 @@ h1 {
    ends of the flow rather than above and below it. */
 .shiftHeads {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-start;
   gap: 26px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 800;
@@ -1123,7 +1123,28 @@ h1 {
   flex-direction: column;
   gap: 6px;
   min-width: 0;
-  max-width: 40ch;
+}
+
+/* The volume figure is anchored to the left end of the flow, not floated above
+   it: it is the size of the bar it sits beside, so it reads as that bar's label
+   rather than as a second headline competing with the cost. */
+.shiftBody {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.shiftVolume {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* The headline figure now sits on the end of the flow it describes, so it is
@@ -1131,8 +1152,9 @@ h1 {
 .shiftAmount {
   position: relative;
   display: block;
+  margin-top: 2px;
   font-family: var(--font-display);
-  font-size: clamp(30px, 4.4vw, 46px);
+  font-size: clamp(28px, 3.4vw, 40px);
   font-weight: 700;
   line-height: 0.95;
   letter-spacing: normal;
@@ -1147,7 +1169,8 @@ h1 {
 }
 
 .shiftAmountUnit {
-  margin-left: 8px;
+  display: block;
+  margin-top: 6px;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -1169,9 +1192,9 @@ h1 {
 .shiftHeadRight {
   align-items: flex-end;
   text-align: right;
-  /* Narrower than the left head: right-aligned prose goes ragged fast, and the
-     "at API list" pill runs inline with it. */
-  max-width: 32ch;
+  /* Right-aligned prose goes ragged fast, so the basis sentence is kept to a
+     couple of even lines rather than the full panel width. */
+  max-width: 44ch;
 }
 
 .shiftRowName {
@@ -1179,6 +1202,9 @@ h1 {
 }
 
 .shiftRowValue {
+  /* Set above the note beneath it: the cost is no longer a hero figure, but it
+     still has to outrank its own footnote. */
+  font-size: 16px;
   color: var(--ink);
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
@@ -1477,24 +1503,31 @@ h1 {
     padding: 18px 16px 16px;
   }
 
-  /* The two figures stop reading as one line on a phone, so they stack with a
-     rule between them instead of beside them. */
   .shiftHeads {
-    display: block;
     font-size: 10px;
     letter-spacing: 0.08em;
   }
 
-  .shiftHead {
+  .shiftHeadRight {
     max-width: none;
   }
 
-  .shiftHead + .shiftHead {
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    align-items: flex-start;
-    text-align: left;
+  /* There is no room for a rail beside a phone-width chart, so the volume
+     figure sits above the flow it labels instead of to the left of it. */
+  .shiftBody {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .shiftVolume {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  /* At phone width the chart is only ~350px across; left to its own aspect
+     ratio it collapses to a 120px sliver. */
+  .shiftFlow {
+    height: 230px;
   }
 
   /* The registration offset is tuned to the 64px desktop figure; at phone sizes

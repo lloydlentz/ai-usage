@@ -255,10 +255,11 @@ export default function TokenBurnDashboard() {
       </section>
 
       <section className="ledger" aria-label="Volume beside cost">
-        {/* The two headline figures are the Sankey's own end labels — volume on
-            the left, cost on the right — rather than a separate row above it.
-            Printed twice, they read as four competing stats instead of one
-            statement flowing from one end to the other. */}
+        {/* Neither figure gets a headline block of its own: the token count is
+            anchored to the left end of the flow it measures, and the cost sits
+            over the right end as a label on the flow's other side. Printed
+            twice — once big, once as an axis label — they read as competing
+            stats instead of one statement flowing end to end. */}
         <ShapeShift
           segments={shiftSegments}
           tokenTotal={measured.typed}
@@ -270,11 +271,7 @@ export default function TokenBurnDashboard() {
               {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} cache reads.
             </>
           }
-          costNote={
-            <>
-              <BasisPill /> Flat-rate subscriptions — no one was billed this.
-            </>
-          }
+          costNote="If priced at public API rates. The actual cost was less because this was all subscription use."
         />
 
         <p className="ledgerNote">
@@ -729,7 +726,7 @@ const SANKEY = {
   h: 336,
   nodeW: 20,
   gap: 5,
-  lx: 168,
+  lx: 170,
   rx: 764,
   labelMinH: 15,
   /* Keeps the first and last node — and their labels, which centre on the node
@@ -809,9 +806,23 @@ function ShapeShift({
 
   return (
     <div className="shift">
+      {/* Cost labels the right end of the flow, so its head sits over the right
+          end and nowhere else. The volume figure is not up here at all — it is
+          anchored to the left end of the flow in .shiftBody below. */}
       <div className="shiftHeads">
-        <div className="shiftHead">
-          <span className="shiftRowName">What it took to get there</span>
+        <div className="shiftHead shiftHeadRight">
+          <span className="shiftRowName">By cost</span>
+          <span className="shiftRowValue">
+            {costKind === "lower-bound" && "at least "}
+            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+          </span>
+          {costNote && <span className="shiftHeadNote">{costNote}</span>}
+        </div>
+      </div>
+
+      <div className="shiftBody">
+        <div className="shiftVolume">
+          <span className="shiftRowName">By volume</span>
           <span className="shiftAmount">
             <span className="shiftAmountStack">
               <span className="ledgerGhost" aria-hidden="true">
@@ -823,99 +834,90 @@ function ShapeShift({
           </span>
           {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
         </div>
-        <div className="shiftHead shiftHeadRight">
-          <span className="shiftRowName">What it would have cost</span>
-          <span className="shiftAmount">
-            {costKind === "lower-bound" && <span className="costBound">at least</span>}
-            <span className="shiftAmountStack">
-              <span className="ledgerGhost" aria-hidden="true">
-                {priced ? formatUsd(costTotal) : "not priced"}
-              </span>
-              <span className="ledgerAmountInk">
-                {priced ? formatUsd(costTotal) : "not priced"}
-              </span>
-            </span>
-          </span>
-          {costNote && <span className="shiftHeadNote">{costNote}</span>}
-        </div>
+
+        {/* preserveAspectRatio="none" is inert at desktop, where the height is
+            auto and so already the viewBox ratio. It matters below 700px, where
+            the CSS gives the flow an explicit height so it cannot collapse to a
+            sliver: the stack stays proportional, and the in-chart labels are
+            hidden by then, so nothing legible stretches. */}
+        <svg
+          className="shiftFlow"
+          viewBox={`0 0 ${SANKEY.w} ${SANKEY.h}`}
+          preserveAspectRatio="none"
+          role="img"
+          aria-label={`Each token type sized twice: by share of volume on the left, by share of cost on the right. ${segments
+            .map(
+              (s) =>
+                `${s.label}, ${formatPct(s.tokenPct)} of volume and ${
+                  priced ? formatPct(s.costPct) : "no recorded"
+                } cost`,
+            )
+            .join(". ")}`}
+        >
+          {/* Flows first so the nodes and labels sit on top of them. */}
+          {segments.map((seg, i) => {
+            const l = left[i];
+            const r = right[i];
+            if (l.h <= 0 && r.h <= 0) return null;
+            return (
+              <path
+                key={seg.type}
+                d={flowPath(l, r)}
+                fill={typeVar(seg.type)}
+                className="shiftRibbon"
+                style={{ opacity: active && active !== seg.type ? 0.05 : undefined }}
+              />
+            );
+          })}
+
+          {segments.map((seg, i) => {
+            const l = left[i];
+            const r = right[i];
+            return (
+              <g key={seg.type} opacity={dim(seg.type)}>
+                <rect x={SANKEY.lx} y={l.top} width={SANKEY.nodeW} height={l.h} fill={typeVar(seg.type)}>
+                  <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
+                </rect>
+                <rect x={SANKEY.rx} y={r.top} width={SANKEY.nodeW} height={r.h} fill={typeVar(seg.type)}>
+                  <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
+                </rect>
+
+                {/* A node names itself only when it is tall enough to hold the
+                    text. On this data that labels cache read on the left and the
+                    four that actually cost something on the right — which is the
+                    point of the chart. The legend carries the rest. */}
+                {l.h >= SANKEY.labelMinH && (
+                  <text
+                    className="shiftNodeLabel"
+                    x={SANKEY.lx - 14}
+                    y={l.top + l.h / 2}
+                    textAnchor="end"
+                    dominantBaseline="middle"
+                  >
+                    <tspan>{seg.label}</tspan>
+                    <tspan className="shiftNodePct" dx="8">
+                      {formatPct(seg.tokenPct)}
+                    </tspan>
+                  </text>
+                )}
+                {r.h >= SANKEY.labelMinH && (
+                  <text
+                    className="shiftNodeLabel"
+                    x={SANKEY.rx + SANKEY.nodeW + 14}
+                    y={r.top + r.h / 2}
+                    dominantBaseline="middle"
+                  >
+                    <tspan>{seg.label}</tspan>
+                    <tspan className="shiftNodePct" dx="8">
+                      {priced ? formatPct(seg.costPct) : "—"}
+                    </tspan>
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </svg>
       </div>
-
-      <svg
-        className="shiftFlow"
-        viewBox={`0 0 ${SANKEY.w} ${SANKEY.h}`}
-        role="img"
-        aria-label={`Each token type sized twice: by share of volume on the left, by share of cost on the right. ${segments
-          .map(
-            (s) =>
-              `${s.label}, ${formatPct(s.tokenPct)} of volume and ${
-                priced ? formatPct(s.costPct) : "no recorded"
-              } cost`,
-          )
-          .join(". ")}`}
-      >
-        {/* Flows first so the nodes and labels sit on top of them. */}
-        {segments.map((seg, i) => {
-          const l = left[i];
-          const r = right[i];
-          if (l.h <= 0 && r.h <= 0) return null;
-          return (
-            <path
-              key={seg.type}
-              d={flowPath(l, r)}
-              fill={typeVar(seg.type)}
-              className="shiftRibbon"
-              style={{ opacity: active && active !== seg.type ? 0.05 : undefined }}
-            />
-          );
-        })}
-
-        {segments.map((seg, i) => {
-          const l = left[i];
-          const r = right[i];
-          return (
-            <g key={seg.type} opacity={dim(seg.type)}>
-              <rect x={SANKEY.lx} y={l.top} width={SANKEY.nodeW} height={l.h} fill={typeVar(seg.type)}>
-                <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
-              </rect>
-              <rect x={SANKEY.rx} y={r.top} width={SANKEY.nodeW} height={r.h} fill={typeVar(seg.type)}>
-                <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
-              </rect>
-
-              {/* A node names itself only when it is tall enough to hold the
-                  text. On this data that labels cache read on the left and the
-                  four that actually cost something on the right — which is the
-                  point of the chart. The legend carries the rest. */}
-              {l.h >= SANKEY.labelMinH && (
-                <text
-                  className="shiftNodeLabel"
-                  x={SANKEY.lx - 14}
-                  y={l.top + l.h / 2}
-                  textAnchor="end"
-                  dominantBaseline="middle"
-                >
-                  <tspan>{seg.label}</tspan>
-                  <tspan className="shiftNodePct" dx="8">
-                    {formatPct(seg.tokenPct)}
-                  </tspan>
-                </text>
-              )}
-              {r.h >= SANKEY.labelMinH && (
-                <text
-                  className="shiftNodeLabel"
-                  x={SANKEY.rx + SANKEY.nodeW + 14}
-                  y={r.top + r.h / 2}
-                  dominantBaseline="middle"
-                >
-                  <tspan>{seg.label}</tspan>
-                  <tspan className="shiftNodePct" dx="8">
-                    {priced ? formatPct(seg.costPct) : "—"}
-                  </tspan>
-                </text>
-              )}
-            </g>
-          );
-        })}
-      </svg>
 
       <ul className="shiftLegend">
         {segments.map((seg) => (
