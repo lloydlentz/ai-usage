@@ -726,12 +726,12 @@ const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
    before it can carry its own name without colliding with its neighbours. */
 const SANKEY = {
   w: 1000,
-  h: 336,
+  h: 282,
   nodeW: 20,
   gap: 5,
   lx: 26,
   rx: 764,
-  labelMinH: 15,
+  labelMinH: 12,
   /* Keeps the first and last node — and their labels, which centre on the node
      and so overhang it — off the edge of the viewBox. */
   padY: 12,
@@ -836,23 +836,9 @@ function ShapeShift({
 
   return (
     <div className="shift">
-      {/* Cost labels the right end of the flow, so its head sits over the right
-          end and nowhere else. The volume figure is not up here at all — it is
-          anchored to the left end of the flow in .shiftBody below. */}
+      {/* Both figures read across one row: volume and its key on the left, cost
+          on the right, in the order the flow below runs. */}
       <div className="shiftHeads">
-        <div className="shiftHead shiftHeadRight">
-          <span className="shiftRowName">By cost</span>
-          <span className="shiftRowValue">
-            {costKind === "lower-bound" && "at least "}
-            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
-          </span>
-          {costNote && <span className="shiftHeadNote">{costNote}</span>}
-        </div>
-      </div>
-
-      <div className="shiftBody">
-        {/* The rail reads top to bottom in the same order the flow stacks, so a
-            legend row sits at the same rank as the band it names. */}
         <div className="shiftRail">
           <div className="shiftVolume">
             <span className="shiftRowName">By volume</span>
@@ -907,6 +893,17 @@ function ShapeShift({
             ))}
           </ul>
         </div>
+        <div className="shiftHead shiftHeadRight">
+          <span className="shiftRowName">By cost</span>
+          <span className="shiftRowValue">
+            {costKind === "lower-bound" && "at least "}
+            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+          </span>
+          {costNote && <span className="shiftHeadNote">{costNote}</span>}
+        </div>
+      </div>
+
+      <div className="shiftBody">
 
         {/* preserveAspectRatio="none" is inert at desktop, where the height is
             auto and so already the viewBox ratio. It matters below 700px, where
