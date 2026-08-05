@@ -1128,18 +1128,19 @@ h1 {
 /* The volume figure is anchored to the left end of the flow, not floated above
    it: it is the size of the bar it sits beside, so it reads as that bar's label
    rather than as a second headline competing with the cost. */
-/* The flow runs the full width of the panel; both figures sit above it. */
+/* The keys run down the flow's left edge, so a key sits level with the band it
+   names and in the same order the flow stacks. */
 .shiftBody {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
 }
 
-/* Held to a column width so the keys stay a vertical list read in the order the
-   flow stacks. Left to fill the row they would wrap into a grid and lose it. */
 .shiftRail {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  max-width: 320px;
 }
 
 .shiftVolume {
@@ -1147,6 +1148,7 @@ h1 {
   flex-direction: column;
   gap: 6px;
   min-width: 0;
+  max-width: 46ch;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 800;
@@ -1263,13 +1265,15 @@ h1 {
   fill: transparent;
 }
 
+/* Centred in whatever height the chart leaves over, so the keys sit against the
+   middle of the flow rather than hanging off the top of it. */
 .shiftLegend {
   display: flex;
   flex-direction: column;
   gap: 2px;
   list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
+  margin: auto 0;
+  padding: 18px 0;
 }
 
 .shiftLegendHead {
@@ -1567,8 +1571,10 @@ h1 {
     border-bottom: 1px solid var(--line);
   }
 
-  .shiftRail {
-    max-width: none;
+  /* No room for a rail beside a phone-width chart: the keys go above it. */
+  .shiftBody {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .shiftVolume {
@@ -1577,7 +1583,8 @@ h1 {
   }
 
   .shiftLegend {
-    margin: 14px 0 4px;
+    margin: 0;
+    padding: 4px 0;
   }
 
   /* At phone width the chart is only ~350px across; left to its own aspect

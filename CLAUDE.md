@@ -67,15 +67,15 @@ tracked session length more than work done. The ledger shows both numbers at
 equal weight and makes the gap between them explain itself.
 
 Neither figure gets a headline block of its own. `.shiftHeads` is one row read
-across: `.shiftRail` on the left holds the token count and the legend keys under
-it, and the cost sits at the right, in the order the flow below them runs. The
-flow itself spans the full panel width. Each figure is printed once — not once as a headline and again as a chart axis label.
+across — the token count on the left, the cost on the right, in the order the
+flow below them runs. The legend keys are not in that row: they sit in
+`.shiftRail`, the first column of `.shiftBody`, down the flow's left edge. Each
+figure is printed once — not once as a headline and again as a chart axis label.
 Anything that belongs beside a figure (the `exact` pill, `BasisPill`, the "at
 least" qualifier, the basis sentence) goes with it, via the `volumeNote` /
-`costNote` props. Below 700px the two heads stack (cost first) and `.shiftFlow`
-takes an explicit height, since at phone width the viewBox ratio alone collapses
-the chart to a sliver. `.shiftRail` is capped at 320px so the keys stay a single
-column read in the order the flow stacks rather than wrapping into a grid.
+`costNote` props. Below 700px the two heads stack (cost first), the rail moves
+above the flow, and `.shiftFlow` takes an explicit height, since at phone width
+the viewBox ratio alone collapses the chart to a sliver.
 
 Only the cost side of the flow labels itself in-chart. The legend rail sits
 against the volume bar and already names every band, so a left-hand `<text>`

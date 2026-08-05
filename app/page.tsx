@@ -726,12 +726,12 @@ const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
    before it can carry its own name without colliding with its neighbours. */
 const SANKEY = {
   w: 1000,
-  h: 282,
+  h: 336,
   nodeW: 20,
   gap: 5,
   lx: 26,
   rx: 764,
-  labelMinH: 12,
+  labelMinH: 15,
   /* Keeps the first and last node — and their labels, which centre on the node
      and so overhang it — off the edge of the viewBox. */
   padY: 12,
@@ -836,24 +836,35 @@ function ShapeShift({
 
   return (
     <div className="shift">
-      {/* Both figures read across one row: volume and its key on the left, cost
-          on the right, in the order the flow below runs. */}
+      {/* The two figures read across one row. The keys are not up here with
+          them: they belong beside the flow, in .shiftBody below, where a row
+          sits at the same rank as the band it names. */}
       <div className="shiftHeads">
-        <div className="shiftRail">
-          <div className="shiftVolume">
-            <span className="shiftRowName">By volume</span>
-            <span className="shiftAmount">
-              <span className="shiftAmountStack">
-                <span className="ledgerGhost" aria-hidden="true">
-                  {formatTokens(tokenTotal)}
-                </span>
-                <span className="ledgerAmountInk">{formatTokens(tokenTotal)}</span>
+        <div className="shiftVolume">
+          <span className="shiftRowName">By volume</span>
+          <span className="shiftAmount">
+            <span className="shiftAmountStack">
+              <span className="ledgerGhost" aria-hidden="true">
+                {formatTokens(tokenTotal)}
               </span>
-              <span className="shiftAmountUnit">tokens</span>
+              <span className="ledgerAmountInk">{formatTokens(tokenTotal)}</span>
             </span>
-            {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
-          </div>
+            <span className="shiftAmountUnit">tokens</span>
+          </span>
+          {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
+        </div>
+        <div className="shiftHead shiftHeadRight">
+          <span className="shiftRowName">By cost</span>
+          <span className="shiftRowValue">
+            {costKind === "lower-bound" && "at least "}
+            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
+          </span>
+          {costNote && <span className="shiftHeadNote">{costNote}</span>}
+        </div>
+      </div>
 
+      <div className="shiftBody">
+        <div className="shiftRail">
           <ul className="shiftLegend">
             <li className="shiftLegendHead" aria-hidden="true">
               share of volume → share of cost
@@ -893,17 +904,6 @@ function ShapeShift({
             ))}
           </ul>
         </div>
-        <div className="shiftHead shiftHeadRight">
-          <span className="shiftRowName">By cost</span>
-          <span className="shiftRowValue">
-            {costKind === "lower-bound" && "at least "}
-            {priced ? formatUsd(costTotal) : "not priced"} <BasisPill />
-          </span>
-          {costNote && <span className="shiftHeadNote">{costNote}</span>}
-        </div>
-      </div>
-
-      <div className="shiftBody">
 
         {/* preserveAspectRatio="none" is inert at desktop, where the height is
             auto and so already the viewBox ratio. It matters below 700px, where
