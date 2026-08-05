@@ -76,6 +76,11 @@ least" qualifier, the basis sentence) goes with it, via the `volumeNote` /
 takes an explicit height, since at phone width the viewBox ratio alone collapses
 the chart to a sliver.
 
+Only the cost side of the flow labels itself in-chart. The legend rail sits
+against the volume bar and already names every band, so a left-hand `<text>`
+would print the same words twice — which is why `SANKEY.lx` can sit at 26 rather
+than reserving a label column.
+
 - The token figure counts **measured** tokens only (exact logs), not the
   all-sources total: only measured tokens are ever priced, so pairing dollars
   with a figure that folds in unpriced chat estimates would put two different
@@ -100,7 +105,7 @@ one. Table columns carry the qualifier in the column header
 (`.thBasis`) so each cell inherits it.
 
 **Key components:**
-- `ShapeShift`: the two-bar-plus-ribbons cost/volume chart, with `displayWidths()` for its geometry
+- `ShapeShift`: the two-bar-plus-ribbons cost/volume chart, with `displayWidths()` for its geometry. Its legend (`.shiftLegend`) is a vertical rail immediately left of the flow, ordered like the stack; hovering, focusing, or clicking a key isolates that type across both bars and reveals its token count and dollars on a line kept in the layout at `opacity: 0`
 - `BasisPill` / `CostAmount` / `CellCost` / `UnpricedNote`: the four renderings of `CostKnowledge` — large figure, table cell, and the lower-bound disclosure
 - `UsageTimeline`: SVG stacked-area chart (Claude Code under Codex CLI) with a hover crosshair, per-series dots, and a tooltip positioned in real pixels so its fixed width can't overflow a narrow container
 - `GitHubHeatmap`: GitHub-style calendar grid (days-of-week rows, weeks columns)

@@ -719,14 +719,17 @@ const typeVar = (type: TokenType) => `var(--t-${type.replace(/_/g, "-")})`;
 /* Sankey geometry, in viewBox units. Volume stacks on the left, cost on the
    right, and each type's flow connects its two sizes — so a type that costs
    more than its share of volume widens across the middle, and one that costs
-   less pinches in. `labelMinH` is the height a node needs before it can carry
-   its own name without colliding with its neighbours. */
+   less pinches in. Only the cost side labels itself in-chart: the legend rail
+   sits immediately left of the volume bar and already names every band, so a
+   left-hand label would be the same text twice, and `lx` can sit near the edge
+   instead of reserving a column for one. `labelMinH` is the height a node needs
+   before it can carry its own name without colliding with its neighbours. */
 const SANKEY = {
   w: 1000,
   h: 336,
   nodeW: 20,
   gap: 5,
-  lx: 170,
+  lx: 26,
   rx: 764,
   labelMinH: 15,
   /* Keeps the first and last node — and their labels, which centre on the node
@@ -821,18 +824,61 @@ function ShapeShift({
       </div>
 
       <div className="shiftBody">
-        <div className="shiftVolume">
-          <span className="shiftRowName">By volume</span>
-          <span className="shiftAmount">
-            <span className="shiftAmountStack">
-              <span className="ledgerGhost" aria-hidden="true">
-                {formatTokens(tokenTotal)}
+        {/* The rail reads top to bottom in the same order the flow stacks, so a
+            legend row sits at the same rank as the band it names. */}
+        <div className="shiftRail">
+          <div className="shiftVolume">
+            <span className="shiftRowName">By volume</span>
+            <span className="shiftAmount">
+              <span className="shiftAmountStack">
+                <span className="ledgerGhost" aria-hidden="true">
+                  {formatTokens(tokenTotal)}
+                </span>
+                <span className="ledgerAmountInk">{formatTokens(tokenTotal)}</span>
               </span>
-              <span className="ledgerAmountInk">{formatTokens(tokenTotal)}</span>
+              <span className="shiftAmountUnit">tokens</span>
             </span>
-            <span className="shiftAmountUnit">tokens</span>
-          </span>
-          {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
+            {volumeNote && <span className="shiftHeadNote">{volumeNote}</span>}
+          </div>
+
+          <ul className="shiftLegend">
+            <li className="shiftLegendHead" aria-hidden="true">
+              share of volume → share of cost
+            </li>
+            {segments.map((seg) => (
+              <li key={seg.type}>
+                <button
+                  type="button"
+                  className="shiftKey"
+                  aria-pressed={active === seg.type}
+                  onMouseEnter={() => setActive(seg.type)}
+                  onMouseLeave={() => setActive(null)}
+                  onFocus={() => setActive(seg.type)}
+                  onBlur={() => setActive(null)}
+                  onClick={() => setActive(active === seg.type ? null : seg.type)}
+                >
+                  <i style={{ background: typeVar(seg.type) }} />
+                  <span className="shiftKeyLabel">{seg.label}</span>
+                  <span className="shiftKeyFlow">
+                    <span className="shiftKeyPct">{formatPct(seg.tokenPct)}</span>
+                    <span className="shiftKeyArrow" aria-hidden="true">
+                      →
+                    </span>
+                    <span className="shiftKeyPct shiftKeyCost">
+                      {priced ? formatPct(seg.costPct) : "—"}
+                    </span>
+                  </span>
+                  {/* Always in the layout, revealed on hover or focus: showing it
+                      only when active would jump the whole rail on every pass of
+                      the mouse. */}
+                  <span className="shiftKeyDetail">
+                    {formatTokens(seg.tokens)} tokens
+                    {priced ? ` · ${formatUsd(seg.cost)}` : " · not priced"}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* preserveAspectRatio="none" is inert at desktop, where the height is
@@ -882,24 +928,10 @@ function ShapeShift({
                   <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
                 </rect>
 
-                {/* A node names itself only when it is tall enough to hold the
-                    text. On this data that labels cache read on the left and the
-                    four that actually cost something on the right — which is the
-                    point of the chart. The legend carries the rest. */}
-                {l.h >= SANKEY.labelMinH && (
-                  <text
-                    className="shiftNodeLabel"
-                    x={SANKEY.lx - 14}
-                    y={l.top + l.h / 2}
-                    textAnchor="end"
-                    dominantBaseline="middle"
-                  >
-                    <tspan>{seg.label}</tspan>
-                    <tspan className="shiftNodePct" dx="8">
-                      {formatPct(seg.tokenPct)}
-                    </tspan>
-                  </text>
-                )}
+                {/* Only the cost side. A node names itself when it is tall
+                    enough to hold the text, which on this data is the four that
+                    actually cost something — the point of the chart. The volume
+                    side is named by the legend rail beside it. */}
                 {r.h >= SANKEY.labelMinH && (
                   <text
                     className="shiftNodeLabel"
@@ -918,34 +950,6 @@ function ShapeShift({
           })}
         </svg>
       </div>
-
-      <ul className="shiftLegend">
-        {segments.map((seg) => (
-          <li key={seg.type}>
-            <button
-              type="button"
-              className="shiftKey"
-              aria-pressed={active === seg.type}
-              onMouseEnter={() => setActive(seg.type)}
-              onMouseLeave={() => setActive(null)}
-              onFocus={() => setActive(seg.type)}
-              onBlur={() => setActive(null)}
-              onClick={() => setActive(active === seg.type ? null : seg.type)}
-            >
-              <i style={{ background: typeVar(seg.type) }} />
-              <span className="shiftKeyLabel">{seg.label}</span>
-              <span className="shiftKeyPct">{formatPct(seg.tokenPct)}</span>
-              <span className="shiftKeyArrow" aria-hidden="true">
-                →
-              </span>
-              <span className="shiftKeyPct shiftKeyCost">{priced ? formatPct(seg.costPct) : "—"}</span>
-            </button>
-          </li>
-        ))}
-        <li className="shiftLegendHead" aria-hidden="true">
-          share of volume → share of cost
-        </li>
-      </ul>
     </div>
   );
 }

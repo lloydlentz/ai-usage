@@ -1130,9 +1130,15 @@ h1 {
    rather than as a second headline competing with the cost. */
 .shiftBody {
   display: grid;
-  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
-  align-items: start;
-  gap: 18px;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
+}
+
+.shiftRail {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .shiftVolume {
@@ -1244,18 +1250,18 @@ h1 {
   transition: opacity 160ms ease;
 }
 
+/* Centred in whatever height the chart leaves over, so the five keys sit
+   against the middle of the flow rather than hanging off the top of it. */
 .shiftLegend {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
+  margin: auto 0;
+  padding: 22px 0;
 }
 
 .shiftLegendHead {
-  order: -1;
-  grid-column: 1 / -1;
   color: var(--muted);
   font-family: var(--font-body);
   font-size: 10.5px;
@@ -1267,11 +1273,11 @@ h1 {
 
 .shiftKey {
   display: grid;
-  grid-template-columns: 10px minmax(0, 1fr) 50px 12px 50px;
+  grid-template-columns: 10px minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
+  gap: 2px 10px;
   width: 100%;
-  padding: 5px 0;
+  padding: 6px 0;
   border: none;
   background: none;
   cursor: pointer;
@@ -1285,7 +1291,37 @@ h1 {
 .shiftKey i {
   width: 10px;
   height: 10px;
+  grid-row: 1;
   border: var(--cell-border);
+}
+
+/* All three text lines stack in the swatch's neighbouring column. Left to
+   auto-placement they would fill the 10px swatch column on the rows the swatch
+   does not occupy, and the flow line would land under the detail line. */
+.shiftKeyLabel,
+.shiftKeyFlow,
+.shiftKeyDetail {
+  grid-column: 2;
+}
+
+.shiftKeyFlow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.shiftKeyDetail {
+  font-size: 11px;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+.shiftKey:hover .shiftKeyDetail,
+.shiftKey:focus-visible .shiftKeyDetail,
+.shiftKey[aria-pressed="true"] .shiftKeyDetail {
+  opacity: 1;
 }
 
 .shiftKeyLabel {
@@ -1295,7 +1331,6 @@ h1 {
 }
 
 .shiftKeyPct {
-  text-align: right;
   color: var(--muted);
 }
 
@@ -1306,7 +1341,6 @@ h1 {
 
 .shiftKeyArrow {
   color: var(--muted);
-  text-align: center;
 }
 
 .shiftKey:hover .shiftKeyLabel,
@@ -1522,6 +1556,13 @@ h1 {
   .shiftVolume {
     font-size: 10px;
     letter-spacing: 0.08em;
+  }
+
+  /* Stacked above the chart rather than beside it, the legend has no leftover
+     height to centre in and the full panel width to spread across. */
+  .shiftLegend {
+    margin: 0;
+    padding: 14px 0 4px;
   }
 
   /* At phone width the chart is only ~350px across; left to its own aspect
