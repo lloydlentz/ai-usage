@@ -105,7 +105,7 @@ one. Table columns carry the qualifier in the column header
 (`.thBasis`) so each cell inherits it.
 
 **Key components:**
-- `ShapeShift`: the two-bar-plus-ribbons cost/volume chart, with `displayWidths()` for its geometry. Its legend (`.shiftLegend`) is a vertical rail immediately left of the flow, ordered like the stack; hovering, focusing, or clicking a key isolates that type across both bars and reveals its token count and dollars on a line kept in the layout at `opacity: 0`
+- `ShapeShift`: the two-bar-plus-ribbons cost/volume chart, with `displayWidths()` for its geometry. Its legend (`.shiftLegend`) is a vertical rail immediately left of the flow, ordered like the stack; hovering, focusing, or clicking a key isolates that type across both bars and reveals its token count and dollars on a line kept in the layout at `opacity: 0`. The same isolate gesture is on the chart itself — every ribbon and node picks up its own type (`pickType`), and `hitBands()` grows each node's target to the midpoint of the gaps around it so a 0.2% type is not a 2px mouse target
 - `BasisPill` / `CostAmount` / `CellCost` / `UnpricedNote`: the four renderings of `CostKnowledge` — large figure, table cell, and the lower-bound disclosure
 - `UsageTimeline`: SVG stacked-area chart (Claude Code under Codex CLI) with a hover crosshair, per-series dots, and a tooltip positioned in real pixels so its fixed width can't overflow a narrow container
 - `GitHubHeatmap`: GitHub-style calendar grid (days-of-week rows, weeks columns)

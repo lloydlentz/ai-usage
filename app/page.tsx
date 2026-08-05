@@ -780,6 +780,21 @@ function displayWidths(values: number[], floor = 0.45) {
   return lifted.map((v) => (v > floor ? v - (v / shrinkable) * added : v));
 }
 
+/* Hover targets for a column of nodes. A type that is 0.2% of the volume draws
+   as a 2px bar, which is not something a mouse can be asked to find, so each
+   node's target is grown to the midpoint of the gap on either side. The bands
+   tile the column exactly — no overlap, so the type under the cursor is never
+   ambiguous — and every type ends up with at least the gap's worth of height. */
+function hitBands(nodes: SankeyNode[]) {
+  return nodes.map((n, i) => {
+    const prev = nodes[i - 1];
+    const next = nodes[i + 1];
+    const top = prev ? (prev.top + prev.h + n.top) / 2 : n.top;
+    const bottom = next ? (n.top + n.h + next.top) / 2 : n.top + n.h;
+    return { top, h: Math.max(0, bottom - top) };
+  });
+}
+
 function ShapeShift({
   segments,
   tokenTotal,
@@ -802,10 +817,22 @@ function ShapeShift({
 
   const dim = (type: TokenType) => (active && active !== type ? 0.14 : 1);
 
+  /* The same isolate-this-type gesture the legend keys carry, so a band can be
+     picked up anywhere it is drawn — its ribbon, either of its nodes, or its
+     row in the rail. Hovering here sets the same `active` the keys set, so the
+     matching key lights up and reveals its numbers at the same time. */
+  const pickType = (type: TokenType) => ({
+    onMouseEnter: () => setActive(type),
+    onMouseLeave: () => setActive(null),
+    onClick: () => setActive(active === type ? null : type),
+  });
+
   const priced = costKind === "priced" || costKind === "lower-bound";
 
   const left = stackNodes(tokenW);
   const right = stackNodes(costW);
+  const leftHits = hitBands(left);
+  const rightHits = hitBands(right);
 
   return (
     <div className="shift">
@@ -912,7 +939,12 @@ function ShapeShift({
                 fill={typeVar(seg.type)}
                 className="shiftRibbon"
                 style={{ opacity: active && active !== seg.type ? 0.05 : undefined }}
-              />
+                {...pickType(seg.type)}
+              >
+                <title>{`${seg.label}: ${formatPct(seg.tokenPct)} of volume, ${
+                  priced ? formatPct(seg.costPct) : "no recorded"
+                } of cost`}</title>
+              </path>
             );
           })}
 
@@ -920,7 +952,7 @@ function ShapeShift({
             const l = left[i];
             const r = right[i];
             return (
-              <g key={seg.type} opacity={dim(seg.type)}>
+              <g key={seg.type} opacity={dim(seg.type)} {...pickType(seg.type)}>
                 <rect x={SANKEY.lx} y={l.top} width={SANKEY.nodeW} height={l.h} fill={typeVar(seg.type)}>
                   <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
                 </rect>
@@ -948,6 +980,30 @@ function ShapeShift({
               </g>
             );
           })}
+
+          {/* Last, so they sit over the nodes: the grown hover targets. They
+              carry the node tooltips too, since a transparent rect on top would
+              otherwise swallow them. */}
+          {segments.map((seg, i) => (
+            <g key={seg.type} className="shiftHit" {...pickType(seg.type)}>
+              <rect
+                x={SANKEY.lx - 8}
+                y={leftHits[i].top}
+                width={SANKEY.nodeW + 16}
+                height={leftHits[i].h}
+              >
+                <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
+              </rect>
+              <rect
+                x={SANKEY.rx - 8}
+                y={rightHits[i].top}
+                width={SANKEY.nodeW + 16}
+                height={rightHits[i].h}
+              >
+                <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
+              </rect>
+            </g>
+          ))}
         </svg>
       </div>
     </div>

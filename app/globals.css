@@ -1250,6 +1250,18 @@ h1 {
   transition: opacity 160ms ease;
 }
 
+/* Every drawn part of a band picks it up, not just its key in the rail. */
+.shiftRibbon,
+.shiftFlow rect,
+.shiftNodeLabel {
+  cursor: pointer;
+}
+
+/* Invisible, but still hit-tested: `fill: none` would not be. */
+.shiftHit rect {
+  fill: transparent;
+}
+
 /* Centred in whatever height the chart leaves over, so the five keys sit
    against the middle of the flow rather than hanging off the top of it. */
 .shiftLegend {
