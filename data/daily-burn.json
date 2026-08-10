@@ -3156,26 +3156,26 @@
   {
     "date": "2026-08-10",
     "codex_tokens": 5168708,
-    "claude_code_tokens": 10672963,
-    "claude_code_calls": 86,
+    "claude_code_tokens": 12257640,
+    "claude_code_calls": 95,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 15894671,
+    "total": 17479348,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
         "models": {
           "claude-sonnet-5": {
-            "calls": 86,
-            "input": 172,
+            "calls": 95,
+            "input": 190,
             "cache_write_5m": 0,
-            "cache_write_1h": 134395,
-            "cache_read": 10475709,
-            "output": 62687,
-            "tokens": 10672963,
-            "cost_usd": 4.889904
+            "cache_write_1h": 144339,
+            "cache_read": 12046385,
+            "output": 66726,
+            "tokens": 12257640,
+            "cost_usd": 5.481409
           }
         },
         "unattributed": 0
@@ -3195,17 +3195,17 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 9.1024,
+      "total": 9.693905,
       "by_tool": {
-        "claude_code": 4.889904,
+        "claude_code": 5.481409,
         "codex": 4.212496
       },
       "by_type": {
-        "input": 1.099596,
+        "input": 1.09965,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.80637,
-        "cache_read": 5.606329,
-        "output": 1.590105
+        "cache_write_1h": 0.866034,
+        "cache_read": 6.077532,
+        "output": 1.65069
       },
       "unpriced_tokens": 0
     }
