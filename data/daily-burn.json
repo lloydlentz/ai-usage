@@ -3269,13 +3269,13 @@
   },
   {
     "date": "2026-08-12",
-    "codex_tokens": 4132223,
-    "claude_code_tokens": 3045853,
-    "claude_code_calls": 40,
+    "codex_tokens": 5555817,
+    "claude_code_tokens": 5781277,
+    "claude_code_calls": 55,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 0,
-    "total": 7223076,
+    "total": 11382094,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
@@ -3290,6 +3290,16 @@
             "output": 25924,
             "tokens": 3045853,
             "cost_usd": 2.81943
+          },
+          "claude-sonnet-5": {
+            "calls": 15,
+            "input": 30,
+            "cache_write_5m": 0,
+            "cache_write_1h": 158524,
+            "cache_read": 2568966,
+            "output": 7904,
+            "tokens": 2735424,
+            "cost_usd": 1.840484
           }
         },
         "unattributed": 0
@@ -3297,11 +3307,11 @@
       "codex": {
         "models": {
           "gpt-5.6-sol": {
-            "input": 222224,
-            "cache_read": 3886080,
-            "output": 23919,
-            "tokens": 4132223,
-            "cost_usd": 3.77173
+            "input": 381624,
+            "cache_read": 5147392,
+            "output": 26801,
+            "tokens": 5555817,
+            "cost_usd": 5.285846
           }
         },
         "unattributed": 0
@@ -3309,17 +3319,17 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 6.59116,
+      "total": 9.94576,
       "by_tool": {
-        "claude_code": 2.81943,
-        "codex": 3.77173
+        "claude_code": 4.659914,
+        "codex": 5.285846
       },
       "by_type": {
-        "input": 1.11389,
+        "input": 1.91098,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.69355,
-        "cache_read": 3.41805,
-        "output": 1.36567
+        "cache_write_1h": 1.644694,
+        "cache_read": 4.819396,
+        "output": 1.57069
       },
       "unpriced_tokens": 0
     }
