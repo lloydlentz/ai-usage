@@ -3888,28 +3888,59 @@
   },
   {
     "date": "2026-08-28",
-    "codex_tokens": 5022252,
-    "claude_code_tokens": 0,
-    "claude_code_calls": 0,
+    "codex_tokens": 8588608,
+    "claude_code_tokens": 6436799,
+    "claude_code_calls": 47,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 5075252,
+    "total": 15078407,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
-        "models": {},
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0,
+            "cost_usd": 0.0
+          },
+          "claude-fable-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 171742,
+            "cache_read": 1179420,
+            "output": 3648,
+            "tokens": 1354826,
+            "cost_usd": 4.79682
+          },
+          "claude-opus-5": {
+            "calls": 38,
+            "input": 76,
+            "cache_write_5m": 0,
+            "cache_write_1h": 155422,
+            "cache_read": 4861775,
+            "output": 64700,
+            "tokens": 5081973,
+            "cost_usd": 5.602987
+          }
+        },
         "unattributed": 0
       },
       "codex": {
         "models": {
           "gpt-5.6-sol": {
-            "input": 272978,
-            "cache_read": 4735232,
-            "output": 9816,
-            "tokens": 5018026,
-            "cost_usd": 4.026986
+            "input": 460529,
+            "cache_read": 8100352,
+            "output": 23501,
+            "tokens": 8584382,
+            "cost_usd": 7.057851
           }
         },
         "unattributed": 4226
@@ -3917,17 +3948,17 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 4.026986,
+      "total": 17.457659,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 4.026986
+        "claude_code": 10.399807,
+        "codex": 7.057851
       },
       "by_type": {
-        "input": 1.36489,
+        "input": 2.303185,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 2.367616,
-        "output": 0.29448
+        "cache_write_1h": 4.98906,
+        "cache_read": 7.660483,
+        "output": 2.50493
       },
       "unpriced_tokens": 4226
     }
