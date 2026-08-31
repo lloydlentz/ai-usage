@@ -4068,13 +4068,13 @@
   },
   {
     "date": "2026-08-31",
-    "codex_tokens": 2621101,
-    "claude_code_tokens": 0,
-    "claude_code_calls": 1,
+    "codex_tokens": 23752726,
+    "claude_code_tokens": 2558793,
+    "claude_code_calls": 14,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 2674101,
+    "total": 26364519,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
@@ -4089,6 +4089,16 @@
             "output": 0,
             "tokens": 0,
             "cost_usd": 0.0
+          },
+          "claude-opus-5": {
+            "calls": 13,
+            "input": 26,
+            "cache_write_5m": 0,
+            "cache_write_1h": 163184,
+            "cache_read": 2387878,
+            "output": 7705,
+            "tokens": 2558793,
+            "cost_usd": 3.018534
           }
         },
         "unattributed": 0
@@ -4096,11 +4106,11 @@
       "codex": {
         "models": {
           "gpt-5.6-sol": {
-            "input": 408378,
-            "cache_read": 2203136,
-            "output": 9587,
-            "tokens": 2621101,
-            "cost_usd": 3.431068
+            "input": 690442,
+            "cache_read": 23018368,
+            "output": 43916,
+            "tokens": 23752726,
+            "cost_usd": 16.278874
           }
         },
         "unattributed": 0
@@ -4108,17 +4118,17 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 3.431068,
+      "total": 19.297408,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 3.431068
+        "claude_code": 3.018534,
+        "codex": 16.278874
       },
       "by_type": {
-        "input": 2.04189,
+        "input": 3.45234,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 1.101568,
-        "output": 0.28761
+        "cache_write_1h": 1.63184,
+        "cache_read": 12.703123,
+        "output": 1.510105
       },
       "unpriced_tokens": 0
     }
