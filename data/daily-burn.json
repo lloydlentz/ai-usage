@@ -4566,18 +4566,38 @@
   },
   {
     "date": "2026-09-08",
-    "codex_tokens": 10696696,
-    "claude_code_tokens": 662541,
-    "claude_code_calls": 11,
+    "codex_tokens": 10777624,
+    "claude_code_tokens": 6639114,
+    "claude_code_calls": 27,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 11439237,
+    "total": 17496738,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
         "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0,
+            "cost_usd": 0.0
+          },
+          "claude-opus-5": {
+            "calls": 15,
+            "input": 30,
+            "cache_write_5m": 0,
+            "cache_write_1h": 382845,
+            "cache_read": 5569911,
+            "output": 23787,
+            "tokens": 5976573,
+            "cost_usd": 7.20823
+          },
           "claude-sonnet-5": {
             "calls": 11,
             "input": 22,
@@ -4594,11 +4614,11 @@
       "codex": {
         "models": {
           "gpt-5.6-sol": {
-            "input": 546922,
-            "cache_read": 10084736,
-            "output": 70814,
-            "tokens": 10702472,
-            "cost_usd": 9.901398
+            "input": 547943,
+            "cache_read": 10162816,
+            "output": 72641,
+            "tokens": 10783400,
+            "cost_usd": 10.000353
           }
         },
         "unattributed": 0
@@ -4606,17 +4626,17 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 10.27622,
+      "total": 17.583405,
       "by_tool": {
-        "claude_code": 0.374822,
-        "codex": 9.901398
+        "claude_code": 7.583052,
+        "codex": 10.000353
       },
       "by_type": {
-        "input": 2.734676,
+        "input": 2.739931,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.163368,
-        "cache_read": 5.232531,
-        "output": 2.145645
+        "cache_write_1h": 3.991818,
+        "cache_read": 8.056526,
+        "output": 2.79513
       },
       "unpriced_tokens": 0
     }
