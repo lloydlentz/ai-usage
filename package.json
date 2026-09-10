@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test:pipeline": "python3 -m unittest discover -s tests -t . -v"
+    "test:pipeline": "python3 -m unittest discover -s tests -t . -v",
+    "test:frontend": "tsx --test tests/frontend.test.tsx",
+    "test:browser": "playwright test",
+    "test": "npm run test:pipeline && npm run test:frontend",
+    "check": "npm run lint && npm test && npm run build"
   },
   "dependencies": {
     "next": "^16.0.0",
@@ -16,11 +20,13 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.2.12",
+    "tsx": "^4.23.13",
     "typescript": "^5.7.0"
   }
 }

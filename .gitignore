@@ -6,3 +6,7 @@ data/exact-daily.json
 .claude/settings.local.json
 __pycache__/
 *.pyc
+
+test-results/
+playwright-report/
+*.tsbuildinfo

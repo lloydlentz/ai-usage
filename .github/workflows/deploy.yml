@@ -12,6 +12,11 @@ on:
       - "data/pricing.json"
       - "app/**"
       - "lib/**"
+      - "scripts/**"
+      - "tests/**"
+      - "playwright.config.ts"
+      - "tsconfig.json"
+      - "eslint.config.mjs"
       - "public/**"
       - "next.config.ts"
       # The build installs with `npm ci`, which fails outright if the lockfile
@@ -48,7 +53,13 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
 
       - uses: actions/configure-pages@v5
 

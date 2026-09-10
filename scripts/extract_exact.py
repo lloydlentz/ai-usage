@@ -237,7 +237,7 @@ def extract_codex():
     that into an overcount that the append-only ledger would freeze
     forever (totals 5000 -> 2000 -> 5200 scored 10,200 against a true
     5,200). The high-water mark scores that sequence at its true 5,200
-    and cannot inflate a day under any input.
+    and does not recount tokens below that mark.
 
     (`info.last_token_usage.total_tokens` looks like a ready-made
     per-event delta and matches the rise exactly on all 2,115 events that
@@ -263,11 +263,19 @@ def extract_codex():
                                            out would add a non-additive key
                                            for no pricing benefit)
 
+    A September 10, 2026 audit found seven advancing events across August 27,
+    September 1, 5, 6, 8 and 9 whose type deltas violated either the total or
+    cached-input nesting. Their totals remain measured; their entire event
+    splits are now unattributed. Never proportionally invent a type split.
+    The six captured days were rebuilt using --repair-codex-days with complete
+    aggregate coverage and private backups. Future split/total disagreement
+    stops the ledger build, rather than freezing an inflated split.
+
     Every one of these is tracked with its OWN high-water mark, by the same
     rule as the total: a value at or below the mark contributes nothing and
     does not lower the baseline. A stale or replayed event therefore cannot
     inflate a per-type figure any more than it can inflate the aggregate.
-    Per-event deltas were verified to preserve the nesting too (0 events
+    The original July survey found per-event deltas preserved nesting (0 events
     where the cached delta exceeds the input delta, so the uncached
     remainder is never negative); it is still clamped defensively.
 
@@ -364,6 +372,19 @@ def extract_codex():
                         typed[field] = max(0, value - marks[field])
                         marks[field] = max(marks[field], value)
 
+                    # September 2026 logs contain advancing totals whose type
+                    # counters disagree (including cached deltas larger than
+                    # input deltas). Independent marks must never manufacture
+                    # a split larger than the authoritative total. Keep the
+                    # total high-water rule; quarantine just this event's split.
+                    ambiguous = (
+                        typed["input_tokens"] + typed["output_tokens"] > delta
+                        or typed["cached_input_tokens"] > typed["input_tokens"]
+                        or (usage.get("cache_write_input_tokens") or 0) > 0
+                    )
+                    if ambiguous:
+                        print(f"  attribution: {local_date(ts)} Codex event has inconsistent or unsupported type counters; {delta} tokens kept unattributed")
+                        typed = {field: 0 for field in marks}
                     cache_read = min(typed["cached_input_tokens"], typed["input_tokens"])
                     uncached_input = typed["input_tokens"] - cache_read
                     output = typed["output_tokens"]
@@ -456,6 +477,17 @@ def main():
     }
     with open(PRIVATE_DIR / "day-detail.json", "w") as fh:
         json.dump(detail, fh, indent=2)
+
+    # This clock is independent of repricing/building the ledger. Never claim
+    # a fresh collection merely because build_daily_burn ran again.
+    collection = {
+        "collected_at": datetime.now(TZ).isoformat(timespec="seconds"),
+        "sources_available": {
+            "claude_code": (HOME / ".claude/projects").is_dir(),
+            "codex": any((HOME / ".codex" / folder).is_dir() for folder in ("sessions", "archived_sessions")),
+        },
+    }
+    (PRIVATE_DIR / "collection.json").write_text(json.dumps(collection))
 
     total_cc = sum(cc_tokens.values())
     total_codex = sum(codex_tokens.values())

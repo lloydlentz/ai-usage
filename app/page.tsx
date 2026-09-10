@@ -1,14 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import { BasisPill, CostAmount, CellCost, UnpricedNote } from "./components/cost";
+import { ModelShare } from "./components/model-share";
+import { UsageTimeline } from "./components/usage-timeline";
 import rawRows from "../data/daily-burn.json";
+import pricing from "../data/pricing.json";
+import { UsageExplorer } from "./components/usage-explorer";
 import meta from "../data/meta.json";
 import {
   emptyByType,
   normalizeRows,
   sourceColumns,
   sumByModel,
+  subtotalCost,
+  sumToolCost,
   sumCost,
   sumSource,
   sumTokensByType,
@@ -19,7 +26,7 @@ import {
   type TokenType,
   type ToolKey,
 } from "../lib/burn-data";
-import { getWindowRows, type WindowKey } from "../lib/date-windows";
+import { getWindowRows, lastCalendarDays, freshness, type WindowKey } from "../lib/date-windows";
 import {
   fermiScale,
   formatPct,
@@ -31,6 +38,7 @@ import {
 } from "../lib/token-math";
 
 const rows = normalizeRows(rawRows);
+const modelNames = [...new Set(rows.flatMap((row) => row.breakdown?.flatMap((tool) => tool.models.map((model) => model.model)) || []))].sort();
 
 type Theme = "ticker" | "printrun";
 const THEME_STORAGE_KEY = "dashboard-theme";
@@ -41,6 +49,8 @@ type ToolSource = {
   ticker: string;
   color: string;
   today: number;
+  todayKnown: boolean;
+  yesterdayKnown: boolean;
   yesterday: number;
   week: number;
   total: number;
@@ -87,7 +97,11 @@ function formatRefreshed(iso: string) {
 }
 
 export default function TokenBurnDashboard() {
-  const [windowKey] = useState<WindowKey>("180");
+  const [showDateFilters, setShowDateFilters] = useState(false);
+  const [windowKey, setWindowKey] = useState<WindowKey>("6m");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [now, setNow] = useState(() => Date.parse(meta.collected_at || meta.refreshed_at));
   const [theme, setTheme] = useState<Theme>("printrun");
   const [mounted, setMounted] = useState(false);
 
@@ -100,7 +114,8 @@ export default function TokenBurnDashboard() {
   const [today, setToday] = useState(() => chicagoDay(new Date(meta.refreshed_at)));
 
   useEffect(() => {
-    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    let saved: string | null = null;
+    try { saved = localStorage.getItem(THEME_STORAGE_KEY); } catch { /* Storage is optional. */ }
     // SSR-safe hydration correction: this page is a static export, so the first
     // client render must be byte-identical to the prerendered HTML. The stored
     // theme and the viewer's real Chicago day are only knowable on the client,
@@ -110,10 +125,18 @@ export default function TokenBurnDashboard() {
     if (saved === "ticker" || saved === "printrun") setTheme(saved);
     setToday(chicagoDay(new Date()));
     setMounted(true);
+    setNow(Date.now());
+    const timer = setInterval(() => {
+      setNow(Date.now());
+      setToday(chicagoDay(new Date()));
+    }, 60_000);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    if (mounted) localStorage.setItem(THEME_STORAGE_KEY, theme);
+    if (mounted) {
+      try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* Keep the in-memory preference. */ }
+    }
   }, [theme, mounted]);
 
   // Mirror the theme onto <html> so body background (outside .page) matches too.
@@ -121,7 +144,12 @@ export default function TokenBurnDashboard() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const selectedRows = useMemo(() => getWindowRows(rows, windowKey), [windowKey]);
+  const selectedRows = useMemo(() => getWindowRows(rows, windowKey).filter((row) =>
+    (!startDate || row.date >= startDate) && (!endDate || row.date <= endDate)
+  ), [windowKey, startDate, endDate]);
+  const overdueRates = Object.entries(pricing.models).filter(([, entry]) => "review_after" in entry && String(entry.review_after) < today).map(([name]) => name);
+  const refreshState = mounted ? freshness(meta.collected_at || "", now) : "unknown";
+  const refreshLabel = refreshState === "fresh" ? "Recently refreshed" : refreshState === "stale" ? "Refresh overdue" : (mounted ? "Collection time unavailable" : "Checking refresh");
   const total = sumTokens(selectedRows);
   const maxDay = Math.max(...selectedRows.map((row) => row.total), 0);
 
@@ -140,13 +168,13 @@ export default function TokenBurnDashboard() {
 
   const peakDay = selectedRows.reduce(
     (peak, row) => (row.total > peak.total ? row : peak),
-    selectedRows[0] || rows[0],
+    selectedRows[0],
   );
   const lastAverage =
-    selectedRows.length > 0 ? movingAverage7(selectedRows, selectedRows.length - 1) : 0;
+    selectedRows.length > 0 ? movingAverage7(rows, rows.findIndex((row) => row.date === selectedRows[selectedRows.length - 1].date)) : 0;
   const drivers = buildDriverRows(selectedRows, total);
   const sourceTotal = sourceColumns.reduce((sum, source) => sum + sumSource(selectedRows, source.key), 0);
-  const tableRows = selectedRows.slice(-30).reverse();
+  const tableRows = lastCalendarDays(selectedRows, 30).reverse();
 
   const yesterday = addDays(today, -1);
   const weekStart = addDays(today, -6);
@@ -157,6 +185,9 @@ export default function TokenBurnDashboard() {
 
   const claudeMaxDaily = Math.max(...selectedRows.map((r) => r.claude_code_tokens), 1);
   const codexMaxDaily = Math.max(...selectedRows.map((r) => r.codex_tokens), 1);
+
+  const todayKnown = todayRows.length > 0;
+  const yesterdayKnown = yesterdayRows.length > 0;
 
   const claudeToday = sumSource(todayRows, "claude_code_tokens");
   const codexToday = sumSource(todayRows, "codex_tokens");
@@ -201,6 +232,7 @@ export default function TokenBurnDashboard() {
   const toolSources: ToolSource[] = [
     {
       key: "claude", label: "Claude", ticker: "CLDE", color: "var(--accent)",
+      todayKnown, yesterdayKnown,
       today: claudeToday, yesterday: claudeYesterday, week: claudeWeek, total: claudeTotal,
       fill: claudeToday / claudeMaxDaily, history: selectedRows.map((r) => r.claude_code_tokens),
     },
@@ -209,14 +241,30 @@ export default function TokenBurnDashboard() {
       // is a separate, estimated column and conflating the two made the exact
       // number look like it counted chat usage.
       key: "chatgpt", label: "Codex", ticker: "CDX", color: "var(--good)",
+      todayKnown, yesterdayKnown,
       today: codexToday, yesterday: codexYesterday, week: codexWeek, total: codexTotal,
       fill: codexToday / codexMaxDaily, history: selectedRows.map((r) => r.codex_tokens),
     },
   ];
 
+  const refreshToggle = (
+    <button
+      type="button"
+      className="refreshToggle"
+      aria-expanded={showDateFilters}
+      aria-controls="date-filters"
+      onClick={() => setShowDateFilters((visible) => !visible)}
+    >
+      {refreshLabel}
+    </button>
+  );
+
   return (
     <main className="page" data-theme={theme}>
       <ThemeToggle theme={theme} onChange={setTheme} />
+      {mounted && Object.values(meta.sources_available).some((available) => !available) && <p className="ledgerWarn">A usage source was unavailable during collection. Missing readings are unknown.</p>}
+      {refreshState === "stale" && <p className="ledgerWarn">No successful refresh in over two hours. Collection or publication may be delayed. Today’s missing readings are unknown, not zero usage.</p>}
+      {!selectedRows.length && <p role="status">No recorded days in this date range.</p>}
 
       {theme === "ticker" && (
         <TickerTape
@@ -232,9 +280,9 @@ export default function TokenBurnDashboard() {
       <section className="heroRow">
         <div className="heroCol">
           {theme === "ticker" ? (
-            <TickerHeroContent refreshedAt={meta.refreshed_at} />
+            <TickerHeroContent refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
           ) : (
-            <PrintRunHero issueNo={selectedRows.length} refreshedAt={meta.refreshed_at} />
+            <PrintRunHero issueNo={selectedRows.length} refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
           )}
         </div>
         {theme === "ticker" ? (
@@ -244,13 +292,23 @@ export default function TokenBurnDashboard() {
         )}
       </section>
 
+      <section id="date-filters" className="dashboardControls" aria-label="Date filters" hidden={!showDateFilters}>
+        <label>Period<select value={windowKey} onChange={(e) => { setWindowKey(e.target.value as WindowKey); setStartDate(""); setEndDate(""); }}>
+          <option value="1">1 day</option><option value="3">3 days</option><option value="7">7 days</option><option value="31">31 days</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="all">All time</option>
+        </select></label>
+        <label>From<input type="date" value={startDate} max={endDate || undefined} onChange={(e) => { setStartDate(e.target.value); setWindowKey("all"); }} /></label>
+        <label>Through<input type="date" value={endDate} min={startDate || undefined} onChange={(e) => { setEndDate(e.target.value); setWindowKey("all"); }} /></label>
+        <button type="button" onClick={() => { setWindowKey("6m"); setStartDate(""); setEndDate(""); }}>Reset dates</button>
+      </section>
+
       <section className="timelineRow">
         <Panel
           label="Daily burn"
           title={theme === "ticker" ? "Burn history" : "Usage timeline"}
-          note="Claude Code and Codex CLI stacked by day — the combined height is the total."
+          note="Measured Claude Code and Codex usage, spaced by calendar date. Gaps between recorded days are not proof of zero usage."
         >
           <UsageTimeline rows={selectedRows} />
+          <ModelShare rows={selectedRows} modelNames={modelNames} />
         </Panel>
       </section>
 
@@ -267,11 +325,11 @@ export default function TokenBurnDashboard() {
           costKind={cost.kind}
           volumeNote={
             <>
-              <span className="pill exact">exact</span> Claude Code and Codex logs;{" "}
+              <span className="pill exact">exact</span> tokens with a recorded type split;{" "}
               {cacheReadSeg ? formatPct(cacheReadSeg.tokenPct) : "—"} cache reads.
             </>
           }
-          costNote="If priced at public API rates. The actual cost was less because this was all subscription use."
+          costNote="At current standard API rates for short context. Actual subscription spending is not measured here."
         />
 
         <p className="ledgerNote">
@@ -330,14 +388,14 @@ export default function TokenBurnDashboard() {
       <section className="stats" aria-label="Token burn summary">
         <Metric label="Total burn" value={formatTokens(total)} note="selected window" />
         <Metric label="Peak day" value={formatTokens(peakDay?.total || 0)} note={peakDay?.date || "n/a"} />
-        <Metric label="7d average" value={formatTokens(lastAverage)} note="moving average" />
-        <Metric label="Active days" value={`${selectedRows.length}`} note="rows in view" />
+        <Metric label="7d average" value={formatTokens(lastAverage)} note="recorded tokens ÷ 7 calendar days" />
+        <Metric label="Active days" value={`${selectedRows.filter((row) => row.codex_tokens + row.claude_code_tokens > 0).length}`} note="days with measured usage" />
       </section>
 
       <section className="grid gridCost">
         <Panel
           label="Cost by model"
-          title="Where the money went"
+          title="API equivalent by model"
           note="Ranked by cost at API list prices, not by token count."
         >
           <div className="modelList">
@@ -354,7 +412,7 @@ export default function TokenBurnDashboard() {
                   </span>
                   <div className="modelFigures">
                     <strong>
-                      {model.costUsd === null ? "not priced" : formatUsd(model.costUsd)}
+                      <CellCost cost={subtotalCost(model.costUsd, model.unpricedTokens)} /> <BasisPill />
                     </strong>
                     <span className="muted">{formatTokens(model.tokens)} tokens</span>
                   </div>
@@ -372,13 +430,13 @@ export default function TokenBurnDashboard() {
 
         <Panel
           label="Cost by tool"
-          title="Which agent spent it"
+          title="API equivalent by tool"
           note="Chat estimates are never priced — only exact logs carry a cost."
         >
           <div className="driverGrid">
             {(["claude_code", "codex"] as ToolKey[]).map((tool) => {
-              const value =
-                cost.kind === "priced" || cost.kind === "lower-bound" ? cost.byTool[tool] : undefined;
+              const toolCost = sumToolCost(selectedRows, tool);
+              const value = toolCost.kind === "priced" || toolCost.kind === "lower-bound" ? toolCost.usd : undefined;
               const share = costTotal && value !== undefined ? (value / costTotal) * 100 : 0;
               return (
                 <div key={tool} className="driver">
@@ -386,7 +444,7 @@ export default function TokenBurnDashboard() {
                   <span className="track">
                     <i style={{ width: `${share}%` }} />
                   </span>
-                  <span>{value === undefined ? "not priced" : formatUsd(value)}</span>
+                  <span><CellCost cost={toolCost} /> <BasisPill /></span>
                 </div>
               );
             })}
@@ -402,7 +460,7 @@ export default function TokenBurnDashboard() {
           <p className="panelFoot">
             <BasisPill /> Counterfactual at API list prices.{" "}
             {measured.measuredDays} of {selectedRows.length} days in view carry a measured split;
-            the rest are estimates only and have nothing to cost.
+            days without a split may be estimates only or older measurements with unknown composition.
           </p>
         </Panel>
       </section>
@@ -433,7 +491,7 @@ export default function TokenBurnDashboard() {
         <Panel
           label="Drivers"
           title="What is burning tokens"
-          note="Keep driver labels boring and consistent: shipping, research, review, video, admin."
+          note="Categories explain the work behind the volume. Label uncategorized days in the explorer below."
         >
           <div className="driverGrid">
             {drivers.map((driver) => (
@@ -490,6 +548,8 @@ export default function TokenBurnDashboard() {
         </Panel>
       </section>
 
+      <UsageExplorer rows={selectedRows} />
+
       <section className="panel">
         <div className="panelHeader">
           <div>
@@ -519,7 +579,7 @@ export default function TokenBurnDashboard() {
             </thead>
             <tbody>
               {tableRows.map((row) => {
-                const originalIndex = selectedRows.findIndex((candidate) => candidate.date === row.date);
+                const originalIndex = rows.findIndex((candidate) => candidate.date === row.date);
                 return (
                   <tr key={row.date}>
                     <td>
@@ -529,7 +589,7 @@ export default function TokenBurnDashboard() {
                     <td>
                       <CellCost cost={row.cost} />
                     </td>
-                    <td>{formatTokens(movingAverage7(selectedRows, originalIndex))}</td>
+                    <td>{formatTokens(movingAverage7(rows, originalIndex))}</td>
                     <td>{formatTokens(row.codex_tokens)}</td>
                     <td>{formatTokens(row.claude_code_tokens)}</td>
                     <td>{row.claude_code_calls}</td>
@@ -545,11 +605,14 @@ export default function TokenBurnDashboard() {
         </div>
       </section>
 
+      <p className="footerNote">Last log collection: {meta.collected_at ? formatRefreshed(meta.collected_at) : "unknown"} (America/Chicago). Data build time is shown separately below.</p>
+      <p className="footerNote">Pricing verified {pricing.verified_at}. {pricing.benchmark}</p>
+      {overdueRates.length > 0 && <p className="ledgerWarn">Pricing review overdue for {overdueRates.join(", ")}. The stored rate may no longer apply.</p>}
       <p className="footerNote">
         {theme === "ticker"
-          ? "● Live · refreshed hourly · "
+          ? `${refreshLabel} · hourly collection · `
           : "Run on a laser printer that pretends to be a riso · "}
-        Last refreshed:{" "}
+        Data built:{" "}
         {new Date(meta.refreshed_at).toLocaleString("en-US", {
           month: "short", day: "numeric", year: "numeric",
           hour: "numeric", minute: "2-digit", timeZoneName: "short",
@@ -607,99 +670,6 @@ function Panel({
       </div>
       {children}
     </article>
-  );
-}
-
-// --- Cost: the basis qualifier and the four ways a day can be costed --------
-
-/**
- * The qualifier that travels with every dollar figure on the page. It uses the
- * same pill mechanism as the exact/estimated fidelity labels because it answers
- * the same kind of question — how much to trust this number — and because a pill
- * stays attached to the figure when someone crops a screenshot. A footnote
- * would not.
- */
-function BasisPill() {
-  return (
-    <span className="pill counterfactual" title={meta.cost.disclaimer}>
-      at API list
-    </span>
-  );
-}
-
-/** Large cost figure. Renders each CostKnowledge state as itself, never as $0. */
-function CostAmount({ cost, className }: { cost: CostKnowledge; className?: string }) {
-  if (cost.kind === "not-measured") {
-    return (
-      <p className={className}>
-        <span className="ledgerAmountInk costNil">&mdash;</span>
-        <span className="ledgerUnit">nothing measured to cost</span>
-      </p>
-    );
-  }
-
-  if (cost.kind === "unknown") {
-    return (
-      <p className={className}>
-        <span className="ledgerAmountInk costNil">Not priced</span>
-        <span className="ledgerUnit">
-          {cost.unpricedTokens.toLocaleString("en-US")} tokens with no rate
-        </span>
-      </p>
-    );
-  }
-
-  const text = formatUsd(cost.usd);
-  return (
-    <p className={className}>
-      {cost.kind === "lower-bound" && <span className="costBound">at least</span>}
-      <span className="ledgerAmountStack">
-        <span className="ledgerGhost" aria-hidden="true">
-          {text}
-        </span>
-        <span className="ledgerAmountInk">{text}</span>
-      </span>
-    </p>
-  );
-}
-
-/** Compact cost for table cells. Same four states, one line. */
-function CellCost({ cost }: { cost: CostKnowledge }) {
-  if (cost.kind === "not-measured") {
-    return <span className="muted" title="Estimates only — there was no measured usage to price">&mdash;</span>;
-  }
-  if (cost.kind === "unknown") {
-    return (
-      <span className="muted" title={`${cost.unpricedTokens.toLocaleString("en-US")} tokens with no rate card`}>
-        not priced
-      </span>
-    );
-  }
-  return (
-    <span title={cost.kind === "lower-bound" ? "Lower bound — some tokens on this day are unpriced" : undefined}>
-      {cost.kind === "lower-bound" ? "≥ " : ""}
-      {formatUsd(cost.usd)}
-    </span>
-  );
-}
-
-/** States plainly what the headline figure is missing, when it is missing any. */
-function UnpricedNote({ cost, unattributed }: { cost: CostKnowledge; unattributed: number }) {
-  const unpriced = cost.kind === "unknown" || cost.kind === "lower-bound" ? cost.unpricedTokens : 0;
-  if (unpriced === 0 && unattributed === 0) return null;
-
-  return (
-    <p className="ledgerWarn">
-      <span className="pill unpriced">lower bound</span>
-      {unpriced.toLocaleString("en-US")} tokens have no rate
-      {unattributed >= unpriced
-        ? " and no recorded model or type split"
-        : unattributed > 0
-        ? `, ${unattributed.toLocaleString("en-US")} of them with no recorded model or type split`
-        : ""}
-      . They count as nothing in the figures above, so the real cost is higher than the one
-      shown.
-    </p>
   );
 }
 
@@ -897,7 +867,7 @@ function ShapeShift({
                       the mouse. */}
                   <span className="shiftKeyDetail">
                     {formatTokens(seg.tokens)} tokens
-                    {priced ? ` · ${formatUsd(seg.cost)}` : " · not priced"}
+                    {priced ? ` · ${costKind === "lower-bound" ? "≥ " : ""}${formatUsd(seg.cost)}` : " · not priced"} {priced && <BasisPill />}
                   </span>
                 </button>
               </li>
@@ -954,7 +924,7 @@ function ShapeShift({
                   <title>{`${seg.label}: ${formatTokens(seg.tokens)} tokens (${formatPct(seg.tokenPct)} of volume)`}</title>
                 </rect>
                 <rect x={SANKEY.rx} y={r.top} width={SANKEY.nodeW} height={r.h} fill={typeVar(seg.type)}>
-                  <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
+                  <title>{`${seg.label}: ${priced ? `${costKind === "lower-bound" ? "≥ " : ""}${formatUsd(seg.cost)} at API list` : "not priced"} (${formatPct(seg.costPct)} of cost)`}</title>
                 </rect>
 
                 {/* Only the cost side. A node names itself when it is tall
@@ -997,7 +967,7 @@ function ShapeShift({
                 width={SANKEY.nodeW + 16}
                 height={rightHits[i].h}
               >
-                <title>{`${seg.label}: ${formatUsd(seg.cost)} at API list (${formatPct(seg.costPct)} of cost)`}</title>
+                <title>{`${seg.label}: ${priced ? `${costKind === "lower-bound" ? "≥ " : ""}${formatUsd(seg.cost)} at API list` : "not priced"} (${formatPct(seg.costPct)} of cost)`}</title>
               </rect>
             </g>
           ))}
@@ -1025,6 +995,7 @@ function TickerTape({
   lastAverage: number;
 }) {
   const totalDelta = pctDelta(totalToday, totalYesterday);
+  const comparable = toolSources.every((source) => source.todayKnown && source.yesterdayKnown);
 
   const tapeItems = (
     <>
@@ -1032,9 +1003,9 @@ function TickerTape({
         const d = pctDelta(s.today, s.yesterday);
         return (
           <span className="tkTapeItem" key={s.ticker}>
-            {s.ticker} <b>{formatTokens(s.today)}</b>{" "}
+            {s.ticker} <b>{s.todayKnown ? formatTokens(s.today) : "no reading"}</b>{" "}
             <span className={d >= 0 ? "tkUp" : "tkDown"}>
-              {d >= 0 ? "▲" : "▼"} {Math.abs(d).toFixed(1)}%
+              {s.todayKnown && s.yesterdayKnown ? (s.yesterday === 0 && s.today > 0 ? "new usage" : `${d >= 0 ? "▲" : "▼"} ${Math.abs(d).toFixed(1)}%`) : "comparison unavailable"}
             </span>
           </span>
         );
@@ -1042,7 +1013,7 @@ function TickerTape({
       <span className="tkTapeItem">
         TOTAL <b>{formatTokens(total)}</b>{" "}
         <span className={totalDelta >= 0 ? "tkUp" : "tkDown"}>
-          {totalDelta >= 0 ? "▲" : "▼"} {Math.abs(totalDelta).toFixed(1)}%
+          {comparable ? (totalYesterday === 0 && totalToday > 0 ? "new usage today" : `${totalDelta >= 0 ? "▲" : "▼"} ${Math.abs(totalDelta).toFixed(1)}% today`) : "daily comparison unavailable"}
         </span>
       </span>
       <span className="tkTapeItem">
@@ -1064,7 +1035,7 @@ function TickerTape({
   );
 }
 
-function TickerHeroContent({ refreshedAt }: { refreshedAt: string }) {
+function TickerHeroContent({ refreshedAt, refreshToggle }: { refreshedAt: string; refreshToggle: React.ReactNode }) {
   return (
     <section className="hero tkHero">
       <div className="tkHeroRow">
@@ -1073,9 +1044,7 @@ function TickerHeroContent({ refreshedAt }: { refreshedAt: string }) {
           <h1>Lloyd&apos;s token usage.</h1>
         </div>
         <div className="tkAsOf">
-          <span className="tkLive">● LIVE</span> · refreshed hourly
-          <br />
-          last tick {formatRefreshed(refreshedAt)}
+          Updated {formatRefreshed(refreshedAt)} · {refreshToggle}
         </div>
       </div>
       <p className="lead">
@@ -1092,7 +1061,7 @@ function TickerToolUse({ sources }: { sources: ToolSource[] }) {
         <div>
           <p className="label">Tool use</p>
         </div>
-        <p>Quoted against each tool&apos;s all-time daily peak.</p>
+        <p>Quoted against each tool&apos;s peak in the selected date range.</p>
       </div>
       <div className="tkQuoteBoard">
         {sources.map((s) => {
@@ -1108,9 +1077,9 @@ function TickerToolUse({ sources }: { sources: ToolSource[] }) {
                 </div>
                 <CandleSpark data={s.history} color={s.color} />
                 <div className="tkQuoteRight">
-                  <span className="tkLast">{Math.round(s.fill * 100)}%</span>
+                  <span className="tkLast">{s.todayKnown ? `${Math.round(s.fill * 100)}%` : "—"}</span>
                   <span className={`tkDelta ${d >= 0 ? "tkUp" : "tkDown"}`}>
-                    {d >= 0 ? "▲" : "▼"} vs yesterday
+                    {s.todayKnown && s.yesterdayKnown ? (s.yesterday === 0 && s.today > 0 ? "new usage" : `${d >= 0 ? "▲" : "▼"} vs yesterday`) : "no comparison"}
                   </span>
                 </div>
               </div>
@@ -1149,12 +1118,12 @@ function CandleSpark({ data, color }: { data: number[]; color: string }) {
 
 // --- Print Run theme: hero + tool-use ring gauges ---------------------------
 
-function PrintRunHero({ issueNo, refreshedAt }: { issueNo: number; refreshedAt: string }) {
+function PrintRunHero({ issueNo, refreshedAt, refreshToggle }: { issueNo: number; refreshedAt: string; refreshToggle: React.ReactNode }) {
   return (
     <section className="hero prHero">
       <div className="prStampRow">
         <span className="prStamp">Issue {String(issueNo).padStart(3, "0")} · Personal Zine</span>
-        <span className="prMeta">Updated {formatRefreshed(refreshedAt)}</span>
+        <span className="prMeta">Updated {formatRefreshed(refreshedAt)} · {refreshToggle}</span>
       </div>
       <div className="prH1Wrap">
         <p className="prGhost" aria-hidden="true">
@@ -1178,17 +1147,17 @@ function PrintRunToolUse({ sources }: { sources: ToolSource[] }) {
         <div>
           <p className="label">Tool use</p>
         </div>
-        <p>Today&apos;s token usage as a percentage of each tool&apos;s peak daily usage.</p>
+        <p>Latest collected tokens for today as a percentage of each tool&apos;s peak daily usage.</p>
       </div>
       <div className="prTools">
         {sources.map((s) => (
           <div key={s.key} className="prToolBlock">
-            <RingGauge fill={s.fill} color={s.color} />
+            <RingGauge fill={s.fill} color={s.color} known={s.todayKnown} />
             <p className="prToolName" style={{ color: s.color }}>
               {s.label}
             </p>
             <p className="prToolSub">
-              of peak day
+              {s.todayKnown ? "of peak day" : "no reading for today in this range"}
               <br />
               week <b>{formatTokens(s.week)}</b> · total <b>{formatTokens(s.total)}</b>
             </p>
@@ -1200,7 +1169,7 @@ function PrintRunToolUse({ sources }: { sources: ToolSource[] }) {
   );
 }
 
-function RingGauge({ fill, color }: { fill: number; color: string }) {
+function RingGauge({ fill, color, known }: { fill: number; color: string; known: boolean }) {
   const r = 46;
   const circ = 2 * Math.PI * r;
   const clamped = Math.min(Math.max(fill, 0), 1);
@@ -1215,7 +1184,7 @@ function RingGauge({ fill, color }: { fill: number; color: string }) {
           transform="rotate(-90 54 54)"
         />
       </svg>
-      <span className="prRingPct">{Math.round(clamped * 100)}%</span>
+      <span className="prRingPct">{known ? `${Math.round(clamped * 100)}%` : "—"}</span>
     </div>
   );
 }
@@ -1239,180 +1208,6 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
       <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
         <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" opacity="0.6" />
       </svg>
-    </div>
-  );
-}
-
-interface TimelineRow {
-  date: string;
-  claude_code_tokens: number;
-  codex_tokens: number;
-  cost: CostKnowledge;
-}
-
-function formatTimelineDate(dateStr: string) {
-  return new Date(dateStr + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-const TIMELINE_TOOLTIP_WIDTH = 176;
-
-function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
-  const [tooltipLeftPx, setTooltipLeftPx] = useState(0);
-
-  const n = rows.length;
-
-  // Geometry is pure viewBox math, so it is safe to compute before the
-  // `n === 0` bail-out below — the measuring effect needs it, and every hook
-  // has to run before that early return.
-  const W = 1400, H = 300;
-  const padL = 52, padR = 16, padT = 12, padB = 28;
-  const innerW = W - padL - padR;
-  const innerH = H - padT - padB;
-
-  const step = n > 1 ? innerW / (n - 1) : 0;
-  const xAt = useCallback(
-    (i: number) => (n === 1 ? padL + innerW / 2 : padL + i * step),
-    [n, padL, innerW, step],
-  );
-
-  // Position the tooltip in real pixels (not a % of the container) so its
-  // fixed width never overflows a narrow container near either edge.
-  //
-  // The measurement has to come from the DOM, and refs must not be read during
-  // render (they are null on the first pass, and writing one never schedules a
-  // re-render — so rendering from them would position the tooltip using the
-  // *previous* layout). Measure in a layout effect instead: it runs after the
-  // hover commit but before paint, so the tooltip never visibly jumps. Deps are
-  // all numbers plus a memoized `xAt`, so this cannot re-fire on its own setState.
-  useLayoutEffect(() => {
-    if (hoverIdx === null) return;
-    const container = containerRef.current;
-    const svg = svgRef.current;
-    if (!container || !svg) return;
-    const containerRect = container.getBoundingClientRect();
-    const svgRect = svg.getBoundingClientRect();
-    // The SVG scales to its container, so map viewBox units into CSS pixels.
-    const scale = svgRect.width / W;
-    const pointPx = svgRect.left - containerRect.left + xAt(hoverIdx) * scale;
-    setTooltipLeftPx(
-      Math.min(
-        containerRect.width - TIMELINE_TOOLTIP_WIDTH - 4,
-        Math.max(4, pointPx - TIMELINE_TOOLTIP_WIDTH / 2),
-      ),
-    );
-  }, [hoverIdx, xAt, W]);
-
-  if (n === 0) return null;
-
-  const claude = rows.map((r) => r.claude_code_tokens);
-  const chatgpt = rows.map((r) => r.codex_tokens);
-  const totals = claude.map((v, i) => v + chatgpt[i]);
-  const yMax = Math.max(...totals, 1) * 1.08;
-
-  const yAt = (v: number) => padT + innerH - (v / yMax) * innerH;
-  const baseline = padT + innerH;
-
-  const claudeTop = claude.map((v) => yAt(v));
-  const stackTop = totals.map((v) => yAt(v));
-
-  const topLine = (ys: number[]) => ys.map((y, i) => `${i === 0 ? "M" : "L"} ${xAt(i).toFixed(1)} ${y.toFixed(1)}`).join(" ");
-
-  const claudePath = `${topLine(claudeTop)} L ${xAt(n - 1).toFixed(1)} ${baseline} L ${xAt(0).toFixed(1)} ${baseline} Z`;
-  const chatgptPath =
-    `${topLine(stackTop)} L ${xAt(n - 1).toFixed(1)} ${claudeTop[n - 1].toFixed(1)} ` +
-    claudeTop
-      .map((y, i) => n - 1 - i)
-      .map((i) => `L ${xAt(i).toFixed(1)} ${claudeTop[i].toFixed(1)}`)
-      .join(" ") +
-    " Z";
-
-  const yTicks = [0, yMax / 2, yMax];
-  const xTickIdx = Array.from(
-    new Set([0, Math.round((n - 1) * 0.25), Math.round((n - 1) * 0.5), Math.round((n - 1) * 0.75), n - 1]),
-  );
-
-  const updateHover = (clientX: number) => {
-    const svg = svgRef.current;
-    if (!svg) return;
-    const rect = svg.getBoundingClientRect();
-    const localX = ((clientX - rect.left) / rect.width) * W;
-    const idx = step > 0 ? Math.round((localX - padL) / step) : 0;
-    setHoverIdx(Math.min(n - 1, Math.max(0, idx)));
-  };
-
-  const hovered = hoverIdx !== null ? rows[hoverIdx] : null;
-
-  return (
-    <div className="timeline" ref={containerRef}>
-      <svg
-        ref={svgRef}
-        className="timelineSvg"
-        viewBox={`0 0 ${W} ${H}`}
-        onMouseMove={(e) => updateHover(e.clientX)}
-        onMouseLeave={() => setHoverIdx(null)}
-        onTouchMove={(e) => e.touches[0] && updateHover(e.touches[0].clientX)}
-        onTouchEnd={() => setHoverIdx(null)}
-      >
-        {yTicks.map((v, i) => (
-          <g key={i}>
-            <line x1={padL} y1={yAt(v)} x2={W - padR} y2={yAt(v)} className="timelineGrid" />
-            <text x={padL - 8} y={yAt(v)} className="timelineAxisLabel" textAnchor="end" dominantBaseline="middle">
-              {v === 0 ? "0" : formatTokens(v)}
-            </text>
-          </g>
-        ))}
-
-        <path d={claudePath} className="timelineAreaClaude" />
-        <path d={chatgptPath} className="timelineAreaChatgpt" />
-
-        {xTickIdx.map((i) => (
-          <text key={i} x={xAt(i)} y={H - 6} className="timelineAxisLabel" textAnchor="middle">
-            {formatTimelineDate(rows[i].date)}
-          </text>
-        ))}
-
-        {hoverIdx !== null && (
-          <g>
-            <line
-              x1={xAt(hoverIdx)} y1={padT} x2={xAt(hoverIdx)} y2={baseline}
-              className="timelineCrosshair"
-            />
-            <circle cx={xAt(hoverIdx)} cy={claudeTop[hoverIdx]} r="3.5" className="timelineDotClaude" />
-            <circle cx={xAt(hoverIdx)} cy={stackTop[hoverIdx]} r="3.5" className="timelineDotChatgpt" />
-          </g>
-        )}
-      </svg>
-
-      {hovered && (
-        <div className="timelineTooltip" style={{ left: `${tooltipLeftPx}px` }}>
-          <div className="timelineTooltipDate">{formatTimelineDate(hovered.date)}</div>
-          <div className="timelineTooltipRow">
-            <span className="timelineSwatch timelineSwatchClaude" />
-            Claude Code <b>{formatTokens(hovered.claude_code_tokens)}</b>
-          </div>
-          <div className="timelineTooltipRow">
-            <span className="timelineSwatch timelineSwatchChatgpt" />
-            Codex <b>{formatTokens(hovered.codex_tokens)}</b>
-          </div>
-          <div className="timelineTooltipRow timelineTooltipTotal">
-            Total <b>{formatTokens(hovered.claude_code_tokens + hovered.codex_tokens)}</b>
-          </div>
-          <div className="timelineTooltipRow timelineTooltipCost">
-            <span className="timelineTooltipCostLabel">Cost at API list</span>
-            <b>
-              <CellCost cost={hovered.cost} />
-            </b>
-          </div>
-        </div>
-      )}
-
-      <div className="timelineLegend">
-        <span><span className="timelineSwatch timelineSwatchClaude" /> Claude Code</span>
-        <span><span className="timelineSwatch timelineSwatchChatgpt" /> Codex</span>
-      </div>
     </div>
   );
 }

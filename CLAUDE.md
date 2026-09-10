@@ -23,6 +23,8 @@ npm run dev          # `next dev` — defaults to http://localhost:3000
 # Build and deploy
 npm run build        # Build static export to out/ (triggered by GitHub Actions)
 npm run lint         # Lint the TypeScript/React sources
+npm run check        # Lint, pipeline + frontend tests, production build
+npm run test:browser # Playwright desktop and mobile checks (install Chromium first)
 
 # Data pipeline (manual—normally runs via cron)
 python3 scripts/extract_exact.py    # Extract tokens from local logs into data/exact-daily.json
@@ -36,8 +38,7 @@ bash scripts/refresh_and_push.sh    # Full pipeline: extract, build, commit, pus
 
 ### Frontend (Next.js App Router)
 
-**File:** `app/page.tsx` — one `"use client"` component plus every sub-component, all in
-this file. `app/layout.tsx` only sets metadata and the basePath-prefixed favicon.
+**File:** `app/page.tsx` composes the dashboard. Cost rendering, the keyboard-accessible timeline, and the day explorer are extracted into `app/components/`. `app/layout.tsx` only sets metadata and the basePath-prefixed favicon.
 `data/daily-burn.json` and `data/meta.json` are imported directly, so they're baked in at build time.
 
 **Themes:** two switchable looks selected by `ThemeToggle`:
@@ -132,7 +133,7 @@ one. Table columns carry the qualifier in the column header
 - `normalizeRows()`: Coerce raw data to strict types, sort by date. Scalars go through `asNumber`; the nested `breakdown` / `cost_usd` objects are parsed explicitly so an absent field stays absent instead of flattening to 0
 - `sumSource()`, `sumCost()`, `sumTokensByType()`, `sumByModel()`: roll-ups across a date range. `sumCost()` returns a `CostKnowledge`, not a number, so an unpriced day cannot disappear into a confident total
 
-**The three cost states (`CostKnowledge`).** Absence never means zero. Every dollar figure in the UI is rendered from this union, and each variant has its own treatment:
+**The four cost states (`CostKnowledge`).** Absence never means zero. Every dollar figure in the UI is rendered from this union, and each variant has its own treatment:
 
 | row shape | `CostKnowledge` | renders as |
 |---|---|---|
@@ -141,17 +142,17 @@ one. Table columns carry the qualifier in the column header
 | `cost_usd` present, `unpriced_tokens > 0` | `lower-bound` | `at least $X` / `≥ $X` |
 | `cost_usd` present, `unpriced_tokens == 0` | `priced` | `$X` |
 
-Gotchas the types are built to prevent: a Codex model entry has **no** `cache_write_5m` / `cache_write_1h` keys (OpenAI bills no cache-write premium), so per-type reads default to 0 rather than indexing; a model's `cost_usd` may be `null` (no rate card) and must render as unknown, never free; and `breakdown.<tool>.unattributed` is real tokens with no split — 2026-06-08 carries 449,154 of them and must not read as a free day.
+Gotchas the types are built to prevent: a Codex model entry has **no** `cache_write_5m` / `cache_write_1h` keys (those are Anthropic TTLs; current OpenAI write rates are recorded separately), so per-type reads default to 0 rather than indexing; a model's `cost_usd` may be `null` (no rate card) and must render as unknown, never free; and `breakdown.<tool>.unattributed` is real tokens with no split — 2026-06-08 carries 449,154 of them and must not read as a free day.
 
 **date-windows.ts**: Time range selection
-- `WindowKey`: 90, 180, 365, or all. `app/page.tsx` pins it to `"180"` with no setter
+- `WindowKey`: 1, 3, 7, or 31 days, 3 or 6 calendar months, or all time; defaults to 6 months, with period and custom date controls hidden by default; click the refresh wording after the updated timestamp to toggle them
 - `getWindowRows()`: Filter rows to a time window; `toUtcDate()` parses a date string at UTC midnight
 
 **token-math.ts**: Calculations
 - `formatTokens()`: B above 1B, M above 1M, K above 1K, otherwise the raw number (e.g., "2.48B", "263.3M")
 - `formatUsd()` / `formatPct()`: hand-rolled, not `Intl` — the page is prerendered in CI and hydrated in the browser, and the two do not have to share ICU data
 - `logHeatLevel()`: Map token value to heatmap color intensity (0–5)
-- `movingAverage7()`, `sumTokens()`: Aggregations for stats
+- `movingAverage7()`: recorded volume over seven calendar dates divided by seven; gaps are not proof of zero usage. `sumTokens()`: aggregation.
 - `fermiScale(outputTokens, inputTokens)`: words / reading time / novel equivalents, derived from **output** tokens only. It used to run on the grand total, which is 96% cache reads — the same context handed back to the model repeatedly — which turned one long session into "20,428 novels". Output tokens are the only ones that correspond to text that came into existence
 
 ### Data Pipeline (Python 3)
@@ -192,7 +193,7 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 **GitHub Actions** (`.github/workflows/deploy.yml`)
 - Triggered by pushes to main that touch `data/daily-burn.json`, `data/meta.json`, `data/pricing.json`, `app/**`, `lib/**`, `public/**`, `next.config.ts`, or `package.json` — plus manual `workflow_dispatch`
 - Costs are precomputed into `daily-burn.json`, so a rate change normally arrives with a data refresh; `data/pricing.json` is listed so a pricing-only correction still rebuilds
-- Builds with Node 22 → `npm ci` → `npm run build` → out/
+- Builds with Node 22 and Python 3.12 → `npm ci` → `npm run check` → browser tests → out/. Pull requests run the same checks in `check.yml`.
 - Deploys out/ to GitHub Pages
 
 **GitHub Pages**
@@ -208,7 +209,11 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 ### Additive Ledger (Freezing)
 Problem: Source logs get pruned (Claude Code deletes logs after 2 months). Solution: Once exact data is captured and `has_exact_data(row) == true`, that row's tokens are frozen. Even if logs disappear, the dashboard preserves history.
 
-Implementation: In `build_daily_burn.py`, a row is frozen when the existing `daily-burn.json` row passes `has_exact_data()` **and** the day has no row at all in `exact-daily.json`. Frozen rows keep their exact counts; estimates and driver labels still refresh on every run.
+Implementation: Each captured exact column and breakdown leaf takes the maximum
+of its captured and freshly extracted value. This protects both fully pruned
+and partially pruned days. Estimates and driver labels refresh on every run;
+costs are always recomputed. A merged split that exceeds its aggregate fails
+validation and requires an explicit audited correction.
 
 ### Activity Calendar Heatmap
 - GitHub-style layout: rows = days of week (Mon–Sun), columns = weeks
@@ -252,3 +257,43 @@ Implementation: In `build_daily_burn.py`, a row is frozen when the existing `dai
 - **Permissions** (`.claude/settings.local.json`, itself gitignored): Allows `npm run *`, reads under `~/.claude` and `~/.gemini`, and the preview-server tool
 - **GitHub Auth**: Uses SSH key-based authentication (ed25519, added to GitHub account)
 - **Static export**: Next.js builds to `out/` directory (no server runtime)
+
+## Review improvements (September 10, 2026)
+
+- Source data is validated before output is replaced. Reconciliation failures
+  stop refresh/deployment. An explicit `--repair-codex-days` option rebuilds
+  selected breakdowns only with complete aggregate coverage and a private backup.
+  See ESTIMATES.md for the audited six-day correction and pricing benchmark.
+- Cost models now carry `unpriced_tokens` as well as `cost_usd`, so partial rates
+  remain lower bounds in per-model, per-tool, table and detail views. Every
+  dollar display keeps an inline basis or an API-list table header.
+- Date controls affect the whole dashboard and are hidden by default. The refresh
+  wording after the updated timestamp toggles them in both themes. Tool and model filters apply to the
+  explorer; expanding a day reveals token types and priced/unknown subtotals.
+  Preset labels can be saved locally, exported and imported with
+  `python3 scripts/import_driver_labels.py /path/to/driver-labels.json`.
+  Rebuild after import; `scripts/driver-labels.json` holds safe overrides.
+- `data/private/collection.json` records the last successful log scan and source
+  availability. The build copies only this non-sensitive status into meta.json.
+  Collection age drives the two-hour stale warning, independently of repricing.
+- Refresh uses a lock, rejects dirty source trees/unrelated staging/non-main
+  branches, tests before committing, and restores the previous public data on
+  validation failure. Failures are recorded in the cron log; the deployed static
+  page can detect staleness but cannot know the exact local failure reason.
+  A lock left by a forced kill can be removed from `.git/token-burn-refresh.lock`
+  after verifying that no refresh is running.
+- Browser tests cover both themes, mobile layout, filters, label export and
+  keyboard navigation. Frontend tests cover calendar math and cost states;
+  pipeline regression fixtures cover contradictory advancing token counters.
+
+### Model share bar
+
+`app/components/model-share.tsx` renders a single full-width 100% stacked bar
+under the usage timeline. `lib/model-share.ts` groups measured token volume by
+model across both tools. The denominator includes unattributed measurements,
+including old days without a breakdown; chat estimates are excluded. Legend
+colors stay consistent across filters, percentages remain exact (no minimum
+segment widths), and the legend offers keyboard/touch inspection for tiny
+segments. The bar follows the same selected rows as the timeline. Periods are
+anchored to the latest recorded day; month windows use clamped calendar-month
+arithmetic, and short day windows include the ending day.

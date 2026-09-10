@@ -714,8 +714,9 @@ class ShippedPricingTests(unittest.TestCase):
                 self.assertAlmostEqual(rates["cache_write_1h"], rates["input"] * 2.0, 6)
 
     def test_openai_models_omit_cache_write_rates(self):
-        # Absent, not zero: OpenAI bills no cache-write premium, and a 0.0
-        # would read as "we priced it and it was free".
+        # These keys denote Anthropic TTLs, not OpenAI's new cache-write
+        # dimension. Published OpenAI write rates live in a separate card field;
+        # nonzero log writes are unpriced until their attribution is supported.
         for model, entry in self.raw["models"].items():
             if entry.get("provider") != "openai":
                 continue
@@ -1064,10 +1065,8 @@ class UnattributedReconciliationTests(unittest.TestCase):
             exact_row("2026-07-16", claude_code=100),
             claude_code={"m-claude": cc_entry(output=500)},
         )
-        buffer = StringIO()
-        with redirect_stdout(buffer):
+        with self.assertRaisesRegex(ValueError, "split exceeds its aggregate"):
             build_daily_burn.build_row("2026-07-16", ex, None, rates=RATES)
-        self.assertIn("the split exceeds its aggregate", buffer.getvalue())
 
 
 class MixedFidelityTests(unittest.TestCase):
@@ -1262,16 +1261,17 @@ class RealDataBreakdownTests(unittest.TestCase):
                     with self.subTest(date=row["date"], model=model):
                         self.assertGreater(counts["cost_usd"], 0)
 
-    def test_every_model_in_the_ledger_has_a_rate(self):
+    def test_missing_models_are_explicitly_unpriced(self):
+        # A new model without verifiable public pricing must not halt collection.
+        # Its tokens remain real, with unknown rather than zero cost.
         rates = build_daily_burn.load_pricing()
-        missing = {
-            model
-            for row in self.split
-            for entry in row["breakdown"].values()
-            for model in entry["models"]
-            if model not in rates
-        }
-        self.assertEqual(missing, set(), f"add these to data/pricing.json: {missing}")
+        for row in self.split:
+            for entry in row["breakdown"].values():
+                for model, counts in entry["models"].items():
+                    if model not in rates:
+                        self.assertIsNone(counts["cost_usd"])
+                        self.assertEqual(counts["unpriced_tokens"], counts["tokens"])
+                        self.assertGreaterEqual(row["cost_usd"]["unpriced_tokens"], counts["tokens"])
 
     def test_cost_declares_its_basis_on_every_row(self):
         for row in self.rows:

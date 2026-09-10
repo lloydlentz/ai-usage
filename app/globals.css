@@ -1620,3 +1620,53 @@ h1 {
     text-align: left;
   }
 }
+
+/* Shared controls inherit both dashboard palettes. */
+.dashboardControls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; }
+.dashboardControls label, .explorerDay > label { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
+.dashboardControls select, .dashboardControls input, .explorerDay select, .dashboardControls button {
+  font: inherit; color: var(--ink, inherit); background: var(--panel); border: 1px solid currentColor; border-radius: 3px; padding: .55rem .7rem; max-width: 100%;
+}
+.dashboardControls button { cursor: pointer; }
+.dashboardControls button:disabled { opacity: .5; cursor: default; }
+.dashboardControls .checkboxLabel { flex-direction: row; align-items: center; padding: .6rem 0; }
+.dashboardControls p { margin: 0 0 .6rem; }
+.refreshStale { font-weight: 700; }
+.explorerDays { max-height: 36rem; overflow: auto; margin-top: 1rem; }
+.explorerDay { border-top: 1px solid currentColor; padding: .75rem 0; }
+.explorerDay summary { cursor: pointer; padding: .5rem 0; }
+.explorerDay > label { max-width: 20rem; margin: .75rem 0; }
+.explorerDay caption { text-align: left; margin: .75rem 0; }
+:where(button, select, input, summary, [tabindex]):focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+@media (max-width: 560px) { .dashboardControls > label { flex: 1 1 45%; min-width: 0; } .dashboardControls select { width: 100%; } }
+.usageExplorer > .dashboardControls, .usageExplorer > p, .usageExplorer > .explorerDays { margin-left: 1.25rem; margin-right: 1.25rem; }
+
+/* Date controls are an easter egg behind the otherwise plain refresh text. */
+.dashboardControls[hidden] { display: none; }
+.refreshToggle {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.modelShare { padding: 1.25rem; border-top: var(--border-w) solid var(--line); }
+.modelShareHeading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-bottom: .85rem; }
+.modelShareHeading h3 { margin: 0; font: 700 .85rem var(--font-body); }
+.modelShareHeading > span, .modelShareNote { color: var(--muted); font-size: .75rem; }
+.modelShareBar { display: flex; width: 100%; height: 3rem; overflow: hidden; }
+.modelShareSegment { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; transition: opacity .15s; overflow: hidden; }
+.modelShareSegment > span { color: white; font-size: .75rem; font-weight: 700; padding: .2rem .35rem; border-radius: 2px; background: #0009; }
+.modelShareLegend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: 0; margin: .85rem 0; list-style: none; }
+.modelShareLegend button { display: flex; align-items: center; gap: .4rem; padding: .2rem 0; border: 0; background: none; color: var(--ink); font: .75rem var(--font-body); cursor: pointer; }
+.modelShareLegend i { width: .65rem; height: .65rem; flex-shrink: 0; }
+.modelShareNote { margin: 0; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .modelShareSegment { transition: none; } }
+/* Tiny segments keep their exact width; their percentages remain in the legend. */
+.modelShareSegment { container-type: inline-size; }
+@container (max-width: 3.5rem) { .modelShareSegment > span { display: none; } }

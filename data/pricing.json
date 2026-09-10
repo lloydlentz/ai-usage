@@ -14,11 +14,9 @@
     "are counted in cost_usd.unpriced_tokens, its per-model cost_usd is null, and",
     "build_daily_burn.py prints a warning naming the model and the affected days."
   ],
-
   "basis": "api_list_price_counterfactual",
   "currency": "USD",
   "unit": "usd_per_million_tokens",
-
   "token_types": {
     "input": "Uncached input tokens, billed at the model's base input rate.",
     "cache_write_5m": "Tokens written to a 5-minute ephemeral prompt cache (Anthropic: 1.25x base input).",
@@ -26,7 +24,6 @@
     "cache_read": "Tokens served from prompt cache (Anthropic: 0.1x base input; OpenAI publishes its own cached-input rate).",
     "output": "Output tokens. Includes OpenAI reasoning tokens, which bill at the output rate."
   },
-
   "models": {
     "claude-opus-5": {
       "provider": "anthropic",
@@ -37,8 +34,8 @@
         "cache_read": 0.5,
         "output": 25.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card (Current Models table); cache rates derived from the documented Anthropic multipliers: read 0.1x, 5m write 1.25x, 1h write 2x of base input.",
-      "source_date": "2026-07-29"
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10"
     },
     "claude-opus-4-8": {
       "provider": "anthropic",
@@ -49,21 +46,21 @@
         "cache_read": 0.5,
         "output": 25.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card; cache multipliers as above.",
-      "source_date": "2026-07-29"
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10"
     },
     "claude-sonnet-5": {
       "provider": "anthropic",
       "usd_per_million": {
-        "input": 3.0,
-        "cache_write_5m": 3.75,
-        "cache_write_1h": 6.0,
-        "cache_read": 0.3,
-        "output": 15.0
+        "input": 2.0,
+        "cache_write_5m": 2.5,
+        "cache_write_1h": 4.0,
+        "cache_read": 0.2,
+        "output": 10.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card; cache multipliers as above.",
-      "source_date": "2026-07-29",
-      "notes": "Standard list price. An introductory rate of $2.00 input / $10.00 output runs through 2026-08-31 and would cover this entire dataset; the durable list price is used here so the figure does not silently expire. Applying the intro rate would lower the Sonnet 5 line by roughly a third."
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10",
+      "notes": "The launch price is now permanent; the previously announced September increase was cancelled."
     },
     "claude-sonnet-4-6": {
       "provider": "anthropic",
@@ -74,8 +71,8 @@
         "cache_read": 0.3,
         "output": 15.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card; cache multipliers as above.",
-      "source_date": "2026-07-29"
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10"
     },
     "claude-haiku-4-5": {
       "provider": "anthropic",
@@ -86,8 +83,8 @@
         "cache_read": 0.1,
         "output": 5.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card; cache multipliers as above.",
-      "source_date": "2026-07-29"
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10"
     },
     "claude-fable-5": {
       "provider": "anthropic",
@@ -98,8 +95,8 @@
         "cache_read": 1.0,
         "output": 50.0
       },
-      "source": "Anthropic model pricing via the claude-api skill rate card; cache multipliers as above.",
-      "source_date": "2026-07-29"
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-09-10"
     },
     "gpt-5.5": {
       "provider": "openai",
@@ -108,40 +105,46 @@
         "cache_read": 0.5,
         "output": 30.0
       },
-      "source": "https://developers.openai.com/api/docs/pricing (standard tier, <272K context)",
-      "source_date": "2026-07-29",
-      "notes": "OpenAI does not bill a separate cache-write premium, so cache_write_5m / cache_write_1h are intentionally absent rather than zero. The Codex logs report no cache-write tokens either."
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.5",
+      "source_date": "2026-09-10",
+      "notes": "Standard short-context benchmark; no cache-write dimension in this legacy model rate."
     },
     "gpt-5.6-sol": {
       "provider": "openai",
       "usd_per_million": {
-        "input": 5.0,
-        "cache_read": 0.5,
-        "output": 30.0
+        "input": 4,
+        "cache_read": 0.4,
+        "output": 20
       },
-      "source": "https://developers.openai.com/api/docs/pricing (standard tier)",
-      "source_date": "2026-07-29"
+      "published_cache_write_usd_per_million": 5,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "source_date": "2026-09-10",
+      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified. Current promotional rate is available at least through 2026-11-21; review at expiry.",
+      "review_after": "2026-11-21"
     },
     "gpt-5.6-terra": {
       "provider": "openai",
       "usd_per_million": {
-        "input": 2.5,
-        "cache_read": 0.25,
-        "output": 15.0
+        "input": 2,
+        "cache_read": 0.2,
+        "output": 12
       },
-      "source": "https://developers.openai.com/api/docs/pricing (standard tier)",
-      "source_date": "2026-07-29"
+      "published_cache_write_usd_per_million": 2.5,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "source_date": "2026-09-10",
+      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
     },
     "gpt-5.6-luna": {
       "provider": "openai",
       "usd_per_million": {
-        "input": 1.0,
-        "cache_read": 0.1,
-        "output": 6.0
+        "input": 0.2,
+        "cache_read": 0.02,
+        "output": 1.2
       },
-      "source": "https://developers.openai.com/api/docs/pricing (standard tier)",
-      "source_date": "2026-07-29",
-      "notes": "Not seen in the local logs yet; listed so a future Luna session prices correctly instead of warning."
+      "published_cache_write_usd_per_million": 0.25,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "source_date": "2026-09-10",
+      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
     },
     "<synthetic>": {
       "provider": "none",
@@ -154,10 +157,23 @@
       },
       "source": "Not a model. Claude Code writes assistant entries with model \"<synthetic>\" for locally-generated turns (e.g. an API error surfaced as a message). Every such entry in the local logs carries zero tokens in all four usage fields, so the zero rate is exact, not an assumption.",
       "source_date": "2026-07-29"
+    },
+    "gpt-6-astra": {
+      "provider": "openai",
+      "usd_per_million": {
+        "input": 10,
+        "cache_read": 1,
+        "output": 50
+      },
+      "published_cache_write_usd_per_million": 12.5,
+      "source": "https://developers.openai.com/api/docs/pricing",
+      "source_date": "2026-09-10",
+      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
     }
   },
-
   "aliases": {
     "claude-haiku-4-5-20251001": "claude-haiku-4-5"
-  }
+  },
+  "benchmark": "Current standard processing and short-context public rates applied to all recorded history; not a reconstruction of historical invoices. Context-tier, fast-mode, regional and tool charges are excluded.",
+  "verified_at": "2026-09-10"
 }

@@ -48,7 +48,7 @@ all 2,137 real events). So `cache_read` takes the cached figure, `input`
 takes the uncached remainder, and reasoning is folded into `output` because
 it bills at the output rate. Summing all four fields would double-count
 every cache hit. Each type carries its own high-water mark, by the same rule
-as the aggregate, so a stale event cannot inflate a per-type figure either.
+as the aggregate, so a stale event cannot lower its baseline. Advancing but contradictory type deltas are quarantined as described in the September correction below.
 Codex reports no cache-write tokens (`cache_write_input_tokens` appears on
 244 recent events and is 0 on every one), so its `cache_write_*` keys are
 **absent rather than zero**.
@@ -69,12 +69,27 @@ needs no code change. Cost is *derived*, never frozen: every run reprices the
 whole ledger from the current rate card, so a correction propagates
 backwards. (Token counts are the opposite — see the ledger rules below.)
 
-Anthropic cache rates are computed from the documented multipliers
-(read 0.1×, 5m write 1.25×, 1h write 2× of base input) rather than
-transcribed, and a test asserts they stay consistent. `claude-sonnet-5` is
-priced at its standard $3/$15 list rate; an introductory $2/$10 rate runs
-through 2026-08-31 and would cover this entire dataset, but the durable list
-price is used so the figure does not silently expire.
+Rates were re-verified on **2026-09-10** against the
+[OpenAI pricing page](https://developers.openai.com/api/docs/pricing),
+[GPT-5.5 model page](https://developers.openai.com/api/docs/models/gpt-5.5), and
+[Anthropic pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
+The rate card records each source and verification date. Sonnet 5's launch
+price became permanent. Sol, Terra and Luna were updated and Astra was added.
+Sol's current promotion is available at least through November 21, 2026;
+`review_after` records the next check. Numeric prices live only in the card.
+
+This is a **current standard-processing, short-context benchmark applied to
+all history**, not the prices applicable on each original usage date. The
+ledger does not preserve per-request context tiers, so long-context premiums,
+fast-mode premiums, regional uplifts and tool charges are excluded. The UI
+states this benchmark explicitly; it must not be described as a full API invoice.
+
+Anthropic cache multipliers apply to the models currently in the card; newer
+models may use different cache-read multipliers and need individual verification.
+OpenAI now publishes a cache-write rate, recorded separately in each current
+model's card. The local logs still report zero cache-write tokens. A future
+nonzero write event remains unattributed until its semantics are supported;
+it is never assigned to an Anthropic TTL or silently treated as free.
 
 ### Unknown models are loud, never free
 
@@ -103,7 +118,7 @@ starts 2026-05-04, so days before that can never gain a breakdown.
 ### `unattributed` tokens
 
 Within a breakdown, `unattributed` counts tokens that are **real but carry no
-type or model attribution**. The invariant, asserted by the test suite, is:
+type or model attribution**. The invariant, enforced before writing output and asserted by tests, is:
 
 ```
 sum(model["tokens"]) + unattributed == <that tool's aggregate column>
@@ -170,3 +185,36 @@ with no coding) are omitted.
 
 A "day" is midnight-to-midnight **America/Chicago**. UTC timestamps in the
 raw logs are converted before bucketing.
+
+## September 2026 attribution correction
+
+Seven advancing Codex events violated the per-type total or cached-input
+nesting, on August 27 and September 1, 5, 6, 8 and 9. The authoritative session
+total high-water mark is unchanged. Each ambiguous event's entire increment
+is retained as unattributed and unpriced; subsequent coherent increments are
+still attributed normally. This avoids fabricating a distribution to make a
+sum fit. The six affected captured breakdowns were rebuilt from complete logs
+with the explicit `--repair-codex-days` option; original rows were backed up
+under gitignored `data/private/`. Captured daily aggregates were not reduced.
+
+A per-leaf maximum can exceed a daily aggregate maximum when composition
+changes. Such a mismatch now fails the build before output is replaced.
+Corrections must use complete source coverage and explicit repair rather than
+silently changing frozen measurements.
+
+## Calendar metrics and labels
+
+The 7-day average is recorded volume during the ending date and six preceding
+calendar dates divided by seven, including gaps with no recorded tokens. It
+is a recorded-volume rate, not evidence that collection succeeded on missing
+days. The 30-day table uses calendar cutoffs, the timeline uses date spacing,
+and Active days counts days with positive measured tool usage (not estimates).
+Today is in America/Chicago; missing rows render as no reading. Freshness uses
+the log collection timestamp separately from the later repricing/build time.
+
+The explorer saves draft categories in the viewer's browser. Exported labels
+contain dates and preset categories only. Import with
+`python3 scripts/import_driver_labels.py /path/to/driver-labels.json`, then run
+`python3 scripts/build_daily_burn.py`. The importer rejects unknown dates and
+free text. Overrides live in `scripts/driver-labels.json`; local project paths
+are never imported or published. Unlabeled days stay unlabeled until reviewed.

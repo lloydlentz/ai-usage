@@ -58,6 +58,7 @@ type RawModelUsage = {
   output?: number;
   tokens?: number;
   cost_usd?: number | null;
+  unpriced_tokens?: number;
 };
 
 type RawToolBreakdown = {
@@ -100,6 +101,7 @@ export type ModelUsage = {
   byType: ByType;
   /** null means the model has no rate card entry. Never coerce this to 0. */
   costUsd: number | null;
+  unpricedTokens: number;
 };
 
 export type ToolBreakdown = {
@@ -222,6 +224,7 @@ function normalizeModel(model: string, usage: RawModelUsage): ModelUsage {
 
   return {
     model,
+    unpricedTokens: usage.cost_usd == null ? (asNumber(usage.tokens) || summed) : asNumber(usage.unpriced_tokens),
     calls: Number.isFinite(usage.calls) ? Number(usage.calls) : null,
     tokens: asNumber(usage.tokens) || summed,
     byType,
@@ -326,6 +329,7 @@ export type ModelTotal = {
   tokens: number;
   /** null when the model has no rate card on any day it appears. */
   costUsd: number | null;
+  unpricedTokens: number;
 };
 
 /** Per-model totals, sorted by cost then tokens. Unpriced models sort last. */
@@ -338,8 +342,9 @@ export function sumByModel(rows: BurnRow[]): ModelTotal[] {
       for (const model of tool.models) {
         const key = `${tool.tool}::${model.model}`;
         const existing =
-          totals.get(key) || { model: model.model, tool: tool.tool, tokens: 0, costUsd: null };
+          totals.get(key) || { model: model.model, tool: tool.tool, tokens: 0, costUsd: null, unpricedTokens: 0 };
         existing.tokens += model.tokens;
+        existing.unpricedTokens += model.unpricedTokens;
         if (model.costUsd !== null) {
           existing.costUsd = (existing.costUsd || 0) + model.costUsd;
         }
@@ -357,4 +362,30 @@ export function sumByModel(rows: BurnRow[]): ModelTotal[] {
 
 function asNumber(value: number | undefined) {
   return Number.isFinite(value) ? Number(value) : 0;
+}
+
+/** A cost subtotal must retain the uncertainty of the tokens that formed it. */
+export function subtotalCost(usd: number | null, unpricedTokens: number): CostKnowledge {
+  if (usd === null || (usd === 0 && unpricedTokens > 0)) return { kind: "unknown", unpricedTokens };
+  const amounts = { usd, byTool: {}, byType: emptyByType() };
+  return unpricedTokens > 0 ? { kind: "lower-bound", unpricedTokens, ...amounts } : { kind: "priced", ...amounts };
+}
+
+export function sumToolCost(rows: BurnRow[], tool: ToolKey): CostKnowledge {
+  const column = tool === "codex" ? "codex_tokens" : "claude_code_tokens";
+  let usd: number | null = null;
+  let unpriced = 0;
+  let measured = false;
+  for (const row of rows) {
+    if (row[column] <= 0) continue;
+    measured = true;
+    const split = row.breakdown?.find((entry) => entry.tool === tool);
+    if (!split) { unpriced += row[column]; continue; }
+    unpriced += split.unattributed;
+    for (const model of split.models) {
+      unpriced += model.unpricedTokens;
+      if (model.costUsd !== null) usd = (usd ?? 0) + model.costUsd;
+    }
+  }
+  return measured ? subtotalCost(usd, unpriced) : { kind: "not-measured" };
 }

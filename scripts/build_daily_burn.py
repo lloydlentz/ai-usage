@@ -63,6 +63,7 @@ apart from "the split is all zeros".
 from __future__ import annotations  # allow X | Y union syntax on Python 3.9
 
 import json
+from copy import deepcopy
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -338,11 +339,10 @@ def reconcile_unattributed(key: str, breakdown: dict | None, merged: dict) -> No
         typed = sum(m.get("tokens") or 0 for m in (entry.get("models") or {}).values())
         aggregate = merged.get(column) or 0
         if typed > aggregate:
-            # Never observed: both sides take a max of the same source. If it
-            # ever fires the breakdown and the headline disagree, so say so
-            # rather than quietly reshaping one of them.
-            print(
-                f"  WARNING: {key} breakdown.{tool} sums to {typed:,} but "
+            # Per-leaf maxima can exceed a maximum of aggregate sums. Require
+            # an audited correction instead of publishing contradictory data.
+            raise ValueError(
+                f"{key} breakdown.{tool} sums to {typed:,} but "
                 f"{column} is {aggregate:,}; the split exceeds its aggregate"
             )
         entry["unattributed"] = max(0, aggregate - typed)
@@ -381,6 +381,7 @@ def price_breakdown(breakdown: dict | None, rates: dict) -> tuple[dict, dict]:
             model_rates = rates.get(model)
             if model_rates is None:
                 counts["cost_usd"] = None
+                counts["unpriced_tokens"] = counts.get("tokens") or 0
                 tokens = counts.get("tokens") or 0
                 cost["unpriced_tokens"] += tokens
                 unpriced[model] = unpriced.get(model, 0) + tokens
@@ -404,6 +405,10 @@ def price_breakdown(breakdown: dict | None, rates: dict) -> tuple[dict, dict]:
                 model_cost += amount
                 by_type[token_type] += amount
             counts["cost_usd"] = round(model_cost, 6)
+            counts["unpriced_tokens"] = sum(
+                (counts.get(t) or 0) for t in _model_entry_types(counts)
+                if model_rates.get(t) is None
+            )
             tool_cost += model_cost
             total += model_cost
         cost["by_tool"][tool] = round(tool_cost, 6)
@@ -421,7 +426,7 @@ def price_breakdown(breakdown: dict | None, rates: dict) -> tuple[dict, dict]:
 
 def build_row(key: str, ex: dict, prev_exact: dict | None,
               rates: dict | None = None,
-              unpriced_out: dict | None = None) -> dict:
+              unpriced_out: dict | None = None, labels: dict | None = None) -> dict:
     """Build one ledger row.
 
     `unpriced_out`, when given, accumulates {model: {date: tokens}} for every
@@ -444,6 +449,9 @@ def build_row(key: str, ex: dict, prev_exact: dict | None,
         driver, evidence = "unlabeled", "exact logs; add a driver label for this day"
     else:
         driver, evidence = CHAT_ONLY
+
+    if labels and key in labels:
+        driver, evidence = labels[key], "user-labeled category"
 
     row = {
         "date": key,
@@ -488,12 +496,61 @@ def build_row(key: str, ex: dict, prev_exact: dict | None,
     return row
 
 
-def main():
+def repair_codex_breakdowns(existing: dict, exact: dict, days: list[str]) -> dict:
+    """Explicit, audited correction; never lower the aggregate or repair pruned days."""
+    repaired = deepcopy(existing)
+    audit = {}
+    for day in days:
+        prev, fresh = repaired.get(day), exact.get(day)
+        if not prev or not fresh or exact_count(fresh, "codex_tokens") < exact_count(prev, "codex_tokens"):
+            raise ValueError(f"Cannot repair {day}: extraction does not cover the captured total")
+        entry = deepcopy((fresh.get("breakdown") or {}).get("codex"))
+        if entry is None or sum(m["tokens"] for m in entry["models"].values()) + entry["unattributed"] != fresh["codex_tokens"]:
+            raise ValueError(f"Cannot repair {day}: fresh split does not reconcile")
+        audit[day] = deepcopy(prev)
+        prev.setdefault("breakdown", {})["codex"] = entry
+    if audit:
+        folder = DATA / "private"
+        folder.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
+        (folder / f"before-codex-repair-{stamp}.json").write_text(json.dumps(audit, indent=2))
+    return repaired
+
+
+def validate_rows(rows: list[dict]) -> None:
+    """Fail before publishing a malformed ledger; unknown prices remain valid."""
+    dates = [r["date"] for r in rows]
+    if dates != sorted(set(dates)):
+        raise ValueError("Ledger dates must be unique and ascending")
+    for row in rows:
+        columns = (*EXACT_COLUMNS[:2], "claude_chat_est", "chatgpt_est", "gemini_est")
+        if any(not isinstance(row.get(c), int) or row[c] < 0 for c in columns):
+            raise ValueError(f"{row['date']}: invalid token count")
+        if row["total"] != sum(row[c] for c in columns):
+            raise ValueError(f"{row['date']}: total does not reconcile")
+        for tool, column in BREAKDOWN_TOOLS.items():
+            entry = (row.get("breakdown") or {}).get(tool)
+            if entry is None:
+                continue
+            for counts in entry["models"].values():
+                if any((counts.get(t) or 0) < 0 for t in TOKEN_TYPES) or counts["tokens"] != sum(counts.get(t) or 0 for t in TOKEN_TYPES):
+                    raise ValueError(f"{row['date']}: invalid model split")
+            if sum(m["tokens"] for m in entry["models"].values()) + entry["unattributed"] != row[column]:
+                raise ValueError(f"{row['date']}: {tool} split does not reconcile")
+
+
+def main(repair_days: list[str] | None = None):
     with open(DATA / "exact-daily.json") as fh:
         exact = {row["date"]: row for row in json.load(fh)}
     out_path = DATA / "daily-burn.json"
     existing = load_existing(out_path)
+    if repair_days:
+        existing = repair_codex_breakdowns(existing, exact, repair_days)
     rates = load_pricing()
+    labels_path = ROOT / "scripts" / "driver-labels.json"
+    labels = json.loads(labels_path.read_text()) if labels_path.exists() else {}
+    if any(value not in {"shipping", "research", "review", "video", "admin", "unlabeled"} for value in labels.values()):
+        raise ValueError("Driver labels must be preset categories")
     if not rates:
         print(
             f"  WARNING: no rate card at {PRICING_PATH}; every model will be "
@@ -531,7 +588,7 @@ def main():
         # now gone entirely or merely thinner than they were. build_row takes
         # the per-column max and announces anything it holds on to.
         prev_exact = prev if (prev and has_exact_data(prev)) else None
-        row = build_row(key, ex, prev_exact, rates=rates, unpriced_out=unpriced_days)
+        row = build_row(key, ex, prev_exact, rates=rates, unpriced_out=unpriced_days, labels=labels)
         if prev_exact and any(
             exact_count(prev_exact, column) > exact_count(ex, column)
             for column in EXACT_COLUMNS
@@ -543,8 +600,11 @@ def main():
         rows.append(row)
         day += timedelta(days=1)
 
-    with open(out_path, "w") as fh:
+    validate_rows(rows)
+    staged_path = out_path.with_suffix(".tmp")
+    with open(staged_path, "w") as fh:
         json.dump(rows, fh, indent=2)
+    staged_path.replace(out_path)
 
     total_cost = round(sum((r.get("cost_usd") or {}).get("total") or 0 for r in rows), 6)
     unpriced_tokens = sum(
@@ -552,8 +612,12 @@ def main():
     )
 
     now = datetime.now(ZoneInfo("America/Chicago"))
+    collection_path = DATA / "private" / "collection.json"
+    collection = json.loads(collection_path.read_text()) if collection_path.exists() else {}
     meta = {
         "refreshed_at": now.isoformat(timespec="seconds"),
+        "collected_at": collection.get("collected_at"),
+        "sources_available": collection.get("sources_available", {}),
         "cost": {
             "basis": COST_BASIS,
             "disclaimer": (
@@ -609,4 +673,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repair-codex-days", nargs="+", default=[], metavar="YYYY-MM-DD",
+                        help="Explicitly rebuild specified Codex splits from complete logs; originals backed up privately")
+    args = parser.parse_args()
+    main(args.repair_codex_days)

@@ -1,4 +1,5 @@
 import type { BurnRow } from "./burn-data";
+import { toUtcDate } from "./date-windows";
 
 export function formatTokens(value: number) {
   if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(2)}B`;
@@ -32,10 +33,15 @@ export function logHeatLevel(value: number, max: number) {
   return Math.max(0, Math.min(5, level));
 }
 
+/** Recorded volume per calendar day. Gaps contribute no recorded tokens. */
 export function movingAverage7(rows: BurnRow[], index: number) {
-  const start = Math.max(0, index - 6);
-  const windowRows = rows.slice(start, index + 1);
-  return sumTokens(windowRows) / windowRows.length;
+  if (!rows[index]) return 0;
+  const end = toUtcDate(rows[index].date).getTime();
+  const start = end - 6 * 86_400_000;
+  return sumTokens(rows.filter((row) => {
+    const day = toUtcDate(row.date).getTime();
+    return day >= start && day <= end;
+  })) / 7;
 }
 
 /**
@@ -71,9 +77,9 @@ export function fermiScale(outputTokens: number, inputTokens: number) {
       note: "90k words per novel",
     },
     {
-      label: "Words read in",
+      label: "Input word equivalent",
       value: formatTokens(inputTokens * 0.75),
-      note: "uncached input, counted once",
+      note: "uncached input equivalent",
     },
   ];
 }
