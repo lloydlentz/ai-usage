@@ -4700,13 +4700,13 @@
   },
   {
     "date": "2026-09-10",
-    "codex_tokens": 16898338,
+    "codex_tokens": 21637489,
     "claude_code_tokens": 0,
     "claude_code_calls": 0,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 16978338,
+    "total": 21717489,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
@@ -4724,10 +4724,10 @@
             "cost_usd": 13.943574
           },
           "gpt-6-astra": {
-            "input": 152289,
-            "cache_read": 865024,
-            "output": 24986,
-            "tokens": 1042299,
+            "input": 317810,
+            "cache_read": 5410944,
+            "output": 52696,
+            "tokens": 5781450,
             "cost_usd": null
           }
         },
@@ -4748,7 +4748,7 @@
         "cache_read": 7.466944,
         "output": 2.23905
       },
-      "unpriced_tokens": 1042299
+      "unpriced_tokens": 5781450
     }
   }
 ]
