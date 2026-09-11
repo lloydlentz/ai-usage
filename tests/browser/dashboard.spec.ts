@@ -24,7 +24,9 @@ test("date controls, empty ranges, and both themes render cleanly", async ({ pag
   await period.selectOption("all");
   await expect(page.locator(".modelShareHeading > span")).not.toHaveText(before);
   const widths = await page.locator(".modelShareSegment").evaluateAll((elements) => elements.reduce((sum, el) => sum + parseFloat((el as HTMLElement).style.width), 0));
-  expect(widths).toBeCloseTo(100, 4);
+  // CSSOM rounds each percentage when serializing style.width. Allow the
+  // accumulated rounding; full-precision share math is covered in unit tests.
+  expect(widths).toBeCloseTo(100, 3);
   await expect(page.getByRole("heading", { name: "Explore recorded usage" })).toBeVisible();
   await page.getByLabel("From", { exact: true }).fill("2099-01-01");
   await expect(page.getByText("No recorded days in this date range.")).toBeVisible();
