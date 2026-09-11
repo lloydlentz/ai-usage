@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type PointerEvent, type KeyboardEvent } from "react";
 import type { CostKnowledge } from "../../lib/burn-data";
-import { toUtcDate } from "../../lib/date-windows";
+import { toUtcDate, dayNumber, dayString, moveDateRange, type DateRange } from "../../lib/date-windows";
 import { formatTokens } from "../../lib/token-math";
 import { CellCost } from "./cost";
 
@@ -18,28 +18,86 @@ function formatTimelineDate(dateStr: string) {
 
 const TIMELINE_TOOLTIP_WIDTH = 176;
 
-export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
+export function UsageTimeline({ rows, range, onRangeChange }: { rows: TimelineRow[]; range: DateRange; onRangeChange: (range: DateRange) => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
   const [tooltipLeftPx, setTooltipLeftPx] = useState(0);
+  const railRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ mode: "create" | "move" | "start" | "end"; anchor: number; original: DateRange; rail: boolean } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const [plotWidth, setPlotWidth] = useState(1400);
+  useLayoutEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const observer = new ResizeObserver(([entry]) => setPlotWidth(Math.max(280, entry.contentRect.width)));
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
 
   const n = rows.length;
 
   // Geometry is pure viewBox math, so it is safe to compute before the
   // `n === 0` bail-out below — the measuring effect needs it, and every hook
   // has to run before that early return.
-  const W = 1400, H = 300;
-  const padL = 52, padR = 16, padT = 12, padB = 28;
+  const W = plotWidth, H = Math.max(180, Math.min(260, W * .21));
+  const padL = 44, padR = 18, padT = 12, padB = 28;
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
-  const first = rows.length ? toUtcDate(rows[0].date).getTime() : 0;
-  const span = rows.length ? toUtcDate(rows[rows.length - 1].date).getTime() - first : 0;
+  const bounds = { start: rows[0]?.date || range.start, end: rows.at(-1)?.date || range.end };
+  const first = dayNumber(bounds.start);
+  const last = dayNumber(bounds.end);
+  const days = last - first + 1;
   const xAt = useCallback(
-    (i: number) => span === 0 ? padL + innerW / 2 : padL + ((toUtcDate(rows[i].date).getTime() - first) / span) * innerW,
-    [rows, span, first, innerW],
+    (i: number) => padL + ((dayNumber(rows[i].date) - first + 0.5) / days) * innerW,
+    [rows, days, first, innerW],
   );
+
+  const selectedStart = dayNumber(range.start);
+  const selectedEnd = dayNumber(range.end);
+  const leftFraction = (selectedStart - first) / days;
+  const widthFraction = (selectedEnd - selectedStart + 1) / days;
+
+  const pointerDay = (clientX: number, rail: boolean) => {
+    const rect = (rail ? railRef.current : svgRef.current)?.getBoundingClientRect();
+    if (!rect) return first;
+    const fraction = rail ? (clientX - rect.left) / rect.width : (((clientX - rect.left) / rect.width) * W - padL) / innerW;
+    return Math.max(first, Math.min(last, first + Math.floor(fraction * days)));
+  };
+  const begin = (e: PointerEvent<Element>, mode: "create" | "move" | "start" | "end", rail: boolean) => {
+    if (e.button !== 0 || !e.isPrimary) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    if (e.currentTarget instanceof HTMLElement) e.currentTarget.focus();
+    const anchor = pointerDay(e.clientX, rail);
+    drag.current = { mode, anchor, original: range, rail };
+    setDragging(true);
+    setHoverIdx(null);
+    if (mode === "create") onRangeChange({ start: dayString(anchor), end: dayString(anchor) });
+  };
+  const move = (e: PointerEvent<Element>) => {
+    const active = drag.current;
+    if (!active) return;
+    const day = pointerDay(e.clientX, active.rail);
+    const { original, mode, anchor } = active;
+    if (mode === "move") onRangeChange(moveDateRange(original, day - anchor, bounds));
+    else if (mode === "start") onRangeChange({ start: dayString(Math.max(first, Math.min(dayNumber(original.start) + day - anchor, dayNumber(original.end)))), end: original.end });
+    else if (mode === "end") onRangeChange({ start: original.start, end: dayString(Math.min(last, Math.max(dayNumber(original.end) + day - anchor, dayNumber(original.start)))) });
+    else onRangeChange({ start: dayString(Math.min(anchor, day)), end: dayString(Math.max(anchor, day)) });
+  };
+  const finish = () => { drag.current = null; setDragging(false); };
+  const cancel = () => { if (drag.current) onRangeChange(drag.current.original); finish(); };
+  const rangeKey = (e: KeyboardEvent<Element>, mode: "move" | "start" | "end") => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End", "Escape"].includes(e.key)) return;
+    e.preventDefault();
+    if (e.key === "Escape") { cancel(); return; }
+    const delta = (e.key === "ArrowLeft" ? -1 : 1) * (e.shiftKey ? 7 : 1);
+    if (mode === "move") onRangeChange(moveDateRange(range, e.key === "Home" ? first - selectedStart : e.key === "End" ? last - selectedEnd : delta, bounds));
+    else if (mode === "start") onRangeChange({ ...range, start: dayString(e.key === "Home" ? first : e.key === "End" ? selectedEnd : Math.max(first, Math.min(selectedEnd, selectedStart + delta))) });
+    else onRangeChange({ ...range, end: dayString(e.key === "End" ? last : e.key === "Home" ? selectedStart : Math.max(selectedStart, Math.min(last, selectedEnd + delta))) });
+  };
 
   // Position the tooltip in real pixels (not a % of the container) so its
   // fixed width never overflows a narrow container near either edge.
@@ -109,10 +167,17 @@ export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
   const hovered = hoverIdx !== null ? rows[hoverIdx] : null;
 
   return (
-    <div className="timeline" ref={containerRef}>
+    <div className="timeline" ref={containerRef} data-start={range.start} data-end={range.end}>
+      <div className="timelineSelectionHeading">
+        <div><strong>{formatTimelineDate(range.start)} – {formatTimelineDate(range.end)}</strong><span>{selectedEnd - selectedStart + 1} days selected</span></div>
+        <button type="button" onClick={() => onRangeChange(bounds)} disabled={range.start === bounds.start && range.end === bounds.end}>Select all time</button>
+      </div>
+      <p id="timeline-instructions" className="timelineInstructions">Drag the chart to select dates. Drag the bar to move the range; use its edges to resize.</p>
       <svg
         ref={svgRef}
         className="timelineSvg"
+        data-plot-left={padL / W}
+        data-plot-width={innerW / W}
         role="slider"
         tabIndex={0}
         aria-label="Daily usage. Use left and right arrows to inspect dates; Home and End jump to the first and last day."
@@ -120,6 +185,7 @@ export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
         aria-valuemax={Math.max(0, n - 1)}
         aria-valuenow={hoverIdx ?? 0}
         aria-valuetext={`${rows[hoverIdx ?? 0].date}: Claude Code ${formatTokens(claude[hoverIdx ?? 0])}, Codex ${formatTokens(chatgpt[hoverIdx ?? 0])} tokens`}
+        aria-describedby="timeline-instructions"
         onFocus={() => setHoverIdx((i) => i ?? 0)}
         onBlur={() => setHoverIdx(null)}
         onKeyDown={(e) => {
@@ -128,12 +194,13 @@ export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
           if (e.key === "Escape") setHoverIdx(null);
           else setHoverIdx((i) => e.key === "Home" ? 0 : e.key === "End" ? n - 1 : Math.max(0, Math.min(n - 1, (i ?? 0) + (e.key === "ArrowRight" ? 1 : -1))));
         }}
-        onTouchStart={(e) => e.touches[0] && updateHover(e.touches[0].clientX)}
         viewBox={`0 0 ${W} ${H}`}
-        onMouseMove={(e) => updateHover(e.clientX)}
-        onMouseLeave={() => setHoverIdx(null)}
-        onTouchMove={(e) => e.touches[0] && updateHover(e.touches[0].clientX)}
-        onTouchEnd={() => setHoverIdx(null)}
+        onPointerDown={(e) => begin(e, "create", false)}
+        onPointerMove={(e) => { if (drag.current) move(e); else if (e.pointerType !== "touch") updateHover(e.clientX); }}
+        onPointerUp={(e) => { move(e); finish(); }}
+        onPointerCancel={cancel}
+        onLostPointerCapture={finish}
+        onPointerLeave={() => setHoverIdx(null)}
       >
         {yTicks.map((v, i) => (
           <g key={i}>
@@ -151,6 +218,12 @@ export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
           <path d={claudePath} className="timelineAreaClaude" />
           <path d={chatgptPath} className="timelineAreaChatgpt" />
         </>}
+
+        <g className="timelineSelectionOverlay" aria-hidden="true">
+          <rect x={padL} y={padT} width={leftFraction * innerW} height={innerH} className="timelineOutside" />
+          <rect x={padL + (leftFraction + widthFraction) * innerW} y={padT} width={Math.max(0, (1 - leftFraction - widthFraction) * innerW)} height={innerH} className="timelineOutside" />
+          <rect x={padL + leftFraction * innerW} y={padT} width={widthFraction * innerW} height={innerH} className="timelineSelectedOutline" />
+        </g>
 
         {xTickIdx.map((i) => (
           <text key={i} x={xAt(i)} y={H - 6} className="timelineAxisLabel" textAnchor="middle">
@@ -170,7 +243,23 @@ export function UsageTimeline({ rows }: { rows: TimelineRow[] }) {
         )}
       </svg>
 
-      {hovered && (
+      <div className="timelineRangeRail" ref={railRef} style={{ marginLeft: `${padL / W * 100}%`, width: `${innerW / W * 100}%` }}
+        onPointerDown={(e) => begin(e, "create", true)} onPointerMove={move} onPointerUp={(e) => { move(e); finish(); }} onPointerCancel={cancel} onLostPointerCapture={finish}>
+        <div className="timelineRangeWindow" style={{ left: `${leftFraction * 100}%`, width: `${widthFraction * 100}%` }}>
+          <button type="button" className="timelineRangeMove" role="slider" aria-label="Move selected date range" aria-describedby="timeline-keyboard"
+            aria-valuemin={first} aria-valuemax={last - (selectedEnd - selectedStart)} aria-valuenow={selectedStart} aria-valuetext={`${range.start} through ${range.end}`}
+            onPointerDown={(e) => begin(e, "move", true)} onKeyDown={(e) => rangeKey(e, "move")} title="Drag to move the selected period"><span aria-hidden="true">⠿</span></button>
+          <button type="button" className="timelineRangeHandle timelineRangeStart" role="slider" aria-label="Range start" aria-describedby="timeline-keyboard"
+            aria-valuemin={first} aria-valuemax={selectedEnd} aria-valuenow={selectedStart} aria-valuetext={range.start}
+            onPointerDown={(e) => begin(e, "start", true)} onKeyDown={(e) => rangeKey(e, "start")} title={`Start: ${range.start}`} />
+          <button type="button" className="timelineRangeHandle timelineRangeEnd" role="slider" aria-label="Range end" aria-describedby="timeline-keyboard"
+            aria-valuemin={selectedStart} aria-valuemax={last} aria-valuenow={selectedEnd} aria-valuetext={range.end}
+            onPointerDown={(e) => begin(e, "end", true)} onKeyDown={(e) => rangeKey(e, "end")} title={`End: ${range.end}`} />
+        </div>
+      </div>
+      <span id="timeline-keyboard" className="srOnly">Left and right arrows move one day; Shift moves seven days. Home and End jump to the limits.</span>
+
+      {hovered && !dragging && (
         <div className="timelineTooltip" style={{ left: `${tooltipLeftPx}px` }}>
           <div className="timelineTooltipDate">{formatTimelineDate(hovered.date)}</div>
           <div className="timelineTooltipRow">

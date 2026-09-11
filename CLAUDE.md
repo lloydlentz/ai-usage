@@ -42,7 +42,7 @@ bash scripts/refresh_and_push.sh    # Full pipeline: extract, build, commit, pus
 `data/daily-burn.json` and `data/meta.json` are imported directly, so they're baked in at build time.
 
 **Themes:** two switchable looks selected by `ThemeToggle`:
-- `"printrun"` (default) — paper stock, condensed display face, ring gauges
+- `"printrun"` (default) — paper stock, condensed display face
 - `"ticker"` — black trading-desk sheet, monospace, scrolling tape
 
 The choice persists to `localStorage` under `dashboard-theme`, and is applied both as
@@ -51,9 +51,9 @@ The choice persists to `localStorage` under `dashboard-theme`, and is applied bo
 
 **Sections, in render order:**
 1. `ThemeToggle`, then `TickerTape` (ticker theme only)
-2. **Hero row** (`.heroRow`): `TickerHeroContent` / `PrintRunHero` beside the **Tool use** panel (`TickerToolUse` / `PrintRunToolUse`)
-3. **Ledger** (`.ledger`): the `ShapeShift` chart, which carries both figures itself — the measured token volume in a rail at the flow's left end, the counterfactual cost as a label over its right end. See "The ledger" below
-4. **Usage timeline** (`.timelineRow`, titled "Burn history" in the ticker theme): stacked-area chart of Claude Code + Codex CLI per day; the tooltip carries that day's cost
+2. **Hero row** (`.heroRow`): full-width `TickerHeroContent` / `PrintRunHero`
+3. **Usage timeline** (`.timelineRow`, titled "Burn history" in the ticker theme): compact tool totals, all-time chart with a movable date selection, and the selected period's model-share bar
+4. **Ledger** (`.ledger`): the `ShapeShift` chart shows selected-period token volume beside its cost at API list prices. See "The ledger" below
 5. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
 6. **Stats**: total burn, peak day, 7d average, active days
 7. **Where the money went** (cost by model) + **Which agent spent it** (cost by tool)
@@ -111,8 +111,9 @@ one. Table columns carry the qualifier in the column header
 - `BasisPill` / `CostAmount` / `CellCost` / `UnpricedNote`: the four renderings of `CostKnowledge` — large figure, table cell, and the lower-bound disclosure
 - `UsageTimeline`: SVG stacked-area chart (Claude Code under Codex CLI) with a hover crosshair, per-series dots, and a tooltip positioned in real pixels so its fixed width can't overflow a narrow container
 - `GitHubHeatmap`: GitHub-style calendar grid (days-of-week rows, weeks columns)
-- Ticker-only: `TickerTape`, `TickerHeroContent`, `TickerToolUse`, `CandleSpark`
-- Print Run-only: `PrintRunHero`, `PrintRunToolUse`, `RingGauge`, `Sparkline`
+- Ticker-only: `TickerTape`, `TickerHeroContent`
+- Print Run-only: `PrintRunHero`
+- `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with last-seven-day, selected-period and all-time measured tokens. Recent trends span 14 calendar days; missing days break the line.
 - Shared: `ThemeToggle`, `Metric`, `Panel`, and the `buildDriverRows()` helper
 
 **Styling:** `app/globals.css`
@@ -120,7 +121,7 @@ one. Table columns carry the qualifier in the column header
 - Tool colors: `--accent` = Claude Code (#ff8c42 ticker / #f0653b print run), `--good` = Codex CLI (#8957e5 / #7a4fc2). The CSS variable names are historical
 - Token-type ramp: `--t-input`, `--t-cache-write-5m`, `--t-cache-write-1h`, `--t-cache-read`, `--t-output`. Deliberately *not* the tool colors, which already mean "Claude" and "Codex". The ramp encodes the thesis — the huge, cheap type (`cache_read`) is the quietest color on the page and the tiny, expensive ones (`cache_write_1h`, `output`) are the loudest
 - `--basis` colors the "at API list" pill; `--seam` is the hairline between adjacent bar segments (page background on ticker, ink on print run)
-- Layout: `.heroRow` is a 12-column grid (`.heroCol` spans 8, the Tool use panel spans 4); `.timelineRow` and `.calendarRow` are full width; `.heatmapContainer` is a 3-column grid
+- Layout: `.heroRow` is a block (full-width title); `.timelineRow` and `.calendarRow` are full width; `.heatmapContainer` is a 3-column grid
 - Heat classes: neutral `heat0`–`heat5`, plus `heatclaude0`–`heatclaude5` and `heatchatgpt0`–`heatchatgpt5`
 - Responsive breakpoints at 880px, 800px, 560px, and 480px, plus a `min-width: 640px` tweak for the Print Run lead. The ticker tape's scroll animation is disabled under `prefers-reduced-motion`
 
@@ -145,8 +146,8 @@ one. Table columns carry the qualifier in the column header
 Gotchas the types are built to prevent: a Codex model entry has **no** `cache_write_5m` / `cache_write_1h` keys (those are Anthropic TTLs; current OpenAI write rates are recorded separately), so per-type reads default to 0 rather than indexing; a model's `cost_usd` may be `null` (no rate card) and must render as unknown, never free; and `breakdown.<tool>.unattributed` is real tokens with no split — 2026-06-08 carries 449,154 of them and must not read as a free day.
 
 **date-windows.ts**: Time range selection
-- `WindowKey`: 1, 3, 7, or 31 days, 3 or 6 calendar months, or all time; defaults to 6 months, with period and custom date controls hidden by default; click the refresh wording after the updated timestamp to toggle them
-- `getWindowRows()`: Filter rows to a time window; `toUtcDate()` parses a date string at UTC midnight
+- `WindowKey`: 1, 3, 7, or 31 days, 3 or 6 calendar months, or all time; defaults to all time, with period and custom date controls hidden by default; click the refresh wording after the updated timestamp to toggle them
+- `getWindowRange()`: inclusive, history-clamped calendar boundaries for presets, even when days are missing. `moveDateRange()` shifts without changing duration and stops at history bounds. `getWindowRows()` filters using these boundaries; `toUtcDate()` parses dates on a fixed UTC clock.
 
 **token-math.ts**: Calculations
 - `formatTokens()`: B above 1B, M above 1M, K above 1K, otherwise the raw number (e.g., "2.48B", "263.3M")
@@ -223,10 +224,23 @@ validation and requires an explicit audited correction.
 - Three calendars displayed horizontally: Total, Claude Code, Codex CLI
 - The Total calendar tints each day by that day's dominant tool (`heatclaude*` / `heatchatgpt*`); the per-tool calendars use their own tool color; neutral `heat0`–`heat5` is the fallback
 
-### Tool-use percentages
-- Each tool's fill = today's tokens for that tool / that tool's peak daily tokens within the selected window
-- Linear scale from 0 to 1 (not log scale)
-- Print Run renders this as a `RingGauge` with a `Sparkline` of the window's history beneath; Ticker renders it as a quoted percentage with a `CandleSpark` of the last 14 days and a vs-yesterday delta
+### Timeline selection and tool summary
+
+- The timeline always receives the entire history. Drag its chart to create a
+  range, drag the selection bar to move it, or drag the edges to resize it.
+  Pointer capture supports mouse/touch and movement outside the control;
+  cancellation restores the original range. Selection is inclusive and uses
+  calendar days, so missing records and DST do not change its duration.
+- The selection bar and each edge are keyboard sliders: arrows step one day,
+  Shift+arrows seven days, Home/End reach the permitted limits. The chart itself
+  retains keyboard inspection of individual recorded days.
+- Presets and custom dates set the same selection; they never crop or rescale
+  the overview. Model share, volume/cost and the remaining detail panels use
+  the selected rows. An empty interval leaves the overview available.
+- Tool summary rows replace today's peak-relative gauges. They show measured
+  tokens for the selected interval alongside fixed all-time and last-seven-day
+  totals. Week/trends end at the latest recorded date, explicitly labeled;
+  they never imply current usage when collection is overdue.
 
 ## Common Workflows
 
@@ -235,7 +249,7 @@ validation and requires an explicit audited correction.
 2. Update `sourceColumns` in `lib/burn-data.ts` (add new column + label)
 3. Update `build_daily_burn.py`: add extraction or estimate logic
 3b. If the source is metered, add its models to `data/pricing.json`. A model with no entry there is priced as **unknown**, never zero: its tokens land in `cost_usd.unpriced_tokens`, its per-model `cost_usd` is `null`, and the build prints a warning naming the model and the affected days
-4. If the source should surface beyond the source-split panel and the table, wire it into `app/page.tsx` — the tool-use components (`TickerToolUse` / `PrintRunToolUse`), `UsageTimeline`, and the heatmap list are all built from an explicit list of columns
+4. If the source should surface beyond the source-split panel and the table, wire it into `app/page.tsx` — the tool-use components (`ToolSummary`), `UsageTimeline`, and the heatmap list are all built from an explicit list of columns
 
 ### Change time zone for bucketing
 - Currently: America/Chicago (see `scripts/extract_exact.py` and `scripts/build_daily_burn.py`)
@@ -269,7 +283,7 @@ validation and requires an explicit audited correction.
 - Cost models now carry `unpriced_tokens` as well as `cost_usd`, so partial rates
   remain lower bounds in per-model, per-tool, table and detail views. Every
   dollar display keeps an inline basis or an API-list table header.
-- Date controls affect the whole dashboard and are hidden by default. The refresh
+- Date controls set the timeline selection and are hidden by default. The refresh
   wording after the updated timestamp toggles them in both themes. Tool and model filters apply to the
   explorer; expanding a day reveals token types and priced/unknown subtotals.
   Preset labels can be saved locally, exported and imported with
@@ -296,6 +310,6 @@ model across both tools. The denominator includes unattributed measurements,
 including old days without a breakdown; chat estimates are excluded. Legend
 colors stay consistent across filters, percentages remain exact (no minimum
 segment widths), and the legend offers keyboard/touch inspection for tiny
-segments. The bar follows the same selected rows as the timeline. Periods are
+segments. The bar follows the selected period while the timeline keeps all history. Periods are
 anchored to the latest recorded day; month windows use clamped calendar-month
 arithmetic, and short day windows include the ending day.

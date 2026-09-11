@@ -26,7 +26,7 @@ import {
   type TokenType,
   type ToolKey,
 } from "../lib/burn-data";
-import { getWindowRows, lastCalendarDays, freshness, type WindowKey } from "../lib/date-windows";
+import { getWindowRange, lastCalendarDays, freshness, dayString, dayNumber, type DateRange, type WindowKey } from "../lib/date-windows";
 import {
   fermiScale,
   formatPct,
@@ -54,8 +54,8 @@ type ToolSource = {
   yesterday: number;
   week: number;
   total: number;
-  fill: number;
-  history: number[];
+  selected: number;
+  history: (number | null)[];
 };
 
 function pctDelta(curr: number, prev: number) {
@@ -98,9 +98,10 @@ function formatRefreshed(iso: string) {
 
 export default function TokenBurnDashboard() {
   const [showDateFilters, setShowDateFilters] = useState(false);
-  const [windowKey, setWindowKey] = useState<WindowKey>("6m");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [windowKey, setWindowKey] = useState<WindowKey | "custom">("all");
+  const [range, setRange] = useState<DateRange>(() => getWindowRange(rows, "all"));
+  const bounds = getWindowRange(rows, "all");
+  const selectRange = (next: DateRange) => { setRange(next); setWindowKey(next.start === bounds.start && next.end === bounds.end ? "all" : "custom"); };
   const [now, setNow] = useState(() => Date.parse(meta.collected_at || meta.refreshed_at));
   const [theme, setTheme] = useState<Theme>("printrun");
   const [mounted, setMounted] = useState(false);
@@ -144,9 +145,7 @@ export default function TokenBurnDashboard() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const selectedRows = useMemo(() => getWindowRows(rows, windowKey).filter((row) =>
-    (!startDate || row.date >= startDate) && (!endDate || row.date <= endDate)
-  ), [windowKey, startDate, endDate]);
+  const selectedRows = useMemo(() => rows.filter((row) => row.date >= range.start && row.date <= range.end), [range]);
   const overdueRates = Object.entries(pricing.models).filter(([, entry]) => "review_after" in entry && String(entry.review_after) < today).map(([name]) => name);
   const refreshState = mounted ? freshness(meta.collected_at || "", now) : "unknown";
   const refreshLabel = refreshState === "fresh" ? "Recently refreshed" : refreshState === "stale" ? "Refresh overdue" : (mounted ? "Collection time unavailable" : "Checking refresh");
@@ -177,14 +176,12 @@ export default function TokenBurnDashboard() {
   const tableRows = lastCalendarDays(selectedRows, 30).reverse();
 
   const yesterday = addDays(today, -1);
-  const weekStart = addDays(today, -6);
 
-  const todayRows = selectedRows.filter((r) => r.date === today);
-  const yesterdayRows = selectedRows.filter((r) => r.date === yesterday);
-  const weekRows = selectedRows.filter((r) => r.date >= weekStart);
-
-  const claudeMaxDaily = Math.max(...selectedRows.map((r) => r.claude_code_tokens), 1);
-  const codexMaxDaily = Math.max(...selectedRows.map((r) => r.codex_tokens), 1);
+  const todayRows = rows.filter((r) => r.date === today);
+  const yesterdayRows = rows.filter((r) => r.date === yesterday);
+  const weekRows = lastCalendarDays(rows, 7);
+  const historyDates = Array.from({ length: 14 }, (_, i) => dayString(dayNumber(bounds.end) - 13 + i));
+  const toolHistory = (key: "claude_code_tokens" | "codex_tokens") => historyDates.map((date) => rows.find((row) => row.date === date)?.[key] ?? null);
 
   const todayKnown = todayRows.length > 0;
   const yesterdayKnown = yesterdayRows.length > 0;
@@ -195,8 +192,8 @@ export default function TokenBurnDashboard() {
   const codexYesterday = sumSource(yesterdayRows, "codex_tokens");
   const claudeWeek = sumSource(weekRows, "claude_code_tokens");
   const codexWeek = sumSource(weekRows, "codex_tokens");
-  const claudeTotal = sumSource(selectedRows, "claude_code_tokens");
-  const codexTotal = sumSource(selectedRows, "codex_tokens");
+  const claudeTotal = sumSource(rows, "claude_code_tokens");
+  const codexTotal = sumSource(rows, "codex_tokens");
 
   const totalToday = todayRows.reduce((sum, r) => sum + r.total, 0);
   const totalYesterday = yesterdayRows.reduce((sum, r) => sum + r.total, 0);
@@ -231,10 +228,10 @@ export default function TokenBurnDashboard() {
 
   const toolSources: ToolSource[] = [
     {
-      key: "claude", label: "Claude", ticker: "CLDE", color: "var(--accent)",
+      key: "claude", label: "Claude Code", ticker: "CLDE", color: "var(--accent)",
       todayKnown, yesterdayKnown,
       today: claudeToday, yesterday: claudeYesterday, week: claudeWeek, total: claudeTotal,
-      fill: claudeToday / claudeMaxDaily, history: selectedRows.map((r) => r.claude_code_tokens),
+      selected: sumSource(selectedRows, "claude_code_tokens"), history: toolHistory("claude_code_tokens"),
     },
     {
       // Exact Codex CLI tokens. Labelled "Codex", not "ChatGPT": the ChatGPT app
@@ -243,7 +240,7 @@ export default function TokenBurnDashboard() {
       key: "chatgpt", label: "Codex", ticker: "CDX", color: "var(--good)",
       todayKnown, yesterdayKnown,
       today: codexToday, yesterday: codexYesterday, week: codexWeek, total: codexTotal,
-      fill: codexToday / codexMaxDaily, history: selectedRows.map((r) => r.codex_tokens),
+      selected: sumSource(selectedRows, "codex_tokens"), history: toolHistory("codex_tokens"),
     },
   ];
 
@@ -282,23 +279,19 @@ export default function TokenBurnDashboard() {
           {theme === "ticker" ? (
             <TickerHeroContent refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
           ) : (
-            <PrintRunHero issueNo={selectedRows.length} refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
+            <PrintRunHero issueNo={rows.length} refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
           )}
         </div>
-        {theme === "ticker" ? (
-          <TickerToolUse sources={toolSources} />
-        ) : (
-          <PrintRunToolUse sources={toolSources} />
-        )}
       </section>
 
       <section id="date-filters" className="dashboardControls" aria-label="Date filters" hidden={!showDateFilters}>
-        <label>Period<select value={windowKey} onChange={(e) => { setWindowKey(e.target.value as WindowKey); setStartDate(""); setEndDate(""); }}>
+        <label>Period<select value={windowKey} onChange={(e) => { const key = e.target.value as WindowKey; setWindowKey(key); setRange(getWindowRange(rows, key)); }}>
+          {windowKey === "custom" && <option value="custom">Custom range</option>}
           <option value="1">1 day</option><option value="3">3 days</option><option value="7">7 days</option><option value="31">31 days</option><option value="3m">3 months</option><option value="6m">6 months</option><option value="all">All time</option>
         </select></label>
-        <label>From<input type="date" value={startDate} max={endDate || undefined} onChange={(e) => { setStartDate(e.target.value); setWindowKey("all"); }} /></label>
-        <label>Through<input type="date" value={endDate} min={startDate || undefined} onChange={(e) => { setEndDate(e.target.value); setWindowKey("all"); }} /></label>
-        <button type="button" onClick={() => { setWindowKey("6m"); setStartDate(""); setEndDate(""); }}>Reset dates</button>
+        <label>From<input type="date" value={range.start} min={bounds.start} max={range.end} onChange={(e) => { if (e.target.value) selectRange({ ...range, start: [bounds.start, e.target.value, range.end].sort()[1] }); }} /></label>
+        <label>Through<input type="date" value={range.end} min={range.start} max={bounds.end} onChange={(e) => { if (e.target.value) selectRange({ ...range, end: [range.start, e.target.value, bounds.end].sort()[1] }); }} /></label>
+        <button type="button" onClick={() => { setWindowKey("all"); setRange(bounds); }}>Reset dates</button>
       </section>
 
       <section className="timelineRow">
@@ -307,7 +300,8 @@ export default function TokenBurnDashboard() {
           title={theme === "ticker" ? "Burn history" : "Usage timeline"}
           note="Measured Claude Code and Codex usage, spaced by calendar date. Gaps between recorded days are not proof of zero usage."
         >
-          <UsageTimeline rows={selectedRows} />
+          <ToolSummary sources={toolSources} through={bounds.end} />
+          <UsageTimeline rows={rows} range={range} onRangeChange={selectRange} />
           <ModelShare rows={selectedRows} modelNames={modelNames} />
         </Panel>
       </section>
@@ -1054,70 +1048,6 @@ function TickerHeroContent({ refreshedAt, refreshToggle }: { refreshedAt: string
   );
 }
 
-function TickerToolUse({ sources }: { sources: ToolSource[] }) {
-  return (
-    <article className="panel tkToolUse">
-      <div className="panelHeader">
-        <div>
-          <p className="label">Tool use</p>
-        </div>
-        <p>Quoted against each tool&apos;s peak in the selected date range.</p>
-      </div>
-      <div className="tkQuoteBoard">
-        {sources.map((s) => {
-          const d = pctDelta(s.today, s.yesterday);
-          return (
-            <div key={s.key} className="tkQuoteEntry">
-              <div className="tkQuoteRow">
-                <div className="tkSym">
-                  <span className="tkSymTicker" style={{ color: s.color }}>
-                    {s.ticker}
-                  </span>
-                  <span className="tkSymName">{s.label}</span>
-                </div>
-                <CandleSpark data={s.history} color={s.color} />
-                <div className="tkQuoteRight">
-                  <span className="tkLast">{s.todayKnown ? `${Math.round(s.fill * 100)}%` : "—"}</span>
-                  <span className={`tkDelta ${d >= 0 ? "tkUp" : "tkDown"}`}>
-                    {s.todayKnown && s.yesterdayKnown ? (s.yesterday === 0 && s.today > 0 ? "new usage" : `${d >= 0 ? "▲" : "▼"} vs yesterday`) : "no comparison"}
-                  </span>
-                </div>
-              </div>
-              <div className="tkQuoteSub">
-                <span>
-                  WEEK <b>{formatTokens(s.week)}</b>
-                </span>
-                <span>
-                  TOTAL <b>{formatTokens(s.total)}</b>
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </article>
-  );
-}
-
-function CandleSpark({ data, color }: { data: number[]; color: string }) {
-  const recent = data.slice(-14);
-  if (recent.length < 2) return null;
-  const max = Math.max(...recent, 1);
-  return (
-    <div className="tkCandles">
-      {recent.map((v, i) => (
-        <span
-          key={i}
-          className="tkCandle"
-          style={{ height: `${(v / max) * 100}%`, background: color }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// --- Print Run theme: hero + tool-use ring gauges ---------------------------
-
 function PrintRunHero({ issueNo, refreshedAt, refreshToggle }: { issueNo: number; refreshedAt: string; refreshToggle: React.ReactNode }) {
   return (
     <section className="hero prHero">
@@ -1139,77 +1069,27 @@ function PrintRunHero({ issueNo, refreshedAt, refreshToggle }: { issueNo: number
   );
 }
 
-function PrintRunToolUse({ sources }: { sources: ToolSource[] }) {
-  return (
-    <article className="panel prToolUse">
-      <span className="prTapeCorner" aria-hidden="true" />
-      <div className="panelHeader">
-        <div>
-          <p className="label">Tool use</p>
-        </div>
-        <p>Latest collected tokens for today as a percentage of each tool&apos;s peak daily usage.</p>
-      </div>
-      <div className="prTools">
-        {sources.map((s) => (
-          <div key={s.key} className="prToolBlock">
-            <RingGauge fill={s.fill} color={s.color} known={s.todayKnown} />
-            <p className="prToolName" style={{ color: s.color }}>
-              {s.label}
-            </p>
-            <p className="prToolSub">
-              {s.todayKnown ? "of peak day" : "no reading for today in this range"}
-              <br />
-              week <b>{formatTokens(s.week)}</b> · total <b>{formatTokens(s.total)}</b>
-            </p>
-            <Sparkline data={s.history} color={s.color} />
-          </div>
-        ))}
-      </div>
-    </article>
-  );
+function ToolSummary({ sources, through }: { sources: ToolSource[]; through: string }) {
+  return <div className="toolSummary" role="region" aria-label="Tool usage summary">
+    <div className="toolSummaryHeader"><span>Measured tokens</span><span>14-day trend</span><span>Last 7 days</span><span>Selected</span><span>All time</span></div>
+    {sources.map((source) => <div className="toolSummaryRow" key={source.key}>
+      <strong className="toolSummaryName"><i style={{ background: source.color }} />{source.label}</strong>
+      <Sparkline data={source.history} color={source.color} />
+      <span className="toolWeek" data-label="Last 7 days">{formatTokens(source.week)}</span>
+      <strong className="toolSelected" data-label="Selected">{formatTokens(source.selected)}</strong>
+      <span className="toolTotal" data-label="All time">{formatTokens(source.total)}</span>
+    </div>)}
+    <p className="toolSummaryNote">Week and trends through {through}. All time stays fixed while you explore.</p>
+  </div>;
 }
 
-function RingGauge({ fill, color, known }: { fill: number; color: string; known: boolean }) {
-  const r = 46;
-  const circ = 2 * Math.PI * r;
-  const clamped = Math.min(Math.max(fill, 0), 1);
-  const offset = circ * (1 - clamped);
-  return (
-    <div className="prRingWrap">
-      <svg viewBox="0 0 108 108" width="108" height="108" aria-hidden="true">
-        <circle cx="54" cy="54" r={r} fill="none" stroke="var(--line)" strokeWidth="2.5" opacity="0.3" />
-        <circle
-          cx="54" cy="54" r={r} fill="none" stroke={color} strokeWidth="7"
-          strokeDasharray={`${circ} ${circ}`} strokeDashoffset={offset} strokeLinecap="butt"
-          transform="rotate(-90 54 54)"
-        />
-      </svg>
-      <span className="prRingPct">{known ? `${Math.round(clamped * 100)}%` : "—"}</span>
-    </div>
-  );
-}
-
-function Sparkline({ data, color }: { data: number[]; color: string }) {
-  if (data.length < 2) return null;
-
-  const width = 120, height = 24;
-  const padding = 1;
-  const max = Math.max(...data, 1);
-  const min = 0;
-
-  const points = data.map((v, i) => {
-    const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
-    const y = height - padding - ((v - min) / (max - min)) * (height - 2 * padding);
-    return `${x},${y}`;
-  }).join(' ');
-
-  return (
-    <div className="sparkline">
-      <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
-        <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" opacity="0.6" />
-      </svg>
-    </div>
-  );
+function Sparkline({ data, color }: { data: (number | null)[]; color: string }) {
+  const width = 120, height = 24, padding = 1;
+  const max = Math.max(...data.map((v) => v ?? 0), 1);
+  const path = data.map((v, i) => v === null ? "" : `${i === 0 || data[i - 1] === null ? "M" : "L"} ${padding + i / (data.length - 1) * (width - 2 * padding)} ${height - padding - v / max * (height - 2 * padding)}`).join(" ");
+  return <div className="sparkline" title="Daily measured tokens over 14 calendar days; gaps mean no reading">
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true"><path d={path} fill="none" stroke={color} strokeWidth="1.5" /></svg>
+  </div>;
 }
 
 function buildDriverRows(selectedRows: typeof rows, total: number) {

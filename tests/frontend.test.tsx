@@ -3,7 +3,7 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { normalizeRows, sumCost, sumToolCost, subtotalCost, sumByModel } from "../lib/burn-data";
 import { movingAverage7 } from "../lib/token-math";
-import { lastCalendarDays, freshness, getWindowRows } from "../lib/date-windows";
+import { lastCalendarDays, freshness, getWindowRows, getWindowRange, moveDateRange, dayNumber } from "../lib/date-windows";
 import { modelTokenShares, UNATTRIBUTED_MODEL } from "../lib/model-share";
 import { parseDriverLabels } from "../lib/driver-labels";
 import { CellCost, BasisPill } from "../app/components/cost";
@@ -73,4 +73,22 @@ test("model share combines tools, preserves unattributed volume and excludes est
     { model: UNATTRIBUTED_MODEL, tokens: 150, percent: 25 },
   ] });
   assert.deepEqual(modelTokenShares(history.slice(-1)), { total: 0, segments: [] });
+});
+
+
+test("range presets retain missing calendar days and clamp to available history", () => {
+  const dates = [{ date: "2026-02-10" }, { date: "2026-03-31" }];
+  assert.deepEqual(getWindowRange(dates, "7"), { start: "2026-03-25", end: "2026-03-31" });
+  assert.deepEqual(getWindowRange(dates, "3m"), { start: "2026-02-10", end: "2026-03-31" });
+  assert.deepEqual(getWindowRange(dates, "1"), { start: "2026-03-31", end: "2026-03-31" });
+});
+
+test("sliding preserves inclusive duration across DST, gaps, and both history boundaries", () => {
+  const bounds = { start: "2026-03-01", end: "2026-03-31" };
+  const range = { start: "2026-03-07", end: "2026-03-09" };
+  assert.deepEqual(moveDateRange(range, 1, bounds), { start: "2026-03-08", end: "2026-03-10" });
+  assert.deepEqual(moveDateRange(range, -100, bounds), { start: "2026-03-01", end: "2026-03-03" });
+  assert.deepEqual(moveDateRange(range, 100, bounds), { start: "2026-03-29", end: "2026-03-31" });
+  assert.deepEqual(moveDateRange(bounds, 100, bounds), bounds);
+  assert.equal(dayNumber("2026-03-09") - dayNumber("2026-03-07"), 2);
 });

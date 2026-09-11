@@ -1,15 +1,30 @@
 import type { BurnRow } from "./burn-data";
 
 export type WindowKey = "1" | "3" | "7" | "31" | "3m" | "6m" | "all";
+export type DateRange = { start: string; end: string };
+const DAY_MS = 86_400_000;
 
-export function getWindowRows(rows: BurnRow[], windowKey: WindowKey) {
-  if (windowKey === "all" || rows.length === 0) return rows;
+export function dayNumber(date: string) {
+  return toUtcDate(date).getTime() / DAY_MS;
+}
 
-  const lastDate = toUtcDate(rows[rows.length - 1].date);
-  const firstDate = new Date(lastDate);
+export function dayString(day: number) {
+  return new Date(day * DAY_MS).toISOString().slice(0, 10);
+}
+
+/** Move by calendar days, preserving duration even when clamped at an edge. */
+export function moveDateRange(range: DateRange, delta: number, bounds: DateRange): DateRange {
+  const offset = Math.max(dayNumber(bounds.start) - dayNumber(range.start),
+    Math.min(dayNumber(bounds.end) - dayNumber(range.end), Math.round(delta)));
+  return { start: dayString(dayNumber(range.start) + offset), end: dayString(dayNumber(range.end) + offset) };
+}
+
+export function getWindowRange(rows: { date: string }[], windowKey: WindowKey): DateRange {
+  const end = rows.at(-1)?.date || "1970-01-01";
+  const start = rows[0]?.date || end;
+  if (windowKey === "all" || !rows.length) return { start, end };
+  const firstDate = toUtcDate(end);
   if (windowKey === "3m" || windowKey === "6m") {
-    // Rolling calendar months, clamped at short month ends before making
-    // the lower boundary inclusive (e.g. May 31 minus 3 months -> March 1).
     const day = firstDate.getUTCDate();
     firstDate.setUTCDate(1);
     firstDate.setUTCMonth(firstDate.getUTCMonth() - (windowKey === "3m" ? 3 : 6));
@@ -18,8 +33,12 @@ export function getWindowRows(rows: BurnRow[], windowKey: WindowKey) {
   } else {
     firstDate.setUTCDate(firstDate.getUTCDate() - Number(windowKey) + 1);
   }
+  return { start: [start, firstDate.toISOString().slice(0, 10)].sort()[1], end };
+}
 
-  return rows.filter((row) => toUtcDate(row.date) >= firstDate);
+export function getWindowRows(rows: BurnRow[], windowKey: WindowKey) {
+  const range = getWindowRange(rows, windowKey);
+  return rows.filter((row) => row.date >= range.start && row.date <= range.end);
 }
 
 export function toUtcDate(date: string) {
