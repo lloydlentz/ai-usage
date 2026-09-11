@@ -45,7 +45,8 @@ trap 'exit 143' TERM
 [[ -d "$HOME/.codex/sessions" || -d "$HOME/.codex/archived_sessions" ]]
 python3 scripts/extract_exact.py
 python3 scripts/build_daily_burn.py
-npm run test:pipeline
+# Cron has a minimal PATH; the Python-only pipeline must not depend on npm.
+python3 -m unittest discover -s tests -t . -v
 validated=1
 git add data/daily-burn.json data/meta.json
 if git diff --cached --quiet; then

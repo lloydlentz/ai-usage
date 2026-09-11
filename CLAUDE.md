@@ -187,6 +187,8 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 - Stages only `data/daily-burn.json` and `data/meta.json`; skips the push if nothing changed
 - Installed in `crontab -e` as: `0 * * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh`
 - Uses SSH key authentication (not stored credentials)
+- Runs pipeline tests directly with Python, so cron does not need Node/npm or
+  an interactive shell's PATH. Frontend checks still run in GitHub Actions.
 
 ### Deployment
 
