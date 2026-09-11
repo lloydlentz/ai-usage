@@ -4,10 +4,21 @@ import { normalizeRows, sumTokensByType } from "../../lib/burn-data";
 import { formatTokens } from "../../lib/token-math";
 import { dayNumber } from "../../lib/date-windows";
 
+async function openDashboard(page: Page) {
+  await page.goto("/");
+  // A fresh CI browser can reach server-rendered markup before hydration and
+  // ResizeObserver apply the real chart size. Pointer coordinates must use it.
+  await expect(page.locator(".refreshToggle")).not.toHaveText("Checking refresh");
+  await expect.poll(() => page.locator(".timelineSvg").evaluate((element) => {
+    const svg = element as SVGSVGElement;
+    return Math.abs(svg.viewBox.baseVal.width - Math.max(280, svg.getBoundingClientRect().width));
+  })).toBeLessThan(.5);
+}
+
 test("presets position the range without shrinking the timeline in either theme", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await openDashboard(page);
   const filters = page.locator("#date-filters");
   const toggle = page.locator(".refreshToggle");
   await expect(filters).toBeHidden();
@@ -51,7 +62,7 @@ test("presets position the range without shrinking the timeline in either theme"
 });
 
 test("timeline supports keyboard inspection", async ({ page }) => {
-  await page.goto("/");
+  await openDashboard(page);
   const chart = page.getByRole("slider", { name: /^Daily usage/ });
   await chart.focus();
   await chart.press("Home");
@@ -64,7 +75,7 @@ test("timeline supports keyboard inspection", async ({ page }) => {
 });
 
 test("explorer filters and sanitized labels persist and export", async ({ page }) => {
-  await page.goto("/");
+  await openDashboard(page);
   const explorer = page.locator(".usageExplorer");
   await explorer.getByRole("combobox", { name: "Tool", exact: true }).selectOption("codex");
   await explorer.getByRole("combobox", { name: "Model", exact: true }).selectOption("gpt-6-astra");
@@ -83,7 +94,7 @@ test("explorer filters and sanitized labels persist and export", async ({ page }
 test("stale collection does not claim live or invent today's readings", async ({ page }) => {
   const meta = JSON.parse(readFileSync("data/meta.json", "utf8"));
   await page.clock.install({ time: new Date(Date.parse(meta.collected_at) + 24 * 60 * 60_000) });
-  await page.goto("/");
+  await openDashboard(page);
   await expect(page.getByRole("button", { name: "Refresh overdue", exact: true })).toBeVisible();
   await expect(page.locator(".toolSummaryNote")).toContainText(JSON.parse(readFileSync("data/daily-burn.json", "utf8")).at(-1).date);
   await expect(page.locator(".ledgerWarn").first()).toContainText("Today’s missing readings are unknown");
@@ -101,7 +112,7 @@ async function assertSelectedTotals(page: Page) {
 }
 
 test("draw, move, and resize a range while the overview and lifetime totals stay fixed", async ({ page }) => {
-  await page.goto("/");
+  await openDashboard(page);
   const svg = page.locator(".timelineSvg");
   await svg.scrollIntoViewIfNeeded();
   const chart = (await svg.boundingBox())!;
@@ -145,7 +156,7 @@ test("draw, move, and resize a range while the overview and lifetime totals stay
 });
 
 test("keyboard moves and resizes inclusive single-day selections at the history boundaries", async ({ page }) => {
-  await page.goto("/");
+  await openDashboard(page);
   await page.locator(".refreshToggle").click();
   await page.getByRole("combobox", { name: "Period", exact: true }).selectOption("1");
   const initial = await assertSelectedTotals(page);
@@ -170,7 +181,7 @@ test("keyboard moves and resizes inclusive single-day selections at the history 
 
 test("touch can select and slide a date range", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Native touch is checked in the mobile project");
-  await page.goto("/");
+  await openDashboard(page);
   await page.locator(".timelineSvg").scrollIntoViewIfNeeded();
   const chart = (await page.locator(".timelineSvg").boundingBox())!;
   const session = await page.context().newCDPSession(page);
@@ -179,11 +190,15 @@ test("touch can select and slide a date range", async ({ page, isMobile }) => {
   await touch("touchStart", chart.x + chart.width * .2, y);
   await touch("touchMove", chart.x + chart.width * .4, y);
   await touch("touchEnd", 0, 0);
+  const firstDate = JSON.parse(readFileSync("data/daily-burn.json", "utf8"))[0].date;
+  await expect(page.locator(".timeline")).not.toHaveAttribute("data-start", firstDate);
   const before = await assertSelectedTotals(page);
+  await page.locator(".timelineRangeMove").scrollIntoViewIfNeeded();
   const bar = (await page.locator(".timelineRangeMove").boundingBox())!;
   await touch("touchStart", bar.x + bar.width / 2, bar.y + bar.height / 2);
   await touch("touchMove", bar.x + bar.width / 2 + 35, bar.y + bar.height / 2);
   await touch("touchEnd", 0, 0);
+  await expect(page.locator(".timeline")).not.toHaveAttribute("data-start", before.start);
   const after = await assertSelectedTotals(page);
   expect(after.days).toBe(before.days);
   expect(after.start > before.start).toBe(true);
