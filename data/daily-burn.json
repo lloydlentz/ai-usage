@@ -4923,18 +4923,30 @@
   },
   {
     "date": "2026-09-11",
-    "codex_tokens": 9333564,
-    "claude_code_tokens": 0,
-    "claude_code_calls": 0,
+    "codex_tokens": 9592804,
+    "claude_code_tokens": 2740504,
+    "claude_code_calls": 17,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 9386564,
+    "total": 12386308,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
-        "models": {},
+        "models": {
+          "claude-opus-5": {
+            "calls": 17,
+            "input": 454,
+            "cache_write_5m": 0,
+            "cache_write_1h": 247840,
+            "cache_read": 2416273,
+            "output": 75937,
+            "tokens": 2740504,
+            "cost_usd": 5.587231,
+            "unpriced_tokens": 0
+          }
+        },
         "unattributed": 0
       },
       "codex": {
@@ -4948,32 +4960,32 @@
             "unpriced_tokens": 0
           },
           "gpt-6-astra": {
-            "input": 637882,
-            "cache_read": 6509056,
+            "input": 638180,
+            "cache_read": 6724608,
             "output": 0,
-            "tokens": 7146938,
-            "cost_usd": 12.887876,
+            "tokens": 7362788,
+            "cost_usd": 13.106408,
             "unpriced_tokens": 0
           }
         },
-        "unattributed": 72290
+        "unattributed": 115680
       }
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 14.740471,
+      "total": 20.546235,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 14.740471
+        "claude_code": 5.587231,
+        "codex": 14.959003
       },
       "by_type": {
-        "input": 7.320196,
+        "input": 7.325446,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 7.257395,
-        "output": 0.16288
+        "cache_write_1h": 2.4784,
+        "cache_read": 8.681084,
+        "output": 2.061305
       },
-      "unpriced_tokens": 72290
+      "unpriced_tokens": 115680
     }
   }
 ]
