@@ -1479,7 +1479,7 @@ h1 {
 @container (max-width: 3.5rem) { .modelShareSegment > span { display: none; } }
 
 /* The all-time chart is the overview; a single brush drives the detail below. */
-.toolSummary { padding: 0 20px 12px; }
+.toolSummary { padding: 20px 20px 12px; }
 .toolSummaryHeader, .toolSummaryRow {
   display: grid;
   grid-template-columns: minmax(110px, 1.3fr) minmax(70px, 1fr) repeat(3, minmax(70px, 1fr));
@@ -1521,7 +1521,7 @@ h1 {
 .timelineTooltip { top: 76px; z-index: 2; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 560px) {
-  .toolSummary { padding: 0 16px 12px; }
+  .toolSummary { padding: 16px 16px 12px; }
   .toolSummaryHeader { display: none; }
   .toolSummaryRow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
   .toolSummaryName { grid-column: span 2; }
@@ -1534,3 +1534,6 @@ h1 {
   .timelineRangeHandle { width: 18px; }
   .timeline { padding-left: 12px; padding-right: 12px; }
 }
+
+.usageSectionLabel { margin: 0 0 12px; color: var(--muted); }
+.timelineDataNote { margin: 0 0 10px; color: var(--muted); font-size: 11px; }

@@ -295,15 +295,11 @@ export default function TokenBurnDashboard() {
       </section>
 
       <section className="timelineRow">
-        <Panel
-          label="Daily burn"
-          title={theme === "ticker" ? "Burn history" : "Usage timeline"}
-          note="Measured Claude Code and Codex usage, spaced by calendar date. Gaps between recorded days are not proof of zero usage."
-        >
+        <article className="panel">
           <ToolSummary sources={toolSources} through={bounds.end} />
           <UsageTimeline rows={rows} range={range} onRangeChange={selectRange} />
           <ModelShare rows={selectedRows} modelNames={modelNames} />
-        </Panel>
+        </article>
       </section>
 
       <section className="ledger" aria-label="Volume beside cost">
@@ -1071,6 +1067,7 @@ function PrintRunHero({ issueNo, refreshedAt, refreshToggle }: { issueNo: number
 
 function ToolSummary({ sources, through }: { sources: ToolSource[]; through: string }) {
   return <div className="toolSummary" role="region" aria-label="Tool usage summary">
+    <h2 className="label usageSectionLabel">Daily burn</h2>
     <div className="toolSummaryHeader"><span>Measured tokens</span><span>14-day trend</span><span>Last 7 days</span><span>Selected</span><span>All time</span></div>
     {sources.map((source) => <div className="toolSummaryRow" key={source.key}>
       <strong className="toolSummaryName"><i style={{ background: source.color }} />{source.label}</strong>

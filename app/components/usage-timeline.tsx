@@ -168,6 +168,7 @@ export function UsageTimeline({ rows, range, onRangeChange }: { rows: TimelineRo
 
   return (
     <div className="timeline" ref={containerRef} data-start={range.start} data-end={range.end}>
+      <h2 className="label usageSectionLabel">Usage timeline</h2>
       <div className="timelineSelectionHeading">
         <div><strong>{formatTimelineDate(range.start)} – {formatTimelineDate(range.end)}</strong><span>{selectedEnd - selectedStart + 1} days selected</span></div>
         <button type="button" onClick={() => onRangeChange(bounds)} disabled={range.start === bounds.start && range.end === bounds.end}>Select all time</button>
@@ -282,6 +283,7 @@ export function UsageTimeline({ rows, range, onRangeChange }: { rows: TimelineRo
         </div>
       )}
 
+      <p className="timelineDataNote">Measured Claude Code and Codex usage, spaced by calendar date. Gaps between recorded days are not proof of zero usage.</p>
       <div className="timelineLegend">
         <span><span className="timelineSwatch timelineSwatchClaude" /> Claude Code</span>
         <span><span className="timelineSwatch timelineSwatchChatgpt" /> Codex</span>

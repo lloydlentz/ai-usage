@@ -52,7 +52,7 @@ The choice persists to `localStorage` under `dashboard-theme`, and is applied bo
 **Sections, in render order:**
 1. `ThemeToggle`, then `TickerTape` (ticker theme only)
 2. **Hero row** (`.heroRow`): full-width `TickerHeroContent` / `PrintRunHero`
-3. **Usage timeline** (`.timelineRow`, titled "Burn history" in the ticker theme): compact tool totals, all-time chart with a movable date selection, and the selected period's model-share bar
+3. **Usage timeline** (`.timelineRow`): "Daily burn" labels the compact tool totals and "Usage timeline" sits above the selected dates;, all-time chart with a movable date selection, and the selected period's model-share bar
 4. **Ledger** (`.ledger`): the `ShapeShift` chart shows selected-period token volume beside its cost at API list prices. See "The ledger" below
 5. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
 6. **Stats**: total burn, peak day, 7d average, active days
