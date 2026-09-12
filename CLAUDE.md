@@ -25,6 +25,10 @@ npm run build        # Build static export to out/ (triggered by GitHub Actions)
 npm run lint         # Lint the TypeScript/React sources
 npm run check        # Lint, pipeline + frontend tests, production build
 npm run test:browser # Playwright desktop and mobile checks (install Chromium first)
+                     # Always starts its own `next dev` on 127.0.0.1:3227, never reuses one:
+                     # if the port is taken (e.g. by another worktree's dev server) the run
+                     # fails with "is already used". Pick a free port instead:
+                     #   PW_PORT=3228 npm run test:browser
 
 # Data pipeline (manual—normally runs via cron)
 python3 scripts/extract_exact.py    # Extract tokens from local logs into data/exact-daily.json
