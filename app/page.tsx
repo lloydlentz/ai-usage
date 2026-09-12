@@ -296,7 +296,7 @@ export default function TokenBurnDashboard() {
 
       <section className="timelineRow">
         <article className="panel">
-          <ToolSummary sources={toolSources} through={bounds.end} />
+          <ToolSummary sources={toolSources} today={today} through={bounds.end} />
           <UsageTimeline rows={rows} range={range} onRangeChange={selectRange} />
           <ModelShare rows={selectedRows} modelNames={modelNames} />
         </article>
@@ -1065,18 +1065,20 @@ function PrintRunHero({ issueNo, refreshedAt, refreshToggle }: { issueNo: number
   );
 }
 
-function ToolSummary({ sources, through }: { sources: ToolSource[]; through: string }) {
+function ToolSummary({ sources, today, through }: { sources: ToolSource[]; today: string; through: string }) {
   return <div className="toolSummary" role="region" aria-label="Tool usage summary">
     <h2 className="label usageSectionLabel">Daily burn</h2>
-    <div className="toolSummaryHeader"><span>Measured tokens</span><span>14-day trend</span><span>Last 7 days</span><span>Selected</span><span>All time</span></div>
+    <div className="toolSummaryHeader"><span>Measured tokens</span><span>14-day trend</span><span>Today</span><span>Last 7 days</span><span>Selected</span><span>All time</span></div>
     {sources.map((source) => <div className="toolSummaryRow" key={source.key}>
       <strong className="toolSummaryName"><i style={{ background: source.color }} />{source.label}</strong>
       <Sparkline data={source.history} color={source.color} />
+      {/* No row for today is unknown, not zero: collection may be overdue. */}
+      <span className={source.todayKnown ? "toolToday" : "toolToday toolNoReading"} data-label="Today">{source.todayKnown ? formatTokens(source.today) : "no reading"}</span>
       <span className="toolWeek" data-label="Last 7 days">{formatTokens(source.week)}</span>
       <strong className="toolSelected" data-label="Selected">{formatTokens(source.selected)}</strong>
       <span className="toolTotal" data-label="All time">{formatTokens(source.total)}</span>
     </div>)}
-    <p className="toolSummaryNote">Week and trends through {through}. All time stays fixed while you explore.</p>
+    <p className="toolSummaryNote">Today is {today} (America/Chicago) as of the last log collection. Week and trends through {through}. All time stays fixed while you explore.</p>
   </div>;
 }
 

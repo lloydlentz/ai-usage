@@ -97,7 +97,17 @@ test("stale collection does not claim live or invent today's readings", async ({
   await openDashboard(page);
   await expect(page.getByRole("button", { name: "Refresh overdue", exact: true })).toBeVisible();
   await expect(page.locator(".toolSummaryNote")).toContainText(JSON.parse(readFileSync("data/daily-burn.json", "utf8")).at(-1).date);
+  await expect(page.locator(".toolToday")).toHaveText(["no reading", "no reading"]);
   await expect(page.locator(".ledgerWarn").first()).toContainText("Today’s missing readings are unknown");
+});
+
+test("today column reads the viewer's Chicago day", async ({ page }) => {
+  const lastDay = JSON.parse(readFileSync("data/daily-burn.json", "utf8")).at(-1);
+  // 18:00 UTC is midday in Chicago under both CST and CDT.
+  await page.clock.install({ time: new Date(`${lastDay.date}T18:00:00Z`) });
+  await openDashboard(page);
+  await expect(page.locator(".toolToday")).toHaveText([formatTokens(lastDay.claude_code_tokens), formatTokens(lastDay.codex_tokens)]);
+  await expect(page.locator(".toolSummaryNote")).toContainText(`Today is ${lastDay.date}`);
 });
 
 async function assertSelectedTotals(page: Page) {

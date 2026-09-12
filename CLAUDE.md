@@ -113,7 +113,7 @@ one. Table columns carry the qualifier in the column header
 - `GitHubHeatmap`: GitHub-style calendar grid (days-of-week rows, weeks columns)
 - Ticker-only: `TickerTape`, `TickerHeroContent`
 - Print Run-only: `PrintRunHero`
-- `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with last-seven-day, selected-period and all-time measured tokens. Recent trends span 14 calendar days; missing days break the line.
+- `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with today's, last-seven-day, selected-period and all-time measured tokens. "Today" is the viewer's America/Chicago day (the same `today` state the ticker tape reads); a day with no row shows "no reading", never 0. Recent trends span 14 calendar days; missing days break the line.
 - Shared: `ThemeToggle`, `Metric`, `Panel`, and the `buildDriverRows()` helper
 
 **Styling:** `app/globals.css`
@@ -238,9 +238,12 @@ validation and requires an explicit audited correction.
   the overview. Model share, volume/cost and the remaining detail panels use
   the selected rows. An empty interval leaves the overview available.
 - Tool summary rows replace today's peak-relative gauges. They show measured
-  tokens for the selected interval alongside fixed all-time and last-seven-day
-  totals. Week/trends end at the latest recorded date, explicitly labeled;
-  they never imply current usage when collection is overdue.
+  tokens for today and the selected interval alongside fixed all-time and
+  last-seven-day totals. Today follows the viewer's Chicago clock, not the
+  data, so an overdue collection reads "no reading" instead of carrying the
+  last recorded day forward. Week/trends end at the latest recorded date,
+  explicitly labeled; they never imply current usage when collection is
+  overdue.
 
 ## Common Workflows
 

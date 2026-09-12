@@ -1482,7 +1482,8 @@ h1 {
 .toolSummary { padding: 20px 20px 12px; }
 .toolSummaryHeader, .toolSummaryRow {
   display: grid;
-  grid-template-columns: minmax(110px, 1.3fr) minmax(70px, 1fr) repeat(3, minmax(70px, 1fr));
+  /* Minimums sum to 470px so the row still fits at 561px, just above the stacked layout. */
+  grid-template-columns: minmax(110px, 1.3fr) minmax(56px, 1fr) repeat(4, minmax(56px, 1fr));
   gap: 16px;
   align-items: center;
 }
@@ -1493,7 +1494,8 @@ h1 {
 .toolSummaryName i { width: 8px; height: 8px; flex-shrink: 0; }
 .toolSummary .sparkline { width: 100%; max-width: 180px; margin: 0; }
 .toolSummary .sparkline svg { display: block; width: 100%; height: 24px; }
-.toolWeek, .toolTotal { color: var(--soft); }
+.toolToday, .toolWeek, .toolTotal { color: var(--soft); }
+.toolNoReading { color: var(--muted); font-size: 12px; }
 .toolSelected { color: var(--ink); }
 .toolSummaryNote { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
 .timelineSelectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 6px; }
@@ -1523,8 +1525,9 @@ h1 {
 @media (max-width: 560px) {
   .toolSummary { padding: 16px 16px 12px; }
   .toolSummaryHeader { display: none; }
-  .toolSummaryRow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
-  .toolSummaryName { grid-column: span 2; }
+  /* Name and trend share the first line; the four figures share the second. */
+  .toolSummaryRow { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 12px; }
+  .toolSummaryName, .toolSummary .sparkline { grid-column: span 2; }
   .toolSummaryRow > :nth-child(n + 3) { text-align: left; }
   .toolSummaryRow > [data-label]::before { content: attr(data-label); display: block; font-size: 10px; color: var(--muted); font-weight: 400; margin-bottom: 3px; }
   .toolSummaryNote { font-size: 10px; }
