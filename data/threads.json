@@ -1,0 +1,7168 @@
+[
+  {
+    "key": "cc-01cd0b4e7f02",
+    "tool": "claude_code",
+    "title": "iOS permission for Caribbean Netherlands",
+    "days": {
+      "2026-09-08": {
+        "tokens": 1540838,
+        "cost_usd": 1.870544,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 19,
+            "input": 38,
+            "cache_write_5m": 0,
+            "cache_write_1h": 73838,
+            "cache_read": 1450697,
+            "output": 16265,
+            "tokens": 1540838
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-09": {
+        "tokens": 251595,
+        "cost_usd": 1.050247,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 93239,
+            "cache_read": 156774,
+            "output": 1578,
+            "tokens": 251595
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0745eb6ea188",
+    "tool": "claude_code",
+    "title": null,
+    "days": {
+      "2026-09-07": {
+        "tokens": 1060989,
+        "cost_usd": 0.627753,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-5": {
+            "calls": 11,
+            "input": 22,
+            "cache_write_5m": 0,
+            "cache_write_1h": 99657,
+            "cache_read": 957553,
+            "output": 3757,
+            "tokens": 1060989
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0783bcc5fc95",
+    "tool": "claude_code",
+    "title": "Create daily folder check for hourly cron",
+    "days": {
+      "2026-08-12": {
+        "tokens": 93670,
+        "cost_usd": 0.089188,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 16589,
+            "cache_read": 76321,
+            "output": 756,
+            "tokens": 93670
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0a70d608b6a8",
+    "tool": "claude_code",
+    "title": "MacFund Asks FY27 script reconciliation",
+    "days": {
+      "2026-07-28": {
+        "tokens": 4444448,
+        "cost_usd": 4.618173,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 27,
+            "input": 51,
+            "cache_write_5m": 0,
+            "cache_write_1h": 177110,
+            "cache_read": 3039096,
+            "output": 19028,
+            "tokens": 3235285
+          },
+          "claude-sonnet-5": {
+            "calls": 12,
+            "input": 24,
+            "cache_write_5m": 0,
+            "cache_write_1h": 75400,
+            "cache_read": 1100762,
+            "output": 32977,
+            "tokens": 1209163
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0b9bee441212",
+    "tool": "claude_code",
+    "title": "Load MacFund Asks FY27 export",
+    "days": {
+      "2026-08-26": {
+        "tokens": 1942478,
+        "cost_usd": 0.95127,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 20,
+            "input": 40,
+            "cache_write_5m": 0,
+            "cache_write_1h": 116209,
+            "cache_read": 1813871,
+            "output": 12358,
+            "tokens": 1942478
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0de75f0344d8",
+    "tool": "claude_code",
+    "title": "Contact report email workflow review",
+    "days": {
+      "2026-08-27": {
+        "tokens": 2443446,
+        "cost_usd": 4.93841,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 19,
+            "input": 38,
+            "cache_write_5m": 0,
+            "cache_write_1h": 238180,
+            "cache_read": 2145889,
+            "output": 59339,
+            "tokens": 2443446
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-0ec08c918db5",
+    "tool": "claude_code",
+    "title": "Cohorts.Art App Store rejection plan",
+    "days": {
+      "2026-08-04": {
+        "tokens": 6219314,
+        "cost_usd": 5.488474,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 64,
+            "input": 119,
+            "cache_write_5m": 0,
+            "cache_write_1h": 149457,
+            "cache_read": 6030618,
+            "output": 39120,
+            "tokens": 6219314
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-05": {
+        "tokens": 42610383,
+        "cost_usd": 42.214998,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 170,
+            "input": 316,
+            "cache_write_5m": 226373,
+            "cache_write_1h": 1628541,
+            "cache_read": 40586353,
+            "output": 168800,
+            "tokens": 42610383
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-11": {
+        "tokens": 3121275,
+        "cost_usd": 8.622513,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 8,
+            "input": 15,
+            "cache_write_5m": 0,
+            "cache_write_1h": 720669,
+            "cache_read": 2391797,
+            "output": 8794,
+            "tokens": 3121275
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-19ddf4dc67eb",
+    "tool": "claude_code",
+    "title": "Orientation Check In filter by House Color",
+    "days": {
+      "2026-09-02": {
+        "tokens": 887860,
+        "cost_usd": 0.566058,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 12,
+            "input": 24,
+            "cache_write_5m": 0,
+            "cache_write_1h": 81108,
+            "cache_read": 798541,
+            "output": 8187,
+            "tokens": 887860
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-1b62fa108f6d",
+    "tool": "claude_code",
+    "title": "Review and reorganize MacFund class agent SQL query",
+    "days": {
+      "2026-08-07": {
+        "tokens": 4469507,
+        "cost_usd": 1.593077,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 44,
+            "input": 86,
+            "cache_write_5m": 0,
+            "cache_write_1h": 102342,
+            "cache_read": 4335434,
+            "output": 31645,
+            "tokens": 4469507
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-10": {
+        "tokens": 3862282,
+        "cost_usd": 1.494302,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 24,
+            "input": 48,
+            "cache_write_5m": 0,
+            "cache_write_1h": 144805,
+            "cache_read": 3699929,
+            "output": 17500,
+            "tokens": 3862282
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-12": {
+        "tokens": 6464313,
+        "cost_usd": 2.711862,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 34,
+            "input": 68,
+            "cache_write_5m": 0,
+            "cache_write_1h": 332306,
+            "cache_read": 6116009,
+            "output": 15930,
+            "tokens": 6464313
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-1be7b9b9520d",
+    "tool": "claude_code",
+    "title": "Person Dashboard wording updates",
+    "days": {
+      "2026-09-02": {
+        "tokens": 866789,
+        "cost_usd": 0.474708,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 13,
+            "input": 26,
+            "cache_write_5m": 0,
+            "cache_write_1h": 71765,
+            "cache_read": 792080,
+            "output": 2918,
+            "tokens": 866789
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-21cc6655a229",
+    "tool": "claude_code",
+    "title": "Orientation Event Checkin",
+    "days": {
+      "2026-07-27": {
+        "tokens": 81742245,
+        "cost_usd": 26.366077,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-5": {
+            "calls": 259,
+            "input": 518,
+            "cache_write_5m": 0,
+            "cache_write_1h": 2053017,
+            "cache_read": 79462666,
+            "output": 226044,
+            "tokens": 81742245
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-2514dd4c4116",
+    "tool": "claude_code",
+    "title": "Cohorts.Art App Store rejection plan",
+    "days": {
+      "2026-08-05": {
+        "tokens": 4162486,
+        "cost_usd": 3.754207,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 29,
+            "input": 54,
+            "cache_write_5m": 0,
+            "cache_write_1h": 124889,
+            "cache_read": 4017695,
+            "output": 19848,
+            "tokens": 4162486
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-2a8d8672071a",
+    "tool": "claude_code",
+    "title": "Scavenger Hunt leaderboard mobile",
+    "days": {
+      "2026-08-06": {
+        "tokens": 1293810,
+        "cost_usd": 1.283789,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 18,
+            "input": 33,
+            "cache_write_5m": 0,
+            "cache_write_1h": 50143,
+            "cache_read": 1237088,
+            "output": 6546,
+            "tokens": 1293810
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-2d9a14436386",
+    "tool": "claude_code",
+    "title": "Pronouns in Dashboard Person view",
+    "days": {
+      "2026-08-26": {
+        "tokens": 398507,
+        "cost_usd": 0.538384,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 31259,
+            "cache_read": 365517,
+            "output": 1719,
+            "tokens": 398507
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-2e33daa11b22",
+    "tool": "claude_code",
+    "title": "Admin dashboard for Scavenger Hunt",
+    "days": {
+      "2026-08-06": {
+        "tokens": 5933861,
+        "cost_usd": 4.98895,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 54,
+            "input": 7586,
+            "cache_write_5m": 0,
+            "cache_write_1h": 110129,
+            "cache_read": 5777711,
+            "output": 38435,
+            "tokens": 5933861
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-07": {
+        "tokens": 9043720,
+        "cost_usd": 8.045839,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 54,
+            "input": 102,
+            "cache_write_5m": 0,
+            "cache_write_1h": 295932,
+            "cache_read": 8718618,
+            "output": 29068,
+            "tokens": 9043720
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-3608085ecd44",
+    "tool": "claude_code",
+    "title": "Assignments by User table redesign",
+    "days": {
+      "2026-08-05": {
+        "tokens": 2055699,
+        "cost_usd": 2.750931,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 20,
+            "input": 38,
+            "cache_write_5m": 0,
+            "cache_write_1h": 87034,
+            "cache_read": 1932052,
+            "output": 36575,
+            "tokens": 2055699
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-39d138024bbe",
+    "tool": "claude_code",
+    "title": "Fundraising initiative events by year",
+    "days": {
+      "2026-08-13": {
+        "tokens": 340873,
+        "cost_usd": 1.011792,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 27177,
+            "cache_read": 310532,
+            "output": 3152,
+            "tokens": 340873
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-3bcab24f3a9a",
+    "tool": "claude_code",
+    "title": "Token Project review and prioritization",
+    "days": {
+      "2026-07-29": {
+        "tokens": 66355826,
+        "cost_usd": 53.941167,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-5": {
+            "calls": 481,
+            "input": 18205,
+            "cache_write_5m": 2400157,
+            "cache_write_1h": 286812,
+            "cache_read": 63481031,
+            "output": 169621,
+            "tokens": 66355826
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-30": {
+        "tokens": 22945854,
+        "cost_usd": 23.765358,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 84,
+            "input": 157,
+            "cache_write_5m": 189411,
+            "cache_write_1h": 1053808,
+            "cache_read": 21653848,
+            "output": 48630,
+            "tokens": 22945854
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-4591e829d0d3",
+    "tool": "claude_code",
+    "title": "SQL query debugging",
+    "days": {
+      "2026-08-31": {
+        "tokens": 1501523,
+        "cost_usd": 1.726647,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 18,
+            "input": 36,
+            "cache_write_5m": 0,
+            "cache_write_1h": 56560,
+            "cache_read": 1427033,
+            "output": 17894,
+            "tokens": 1501523
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-01": {
+        "tokens": 98770,
+        "cost_usd": 0.631809,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 60773,
+            "cache_read": 37788,
+            "output": 207,
+            "tokens": 98770
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-46f546d86250",
+    "tool": "claude_code",
+    "title": "Android vitals deprecated APIs",
+    "days": {
+      "2026-08-26": {
+        "tokens": 1995870,
+        "cost_usd": 1.699676,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 28,
+            "input": 56,
+            "cache_write_5m": 0,
+            "cache_write_1h": 42370,
+            "cache_read": 1941241,
+            "output": 12203,
+            "tokens": 1995870
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-48182c5fa513",
+    "tool": "claude_code",
+    "title": "Daily Burn Table today column",
+    "days": {
+      "2026-09-12": {
+        "tokens": 3500750,
+        "cost_usd": 4.228638,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 25,
+            "input": 712,
+            "cache_write_5m": 0,
+            "cache_write_1h": 127562,
+            "cache_read": 3320916,
+            "output": 51560,
+            "tokens": 3500750
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-4823abf37416",
+    "tool": "claude_code",
+    "title": "Fundraising operations documentation",
+    "days": {
+      "2026-08-13": {
+        "tokens": 1302564,
+        "cost_usd": 4.583235,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 14,
+            "input": 26,
+            "cache_write_5m": 0,
+            "cache_write_1h": 89548,
+            "cache_read": 1180765,
+            "output": 32225,
+            "tokens": 1302564
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-26": {
+        "tokens": 893256,
+        "cost_usd": 4.142897,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 121128,
+            "cache_read": 752767,
+            "output": 19349,
+            "tokens": 893256
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-28": {
+        "tokens": 1354826,
+        "cost_usd": 4.79682,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-fable-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 171742,
+            "cache_read": 1179420,
+            "output": 3648,
+            "tokens": 1354826
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-490147820405",
+    "tool": "claude_code",
+    "title": "Annual Sustainer Pledge Amount spec",
+    "days": {
+      "2026-09-09": {
+        "tokens": 25251350,
+        "cost_usd": 20.286283,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 113,
+            "input": 226,
+            "cache_write_5m": 0,
+            "cache_write_1h": 299783,
+            "cache_read": 24754947,
+            "output": 196394,
+            "tokens": 25251350
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-4b09f17b096f",
+    "tool": "claude_code",
+    "title": "Stop Playwright reusing another worktree's server",
+    "days": {
+      "2026-09-12": {
+        "tokens": 1827188,
+        "cost_usd": 2.729808,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 16,
+            "input": 452,
+            "cache_write_5m": 0,
+            "cache_write_1h": 90328,
+            "cache_read": 1697385,
+            "output": 39023,
+            "tokens": 1827188
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-4d793117d84a",
+    "tool": "claude_code",
+    "title": "Phonetic name field in Person Dashboard",
+    "days": {
+      "2026-08-11": {
+        "tokens": 520732,
+        "cost_usd": 0.584636,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 9,
+            "input": 17,
+            "cache_write_5m": 0,
+            "cache_write_1h": 29922,
+            "cache_read": 489163,
+            "output": 1630,
+            "tokens": 520732
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-4ff4ca852b1e",
+    "tool": "claude_code",
+    "title": "Query excluding Emoji",
+    "days": {
+      "2026-09-09": {
+        "tokens": 2696038,
+        "cost_usd": 2.980292,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 29,
+            "input": 58,
+            "cache_write_5m": 0,
+            "cache_write_1h": 76037,
+            "cache_read": 2582814,
+            "output": 37129,
+            "tokens": 2696038
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-571cb96dbc0b",
+    "tool": "claude_code",
+    "title": "AI frontier models for document extraction",
+    "days": {
+      "2026-08-27": {
+        "tokens": 513757,
+        "cost_usd": 1.88939,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 55816,
+            "cache_read": 451500,
+            "output": 6429,
+            "tokens": 513757
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-5f7e55418430",
+    "tool": "claude_code",
+    "title": "Email input keyboard overlap",
+    "days": {
+      "2026-08-26": {
+        "tokens": 506732,
+        "cost_usd": 0.597692,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 29060,
+            "cache_read": 474873,
+            "output": 2783,
+            "tokens": 506732
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-65b716b8b6bd",
+    "tool": "claude_code",
+    "title": "Copy Fundraising Initiative plan",
+    "days": {
+      "2026-08-28": {
+        "tokens": 14620031,
+        "cost_usd": 14.231214,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 76,
+            "input": 152,
+            "cache_write_5m": 0,
+            "cache_write_1h": 406473,
+            "cache_read": 14088548,
+            "output": 124858,
+            "tokens": 14620031
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-31": {
+        "tokens": 14139577,
+        "cost_usd": 11.484832,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 2,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-5": {
+            "calls": 42,
+            "input": 84,
+            "cache_write_5m": 0,
+            "cache_write_1h": 334684,
+            "cache_read": 13754394,
+            "output": 50415,
+            "tokens": 14139577
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-08": {
+        "tokens": 9898660,
+        "cost_usd": 9.537571,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-5": {
+            "calls": 24,
+            "input": 48,
+            "cache_write_5m": 0,
+            "cache_write_1h": 403276,
+            "cache_read": 9464442,
+            "output": 30894,
+            "tokens": 9898660
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-661e34a50f7a",
+    "tool": "claude_code",
+    "title": "App accounts by email address",
+    "days": {
+      "2026-09-07": {
+        "tokens": 1855478,
+        "cost_usd": 1.850559,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 23,
+            "input": 46,
+            "cache_write_5m": 0,
+            "cache_write_1h": 68545,
+            "cache_read": 1775808,
+            "output": 11079,
+            "tokens": 1855478
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-69d291cfe61d",
+    "tool": "claude_code",
+    "title": "Person Dashboard reports section",
+    "days": {
+      "2026-07-15": {
+        "tokens": 6889807,
+        "cost_usd": 1.996148,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 60,
+            "input": 118,
+            "cache_write_5m": 0,
+            "cache_write_1h": 108062,
+            "cache_read": 6760470,
+            "output": 21157,
+            "tokens": 6889807
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-16": {
+        "tokens": 11483872,
+        "cost_usd": 4.033137,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 63,
+            "input": 126,
+            "cache_write_5m": 0,
+            "cache_write_1h": 357101,
+            "cache_read": 11087956,
+            "output": 38689,
+            "tokens": 11483872
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-17": {
+        "tokens": 6037651,
+        "cost_usd": 2.101051,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 26,
+            "input": 52,
+            "cache_write_5m": 0,
+            "cache_write_1h": 209132,
+            "cache_read": 5818393,
+            "output": 10074,
+            "tokens": 6037651
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-6e29c6f6db99",
+    "tool": "claude_code",
+    "title": "Handshake integration options",
+    "days": {
+      "2026-08-27": {
+        "tokens": 928287,
+        "cost_usd": 2.847591,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 11,
+            "input": 22,
+            "cache_write_5m": 0,
+            "cache_write_1h": 59745,
+            "cache_read": 852521,
+            "output": 15999,
+            "tokens": 928287
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-6e974ea5618c",
+    "tool": "claude_code",
+    "title": "Dashboard report_suffix placement",
+    "days": {
+      "2026-08-27": {
+        "tokens": 3858282,
+        "cost_usd": 1.272864,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 48,
+            "input": 96,
+            "cache_write_5m": 0,
+            "cache_write_1h": 98134,
+            "cache_read": 3746978,
+            "output": 13074,
+            "tokens": 3858282
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-7596c15ca970",
+    "tool": "claude_code",
+    "title": "Giving Society records missing dates",
+    "days": {
+      "2026-08-12": {
+        "tokens": 3045853,
+        "cost_usd": 2.81943,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 40,
+            "input": 554,
+            "cache_write_5m": 0,
+            "cache_write_1h": 69355,
+            "cache_read": 2950020,
+            "output": 25924,
+            "tokens": 3045853
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-7aa880168567",
+    "tool": "claude_code",
+    "title": "Account List import date display",
+    "days": {
+      "2026-08-29": {
+        "tokens": 27344702,
+        "cost_usd": 19.919592,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 152,
+            "input": 304,
+            "cache_write_5m": 0,
+            "cache_write_1h": 426807,
+            "cache_read": 26828154,
+            "output": 89437,
+            "tokens": 27344702
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-81f3f0cb61d9",
+    "tool": "claude_code",
+    "title": "Person Dashboard assignment/stage change forms",
+    "days": {
+      "2026-07-29": {
+        "tokens": 1102700,
+        "cost_usd": 1.053116,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 17,
+            "input": 32,
+            "cache_write_5m": 24181,
+            "cache_write_1h": 21246,
+            "cache_read": 1050680,
+            "output": 6561,
+            "tokens": 1102700
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-05": {
+        "tokens": 7019217,
+        "cost_usd": 6.980297,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 64,
+            "input": 120,
+            "cache_write_5m": 0,
+            "cache_write_1h": 248192,
+            "cache_read": 6725504,
+            "output": 45401,
+            "tokens": 7019217
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-867efb14c0d0",
+    "tool": "claude_code",
+    "title": "Set up Apple developer account",
+    "days": {
+      "2026-07-07": {
+        "tokens": 128865755,
+        "cost_usd": 33.163367,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 468,
+            "input": 936,
+            "cache_write_5m": 323434,
+            "cache_write_1h": 1422227,
+            "cache_read": 126992610,
+            "output": 126548,
+            "tokens": 128865755
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-08": {
+        "tokens": 96924739,
+        "cost_usd": 35.475855,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-5": {
+            "calls": 185,
+            "input": 370,
+            "cache_write_5m": 87846,
+            "cache_write_1h": 4003528,
+            "cache_read": 92764139,
+            "output": 68856,
+            "tokens": 96924739
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-09": {
+        "tokens": 1312538,
+        "cost_usd": 2.648513,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 622628,
+            "cache_read": 687864,
+            "output": 2042,
+            "tokens": 1312538
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-89af98b749d1",
+    "tool": "claude_code",
+    "title": "Add appointment type filtering for DRC scheduling",
+    "days": {
+      "2026-08-26": {
+        "tokens": 49593218,
+        "cost_usd": 12.599798,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 214,
+            "input": 428,
+            "cache_write_5m": 0,
+            "cache_write_1h": 375736,
+            "cache_read": 49089239,
+            "output": 127815,
+            "tokens": 49593218
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-8c9f203dbed9",
+    "tool": "claude_code",
+    "title": "Cohorts.ART",
+    "days": {
+      "2026-07-03": {
+        "tokens": 76115324,
+        "cost_usd": 22.924917,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 315,
+            "input": 16818,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1558420,
+            "cache_read": 74361557,
+            "output": 178529,
+            "tokens": 76115324
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-04": {
+        "tokens": 129512676,
+        "cost_usd": 40.985885,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 254,
+            "input": 5726,
+            "cache_write_5m": 0,
+            "cache_write_1h": 3618061,
+            "cache_read": 125753745,
+            "output": 135144,
+            "tokens": 129512676
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-05": {
+        "tokens": 62810508,
+        "cost_usd": 27.742556,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 93,
+            "input": 2845,
+            "cache_write_5m": 0,
+            "cache_write_1h": 3874965,
+            "cache_read": 58886732,
+            "output": 45966,
+            "tokens": 62810508
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-06": {
+        "tokens": 203768029,
+        "cost_usd": 72.799443,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 333,
+            "input": 35623,
+            "cache_write_5m": 560267,
+            "cache_write_1h": 7672601,
+            "cache_read": 195342679,
+            "output": 156859,
+            "tokens": 203768029
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-07": {
+        "tokens": 28222616,
+        "cost_usd": 9.96167,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-5": {
+            "calls": 125,
+            "input": 250,
+            "cache_write_5m": 258745,
+            "cache_write_1h": 855474,
+            "cache_read": 27060108,
+            "output": 48039,
+            "tokens": 28222616
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-08": {
+        "tokens": 52539609,
+        "cost_usd": 15.514906,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 144,
+            "input": 287,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1115137,
+            "cache_read": 51345721,
+            "output": 78464,
+            "tokens": 52539609
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-09": {
+        "tokens": 181361461,
+        "cost_usd": 105.144904,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-4-8": {
+            "calls": 248,
+            "input": 37800,
+            "cache_write_5m": 742787,
+            "cache_write_1h": 1686884,
+            "cache_read": 109087286,
+            "output": 121759,
+            "tokens": 111676516
+          },
+          "claude-sonnet-5": {
+            "calls": 137,
+            "input": 602,
+            "cache_write_5m": 0,
+            "cache_write_1h": 2966354,
+            "cache_read": 66651988,
+            "output": 66001,
+            "tokens": 69684945
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-10": {
+        "tokens": 151157895,
+        "cost_usd": 118.807846,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-4-8": {
+            "calls": 222,
+            "input": 13090,
+            "cache_write_5m": 1465487,
+            "cache_write_1h": 3344306,
+            "cache_read": 146213684,
+            "output": 121328,
+            "tokens": 151157895
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-12": {
+        "tokens": 37637455,
+        "cost_usd": 49.36906,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-4-8": {
+            "calls": 47,
+            "input": 5778,
+            "cache_write_5m": 0,
+            "cache_write_1h": 3101481,
+            "cache_read": 34486920,
+            "output": 43276,
+            "tokens": 37637455
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-13": {
+        "tokens": 89844512,
+        "cost_usd": 80.358762,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 4,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-4-8": {
+            "calls": 88,
+            "input": 2380,
+            "cache_write_5m": 0,
+            "cache_write_1h": 3450481,
+            "cache_read": 73733698,
+            "output": 64857,
+            "tokens": 77251416
+          },
+          "claude-sonnet-5": {
+            "calls": 100,
+            "input": 16039,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1207029,
+            "cache_read": 11347622,
+            "output": 22406,
+            "tokens": 12593096
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-14": {
+        "tokens": 41681027,
+        "cost_usd": 15.954664,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 170,
+            "input": 6517,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1809448,
+            "cache_read": 39790488,
+            "output": 74574,
+            "tokens": 41681027
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-15": {
+        "tokens": 69734714,
+        "cost_usd": 21.03009,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 2,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-5": {
+            "calls": 165,
+            "input": 330,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1674138,
+            "cache_read": 67986692,
+            "output": 73554,
+            "tokens": 69734714
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-17": {
+        "tokens": 54773623,
+        "cost_usd": 37.645174,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-4-8": {
+            "calls": 72,
+            "input": 133,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1300425,
+            "cache_read": 31092025,
+            "output": 47522,
+            "tokens": 32440105
+          },
+          "claude-sonnet-5": {
+            "calls": 39,
+            "input": 78,
+            "cache_write_5m": 570359,
+            "cache_write_1h": 520121,
+            "cache_read": 21227545,
+            "output": 15415,
+            "tokens": 22333518
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-18": {
+        "tokens": 8475118,
+        "cost_usd": 8.336333,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 14,
+            "input": 28,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1709993,
+            "cache_read": 6750476,
+            "output": 14621,
+            "tokens": 8475118
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-20": {
+        "tokens": 183942253,
+        "cost_usd": 48.955113,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 250,
+            "input": 500,
+            "cache_write_5m": 0,
+            "cache_write_1h": 2889010,
+            "cache_read": 180931567,
+            "output": 121176,
+            "tokens": 183942253
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-22": {
+        "tokens": 62755261,
+        "cost_usd": 16.280702,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 70,
+            "input": 140,
+            "cache_write_5m": 0,
+            "cache_write_1h": 886706,
+            "cache_read": 61831689,
+            "output": 36726,
+            "tokens": 62755261
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-23": {
+        "tokens": 14331912,
+        "cost_usd": 7.802845,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 56,
+            "input": 112,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1230973,
+            "cache_read": 13074443,
+            "output": 26384,
+            "tokens": 14331912
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-24": {
+        "tokens": 45032642,
+        "cost_usd": 14.950599,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 182,
+            "input": 364,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1369800,
+            "cache_read": 43587154,
+            "output": 75324,
+            "tokens": 45032642
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-25": {
+        "tokens": 18563773,
+        "cost_usd": 6.406644,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 51,
+            "input": 102,
+            "cache_write_5m": 0,
+            "cache_write_1h": 646132,
+            "cache_read": 17893212,
+            "output": 24327,
+            "tokens": 18563773
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-26": {
+        "tokens": 1155059,
+        "cost_usd": 1.555127,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 3,
+            "input": 6,
+            "cache_write_5m": 0,
+            "cache_write_1h": 346780,
+            "cache_read": 807626,
+            "output": 647,
+            "tokens": 1155059
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-28": {
+        "tokens": 385850,
+        "cost_usd": 1.397892,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 347364,
+            "cache_read": 38409,
+            "output": 75,
+            "tokens": 385850
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-928f5b24ac4a",
+    "tool": "claude_code",
+    "title": "Google Sheets cell limit and API trigger strategy",
+    "days": {
+      "2026-08-12": {
+        "tokens": 326694,
+        "cost_usd": 0.733942,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 4,
+            "input": 8,
+            "cache_write_5m": 0,
+            "cache_write_1h": 50313,
+            "cache_read": 272594,
+            "output": 3779,
+            "tokens": 326694
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-92beb96058d0",
+    "tool": "claude_code",
+    "title": "First-year students missing from advising search",
+    "days": {
+      "2026-07-10": {
+        "tokens": 863682,
+        "cost_usd": 0.467486,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 12,
+            "input": 12427,
+            "cache_write_5m": 0,
+            "cache_write_1h": 43205,
+            "cache_read": 797009,
+            "output": 11041,
+            "tokens": 863682
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-9e137e62d7d3",
+    "tool": "claude_code",
+    "title": "Source uploads and Student Slate records",
+    "days": {
+      "2026-07-10": {
+        "tokens": 10144876,
+        "cost_usd": 4.399301,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 71,
+            "input": 17476,
+            "cache_write_5m": 0,
+            "cache_write_1h": 398115,
+            "cache_read": 9644996,
+            "output": 84289,
+            "tokens": 10144876
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-a211cf6e36d6",
+    "tool": "claude_code",
+    "title": "Add preferred email address tag to dashboard",
+    "days": {
+      "2026-08-14": {
+        "tokens": 2466907,
+        "cost_usd": 0.937892,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 27,
+            "input": 54,
+            "cache_write_5m": 0,
+            "cache_write_1h": 78228,
+            "cache_read": 2373610,
+            "output": 15015,
+            "tokens": 2466907
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-a2bbbf6052db",
+    "tool": "claude_code",
+    "title": "Scavenger hunt portal",
+    "days": {
+      "2026-07-27": {
+        "tokens": 65750546,
+        "cost_usd": 22.382577,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 230,
+            "input": 457,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1988063,
+            "cache_read": 63590903,
+            "output": 171123,
+            "tokens": 65750546
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-28": {
+        "tokens": 25012010,
+        "cost_usd": 8.934698,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 49,
+            "input": 98,
+            "cache_write_5m": 0,
+            "cache_write_1h": 947894,
+            "cache_read": 24030332,
+            "output": 33686,
+            "tokens": 25012010
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-06": {
+        "tokens": 73538739,
+        "cost_usd": 24.905517,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 119,
+            "input": 238,
+            "cache_write_5m": 0,
+            "cache_write_1h": 2451292,
+            "cache_read": 70997165,
+            "output": 90044,
+            "tokens": 73538739
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-07": {
+        "tokens": 10875575,
+        "cost_usd": 7.755485,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 15,
+            "input": 30,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1421477,
+            "cache_read": 9435833,
+            "output": 18235,
+            "tokens": 10875575
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-a979a139b288",
+    "tool": "claude_code",
+    "title": "Sabbatical project synopsis",
+    "days": {
+      "2026-06-10": {
+        "tokens": 1013731,
+        "cost_usd": 0.862637,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-4-6": {
+            "calls": 21,
+            "input": 37,
+            "cache_write_5m": 0,
+            "cache_write_1h": 88640,
+            "cache_read": 921437,
+            "output": 3617,
+            "tokens": 1013731
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-b677e6698e34",
+    "tool": "claude_code",
+    "title": "Fundraising Initiative field analysis",
+    "days": {
+      "2026-08-13": {
+        "tokens": 37309759,
+        "cost_usd": 31.052893,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 185,
+            "input": 9446,
+            "cache_write_5m": 0,
+            "cache_write_1h": 865096,
+            "cache_read": 36266356,
+            "output": 168861,
+            "tokens": 37309759
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-14": {
+        "tokens": 14636393,
+        "cost_usd": 12.135997,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 39,
+            "input": 71,
+            "cache_write_5m": 0,
+            "cache_write_1h": 370793,
+            "cache_read": 14212674,
+            "output": 52855,
+            "tokens": 14636393
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-26": {
+        "tokens": 55067126,
+        "cost_usd": 41.390002,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 104,
+            "input": 208,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1116454,
+            "cache_read": 53817844,
+            "output": 132620,
+            "tokens": 55067126
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-27": {
+        "tokens": 10362522,
+        "cost_usd": 17.339927,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-opus-5": {
+            "calls": 16,
+            "input": 32,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1231239,
+            "cache_read": 9112404,
+            "output": 18847,
+            "tokens": 10362522
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-b8d644ac1f7e",
+    "tool": "claude_code",
+    "title": "Custom SQL entity row creation",
+    "days": {
+      "2026-08-05": {
+        "tokens": 414072,
+        "cost_usd": 0.656988,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 7,
+            "input": 13,
+            "cache_write_5m": 0,
+            "cache_write_1h": 37075,
+            "cache_read": 372997,
+            "output": 3987,
+            "tokens": 414072
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-b9fdcecc2231",
+    "tool": "claude_code",
+    "title": "Cloud container chat token usage",
+    "days": {
+      "2026-08-11": {
+        "tokens": 118155,
+        "cost_usd": 0.374726,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 29967,
+            "cache_read": 86921,
+            "output": 1263,
+            "tokens": 118155
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-bfebf8de77d2",
+    "tool": "claude_code",
+    "title": "Dashboard section arrangement",
+    "days": {
+      "2026-08-04": {
+        "tokens": 9639490,
+        "cost_usd": 9.337673,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 89,
+            "input": 169,
+            "cache_write_5m": 0,
+            "cache_write_1h": 392591,
+            "cache_read": 9214585,
+            "output": 32145,
+            "tokens": 9639490
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-05": {
+        "tokens": 33268975,
+        "cost_usd": 27.308587,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 151,
+            "input": 286,
+            "cache_write_5m": 0,
+            "cache_write_1h": 985978,
+            "cache_read": 32229404,
+            "output": 53307,
+            "tokens": 33268975
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-c3e1f8e7c3d5",
+    "tool": "claude_code",
+    "title": "Play Store publishing warnings",
+    "days": {
+      "2026-07-15": {
+        "tokens": 965934,
+        "cost_usd": 0.338039,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 16,
+            "input": 32,
+            "cache_write_5m": 0,
+            "cache_write_1h": 28180,
+            "cache_read": 933874,
+            "output": 3848,
+            "tokens": 965934
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-c4904818aef3",
+    "tool": "claude_code",
+    "title": "Cohorts Project review and prioritization",
+    "days": {
+      "2026-07-29": {
+        "tokens": 539446,
+        "cost_usd": 0.795906,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 9,
+            "input": 17,
+            "cache_write_5m": 0,
+            "cache_write_1h": 40102,
+            "cache_read": 493403,
+            "output": 5924,
+            "tokens": 539446
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-c61841884667",
+    "tool": "claude_code",
+    "title": "Smart AI Brief tab implementation status",
+    "days": {
+      "2026-09-12": {
+        "tokens": 8866931,
+        "cost_usd": 11.979085,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 37,
+            "input": 974,
+            "cache_write_5m": 0,
+            "cache_write_1h": 329364,
+            "cache_read": 8356500,
+            "output": 180093,
+            "tokens": 8866931
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-d3a9e8a98a40",
+    "tool": "claude_code",
+    "title": "Chat thread token usage breakdown",
+    "days": {
+      "2026-09-12": {
+        "tokens": 9886289,
+        "cost_usd": 18.094282,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 36,
+            "input": 1032,
+            "cache_write_5m": 0,
+            "cache_write_1h": 599060,
+            "cache_read": 8981894,
+            "output": 304303,
+            "tokens": 9886289
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-13": {
+        "tokens": 1061979,
+        "cost_usd": 5.43794,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 2,
+            "input": 34,
+            "cache_write_5m": 0,
+            "cache_write_1h": 486419,
+            "cache_read": 563860,
+            "output": 11666,
+            "tokens": 1061979
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-d941e9dc2453",
+    "tool": "claude_code",
+    "title": "Compare car rental versus train travel options",
+    "days": {
+      "2026-05-19": {
+        "tokens": 111649,
+        "cost_usd": 0.222363,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-4-6": {
+            "calls": 4,
+            "input": 8,
+            "cache_write_5m": 0,
+            "cache_write_1h": 18462,
+            "cache_read": 87491,
+            "output": 5688,
+            "tokens": 111649
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-dcf9dca554c4",
+    "tool": "claude_code",
+    "title": "Alum member Studio Potter tab visibility",
+    "days": {
+      "2026-07-24": {
+        "tokens": 332950,
+        "cost_usd": 0.267021,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 7,
+            "input": 14,
+            "cache_write_5m": 40914,
+            "cache_write_1h": 23268,
+            "cache_read": 266929,
+            "output": 1825,
+            "tokens": 332950
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-dcfca4453ba3",
+    "tool": "claude_code",
+    "title": "EXPO Android updates testing",
+    "days": {
+      "2026-08-27": {
+        "tokens": 3607769,
+        "cost_usd": 3.032698,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 40,
+            "input": 80,
+            "cache_write_5m": 0,
+            "cache_write_1h": 72146,
+            "cache_read": 3513377,
+            "output": 22166,
+            "tokens": 3607769
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-dea8508d2f3e",
+    "tool": "claude_code",
+    "title": "EAS Update Android build failure",
+    "days": {
+      "2026-08-29": {
+        "tokens": 12156934,
+        "cost_usd": 10.322711,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 96,
+            "input": 192,
+            "cache_write_5m": 0,
+            "cache_write_1h": 257431,
+            "cache_read": 11825932,
+            "output": 73379,
+            "tokens": 12156934
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-31": {
+        "tokens": 12219721,
+        "cost_usd": 10.713447,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 56,
+            "input": 112,
+            "cache_write_5m": 0,
+            "cache_write_1h": 383007,
+            "cache_read": 11797234,
+            "output": 39368,
+            "tokens": 12219721
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-df6e3179db6e",
+    "tool": "claude_code",
+    "title": "Interaction HTML markup dashboard rendering",
+    "days": {
+      "2026-08-11": {
+        "tokens": 3499856,
+        "cost_usd": 2.794814,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 46,
+            "input": 88,
+            "cache_write_5m": 0,
+            "cache_write_1h": 67208,
+            "cache_read": 3415988,
+            "output": 16572,
+            "tokens": 3499856
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-e9bdb4414c78",
+    "tool": "claude_code",
+    "title": "Sustainer giving population reports",
+    "days": {
+      "2026-09-11": {
+        "tokens": 22947881,
+        "cost_usd": 23.92641,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 57,
+            "input": 1674,
+            "cache_write_5m": 0,
+            "cache_write_1h": 560608,
+            "cache_read": 22095021,
+            "output": 290578,
+            "tokens": 22947881
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-ec076a8b2b20",
+    "tool": "claude_code",
+    "title": "Student Success initiatives",
+    "days": {
+      "2026-08-12": {
+        "tokens": 112468,
+        "cost_usd": 0.301099,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 24177,
+            "cache_read": 87668,
+            "output": 619,
+            "tokens": 112468
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-fd445d902531",
+    "tool": "claude_code",
+    "title": "Token-burn dashboard",
+    "days": {
+      "2026-06-12": {
+        "tokens": 2785152,
+        "cost_usd": 5.669336,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-fable-5": {
+            "calls": 46,
+            "input": 10522,
+            "cache_write_5m": 0,
+            "cache_write_1h": 73444,
+            "cache_read": 2672736,
+            "output": 28450,
+            "tokens": 2785152
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-06-15": {
+        "tokens": 600683,
+        "cost_usd": 0.509647,
+        "unpriced_tokens": 0,
+        "models": {
+          "<synthetic>": {
+            "calls": 1,
+            "input": 0,
+            "cache_write_5m": 0,
+            "cache_write_1h": 0,
+            "cache_read": 0,
+            "output": 0,
+            "tokens": 0
+          },
+          "claude-sonnet-4-6": {
+            "calls": 9,
+            "input": 11,
+            "cache_write_5m": 0,
+            "cache_write_1h": 54488,
+            "cache_read": 544903,
+            "output": 1281,
+            "tokens": 600683
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-10": {
+        "tokens": 17748600,
+        "cost_usd": 11.621369,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-4-6": {
+            "calls": 149,
+            "input": 196,
+            "cache_write_5m": 9654,
+            "cache_write_1h": 794693,
+            "cache_read": 16826152,
+            "output": 117905,
+            "tokens": 17748600
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-13": {
+        "tokens": 4338628,
+        "cost_usd": 1.792388,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-haiku-4-5-20251001": {
+            "calls": 23,
+            "input": 194,
+            "cache_write_5m": 0,
+            "cache_write_1h": 95522,
+            "cache_read": 2622092,
+            "output": 6227,
+            "tokens": 2724035
+          },
+          "claude-sonnet-4-6": {
+            "calls": 10,
+            "input": 14,
+            "cache_write_5m": 0,
+            "cache_write_1h": 136960,
+            "cache_read": 1474713,
+            "output": 2906,
+            "tokens": 1614593
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-14": {
+        "tokens": 2302435,
+        "cost_usd": 0.69803,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-haiku-4-5-20251001": {
+            "calls": 17,
+            "input": 146,
+            "cache_write_5m": 0,
+            "cache_write_1h": 229188,
+            "cache_read": 2066530,
+            "output": 6571,
+            "tokens": 2302435
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-15": {
+        "tokens": 3375995,
+        "cost_usd": 0.87994,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-haiku-4-5-20251001": {
+            "calls": 22,
+            "input": 188,
+            "cache_write_5m": 0,
+            "cache_write_1h": 263868,
+            "cache_read": 3103608,
+            "output": 8331,
+            "tokens": 3375995
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-16": {
+        "tokens": 18584581,
+        "cost_usd": 3.512909,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-haiku-4-5-20251001": {
+            "calls": 146,
+            "input": 1216,
+            "cache_write_5m": 0,
+            "cache_write_1h": 763695,
+            "cache_read": 17778377,
+            "output": 41293,
+            "tokens": 18584581
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-17": {
+        "tokens": 26627457,
+        "cost_usd": 8.751518,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-haiku-4-5-20251001": {
+            "calls": 123,
+            "input": 1022,
+            "cache_write_5m": 0,
+            "cache_write_1h": 709359,
+            "cache_read": 16900406,
+            "output": 30802,
+            "tokens": 17641589
+          },
+          "claude-sonnet-5": {
+            "calls": 39,
+            "input": 76,
+            "cache_write_5m": 0,
+            "cache_write_1h": 788351,
+            "cache_read": 8126555,
+            "output": 70886,
+            "tokens": 8985868
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-18": {
+        "tokens": 43836888,
+        "cost_usd": 12.433152,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 117,
+            "input": 234,
+            "cache_write_5m": 0,
+            "cache_write_1h": 759138,
+            "cache_read": 42997860,
+            "output": 79656,
+            "tokens": 43836888
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-21": {
+        "tokens": 6399536,
+        "cost_usd": 2.811487,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 15,
+            "input": 30,
+            "cache_write_5m": 0,
+            "cache_write_1h": 398048,
+            "cache_read": 5999525,
+            "output": 1933,
+            "tokens": 6399536
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-22": {
+        "tokens": 47590909,
+        "cost_usd": 13.530023,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 97,
+            "input": 193,
+            "cache_write_5m": 0,
+            "cache_write_1h": 928393,
+            "cache_read": 46612976,
+            "output": 49347,
+            "tokens": 47590909
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-25": {
+        "tokens": 19718926,
+        "cost_usd": 6.171591,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 35,
+            "input": 70,
+            "cache_write_5m": 0,
+            "cache_write_1h": 538312,
+            "cache_read": 19161963,
+            "output": 18581,
+            "tokens": 19718926
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-27": {
+        "tokens": 24089089,
+        "cost_usd": 9.353605,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 40,
+            "input": 80,
+            "cache_write_5m": 0,
+            "cache_write_1h": 1138277,
+            "cache_read": 22929284,
+            "output": 21448,
+            "tokens": 24089089
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-03": {
+        "tokens": 1253167,
+        "cost_usd": 2.495118,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 2,
+            "input": 4,
+            "cache_write_5m": 0,
+            "cache_write_1h": 588024,
+            "cache_read": 664120,
+            "output": 1019,
+            "tokens": 1253167
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-fdb823ba2e94",
+    "tool": "claude_code",
+    "title": "Copy Fundraising Initiative plan",
+    "days": {
+      "2026-09-08": {
+        "tokens": 40219419,
+        "cost_usd": 29.199811,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 75,
+            "input": 150,
+            "cache_write_5m": 0,
+            "cache_write_1h": 709863,
+            "cache_read": 39413662,
+            "output": 95744,
+            "tokens": 40219419
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-ff2ea3906992",
+    "tool": "claude_code",
+    "title": "Pronouns misspelling in Dashboard",
+    "days": {
+      "2026-09-08": {
+        "tokens": 662541,
+        "cost_usd": 0.249881,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 11,
+            "input": 22,
+            "cache_write_5m": 0,
+            "cache_write_1h": 27228,
+            "cache_read": 633876,
+            "output": 1415,
+            "tokens": 662541
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-ff482ea9ebee",
+    "tool": "claude_code",
+    "title": "Distribution process",
+    "days": {
+      "2026-08-11": {
+        "tokens": 52484,
+        "cost_usd": 0.246054,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 21386,
+            "cache_read": 30417,
+            "output": 679,
+            "tokens": 52484
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-001e173a6eb5",
+    "tool": "codex",
+    "title": "Optimize staff assignment query",
+    "days": {
+      "2026-08-06": {
+        "tokens": 115309,
+        "cost_usd": 0.188193,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 21987,
+            "cache_read": 90112,
+            "output": 3210,
+            "tokens": 115309
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-00a3313ee7f1",
+    "tool": "codex",
+    "title": "Test OpenAI connection",
+    "days": {
+      "2026-09-02": {
+        "tokens": 170131,
+        "cost_usd": 0.125986,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 13964,
+            "cache_read": 155776,
+            "output": 391,
+            "tokens": 170131
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0167d3daca57",
+    "tool": "codex",
+    "title": "Update portal design guide",
+    "days": {
+      "2026-09-12": {
+        "tokens": 1646916,
+        "cost_usd": 1.470413,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 108821,
+            "cache_read": 1516672,
+            "output": 21423,
+            "tokens": 1646916
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-01cf245305f2",
+    "tool": "codex",
+    "title": "Review embed script behavior",
+    "days": {
+      "2026-07-30": {
+        "tokens": 130907,
+        "cost_usd": 0.193999,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 29832,
+            "cache_read": 99328,
+            "output": 1747,
+            "tokens": 130907
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-02d59f15e88c",
+    "tool": "codex",
+    "title": "Review CKE form injection",
+    "days": {
+      "2026-08-10": {
+        "tokens": 2356790,
+        "cost_usd": 1.703832,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 140970,
+            "cache_read": 2202880,
+            "output": 12940,
+            "tokens": 2356790
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-04a4f030cbec",
+    "tool": "codex",
+    "title": "Fix ARRAYFORMULA in Data for Slate",
+    "days": {
+      "2026-07-30": {
+        "tokens": 565183,
+        "cost_usd": 0.545209,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 61824,
+            "cache_read": 498432,
+            "output": 4927,
+            "tokens": 565183
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-09ba7cf627b1",
+    "tool": "codex",
+    "title": "Brainstorm Slate unique IDs",
+    "days": {
+      "2026-09-01": {
+        "tokens": 162897,
+        "cost_usd": 0.304266,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 41603,
+            "cache_read": 116736,
+            "output": 4558,
+            "tokens": 162897
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0acee08b77ca",
+    "tool": "codex",
+    "title": "Design MGO Smart Section",
+    "days": {
+      "2026-09-11": {
+        "tokens": 6339451,
+        "cost_usd": 3.670774,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 143716,
+            "cache_read": 6164224,
+            "output": 31511,
+            "tokens": 6339451
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-12": {
+        "tokens": 7811788,
+        "cost_usd": 5.303098,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 494437,
+            "cache_read": 7297024,
+            "output": 20327,
+            "tokens": 7811788
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0cf14946c245",
+    "tool": "codex",
+    "title": "Update 2025-26 staff review",
+    "days": {
+      "2026-08-03": {
+        "tokens": 9213893,
+        "cost_usd": 5.608919,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 324716,
+            "cache_read": 8850688,
+            "output": 38489,
+            "tokens": 9213893
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0d2dc77eb7fb",
+    "tool": "codex",
+    "title": "Add local Codex import flow",
+    "days": {
+      "2026-07-07": {
+        "tokens": 462341,
+        "cost_usd": 0.536547,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 33707,
+            "cache_read": 423424,
+            "output": 5210,
+            "tokens": 462341
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-08": {
+        "tokens": 138174,
+        "cost_usd": 0.222234,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 30650,
+            "cache_read": 107008,
+            "output": 516,
+            "tokens": 138174
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0d49b668def4",
+    "tool": "codex",
+    "title": "Find receipts for expense report",
+    "days": {
+      "2026-09-10": {
+        "tokens": 32374397,
+        "cost_usd": 37.775218,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-6-astra": {
+            "input": 404211,
+            "cache_read": 31934208,
+            "output": 35978,
+            "tokens": 32374397
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0da41a9593f6",
+    "tool": "codex",
+    "title": "Summarize Lucy Bauer update",
+    "days": {
+      "2026-08-26": {
+        "tokens": 432336,
+        "cost_usd": 0.544813,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 90222,
+            "cache_read": 339712,
+            "output": 2402,
+            "tokens": 432336
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-0e57292cc185",
+    "tool": "codex",
+    "title": "Find a PII redaction tool",
+    "days": {
+      "2026-07-29": {
+        "tokens": 122565,
+        "cost_usd": 0.353783,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 75274,
+            "cache_read": 45568,
+            "output": 1723,
+            "tokens": 122565
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-120fb2666ddc",
+    "tool": "codex",
+    "title": "Investigate DRC calendar arrows",
+    "days": {
+      "2026-07-30": {
+        "tokens": 2704841,
+        "cost_usd": 2.064919,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 218541,
+            "cache_read": 2476288,
+            "output": 10012,
+            "tokens": 2704841
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-12bdb0eb2276",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-21": {
+        "tokens": 1701138,
+        "cost_usd": 1.249723,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 121870,
+            "cache_read": 1572608,
+            "output": 6660,
+            "tokens": 1701138
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-13f629e661a6",
+    "tool": "codex",
+    "title": "Draft AI literacy panel bio",
+    "days": {
+      "2026-07-24": {
+        "tokens": 149286,
+        "cost_usd": 0.210738,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 35766,
+            "cache_read": 112384,
+            "output": 1136,
+            "tokens": 149286
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-141631c39e5c",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-02": {
+        "tokens": 1604299,
+        "cost_usd": 1.207481,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 116671,
+            "cache_read": 1480192,
+            "output": 7436,
+            "tokens": 1604299
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-165f8d8ab155",
+    "tool": "codex",
+    "title": "Update project tracker",
+    "days": {
+      "2026-08-03": {
+        "tokens": 5275249,
+        "cost_usd": 3.155943,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 213250,
+            "cache_read": 5047808,
+            "output": 14191,
+            "tokens": 5275249
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-1673ddd49a42",
+    "tool": "codex",
+    "title": "Review the specs document",
+    "days": {
+      "2026-06-08": {
+        "tokens": 56501,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 56501,
+        "models": {},
+        "unattributed": 56501
+      }
+    }
+  },
+  {
+    "key": "cx-1835ad3f16c1",
+    "tool": "codex",
+    "title": "Check finance transactions",
+    "days": {
+      "2026-08-26": {
+        "tokens": 231205,
+        "cost_usd": 0.211614,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 28350,
+            "cache_read": 201984,
+            "output": 871,
+            "tokens": 231205
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-1d48a8870576",
+    "tool": "codex",
+    "title": "Meeting Notes Review",
+    "days": {
+      "2026-08-07": {
+        "tokens": 345804,
+        "cost_usd": 0.166248,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 39771,
+            "cache_read": 303872,
+            "output": 2161,
+            "tokens": 345804
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-1d7f6b71c030",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-19": {
+        "tokens": 598442,
+        "cost_usd": 0.658725,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 91599,
+            "cache_read": 502272,
+            "output": 4571,
+            "tokens": 598442
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-1dc872690110",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-25": {
+        "tokens": 910257,
+        "cost_usd": 0.910308,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 132287,
+            "cache_read": 774400,
+            "output": 3570,
+            "tokens": 910257
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2099d7a6ee32",
+    "tool": "codex",
+    "title": "Organize root project folders",
+    "days": {
+      "2026-08-05": {
+        "tokens": 1168401,
+        "cost_usd": 0.96539,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 61406,
+            "cache_read": 1092864,
+            "output": 14131,
+            "tokens": 1168401
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2143dc81480b",
+    "tool": "codex",
+    "title": "Optimize Slate query",
+    "days": {
+      "2026-07-20": {
+        "tokens": 50191,
+        "cost_usd": 0.115218,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 16024,
+            "cache_read": 32256,
+            "output": 1911,
+            "tokens": 50191
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-21e94cd47f41",
+    "tool": "codex",
+    "title": "Review transcript form exports",
+    "days": {
+      "2026-08-05": {
+        "tokens": 8748819,
+        "cost_usd": 5.275094,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 286068,
+            "cache_read": 8424704,
+            "output": 38047,
+            "tokens": 8748819
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-27": {
+        "tokens": 938576,
+        "cost_usd": 1.02239,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 154095,
+            "cache_read": 779776,
+            "output": 4705,
+            "tokens": 938576
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2254a7590ddf",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-19": {
+        "tokens": 880067,
+        "cost_usd": 0.779871,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 89217,
+            "cache_read": 785408,
+            "output": 5442,
+            "tokens": 880067
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-257657a98517",
+    "tool": "codex",
+    "title": "Build environmental impact dashboard",
+    "days": {
+      "2026-06-10": {
+        "tokens": 2586146,
+        "cost_usd": 3.553951,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 362725,
+            "cache_read": 2202112,
+            "output": 21309,
+            "tokens": 2586146
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-06-11": {
+        "tokens": 4198053,
+        "cost_usd": 3.606613,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 248617,
+            "cache_read": 3936256,
+            "output": 13180,
+            "tokens": 4198053
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-06-18": {
+        "tokens": 7575356,
+        "cost_usd": 6.126657,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 319455,
+            "cache_read": 7225344,
+            "output": 30557,
+            "tokens": 7575356
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-06-19": {
+        "tokens": 2236157,
+        "cost_usd": 2.07757,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 170052,
+            "cache_read": 2059520,
+            "output": 6585,
+            "tokens": 2236157
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-25d3c6d8eda3",
+    "tool": "codex",
+    "title": "Compare Fall 2026 query filters",
+    "days": {
+      "2026-07-23": {
+        "tokens": 2873939,
+        "cost_usd": 1.761225,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 107384,
+            "cache_read": 2755072,
+            "output": 11483,
+            "tokens": 2873939
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-288370609175",
+    "tool": "codex",
+    "title": "Assess Slate site security",
+    "days": {
+      "2026-06-17": {
+        "tokens": 44378,
+        "cost_usd": 0.193637,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 33727,
+            "cache_read": 9984,
+            "output": 667,
+            "tokens": 44378
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-29275be44c45",
+    "tool": "codex",
+    "title": "Redesign MGO assignments table",
+    "days": {
+      "2026-08-05": {
+        "tokens": 2195673,
+        "cost_usd": 2.090638,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 154048,
+            "cache_read": 2008064,
+            "output": 33561,
+            "tokens": 2195673
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2a6c3e170853",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-19": {
+        "tokens": 969043,
+        "cost_usd": 0.84295,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 92693,
+            "cache_read": 870144,
+            "output": 6206,
+            "tokens": 969043
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2d616d5194dd",
+    "tool": "codex",
+    "title": "Draft checkout PRD and wireframe",
+    "days": {
+      "2026-07-13": {
+        "tokens": 419372,
+        "cost_usd": 0.670077,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 67427,
+            "cache_read": 346624,
+            "output": 5321,
+            "tokens": 419372
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2d71c1e68b33",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-31": {
+        "tokens": 1756209,
+        "cost_usd": 1.273905,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 123655,
+            "cache_read": 1626112,
+            "output": 6442,
+            "tokens": 1756209
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2e4a5cc304c0",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-26": {
+        "tokens": 1222335,
+        "cost_usd": 0.949532,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 96573,
+            "cache_read": 1120000,
+            "output": 5762,
+            "tokens": 1222335
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2f170997c082",
+    "tool": "codex",
+    "title": "Draft change announcement",
+    "days": {
+      "2026-07-14": {
+        "tokens": 52646,
+        "cost_usd": 0.097746,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 17676,
+            "cache_read": 34304,
+            "output": 666,
+            "tokens": 52646
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-30505df5a27d",
+    "tool": "codex",
+    "title": "Find source format record type",
+    "days": {
+      "2026-08-31": {
+        "tokens": 1599139,
+        "cost_usd": 1.347714,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 97066,
+            "cache_read": 1483776,
+            "output": 18297,
+            "tokens": 1599139
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-01": {
+        "tokens": 782648,
+        "cost_usd": 0.777466,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 105264,
+            "cache_read": 673024,
+            "output": 4360,
+            "tokens": 782648
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-31e999f581d9",
+    "tool": "codex",
+    "title": "What is the Appropriate Install count in the admin panel based on?",
+    "days": {
+      "2026-09-04": {
+        "tokens": 163031,
+        "cost_usd": 0.213494,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 37095,
+            "cache_read": 125184,
+            "output": 752,
+            "tokens": 163031
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-05": {
+        "tokens": 90458,
+        "cost_usd": 0.241368,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 54083,
+            "cache_read": 35840,
+            "output": 535,
+            "tokens": 90458
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-32b8ea3e73d3",
+    "tool": "codex",
+    "title": "Granola meeting notes",
+    "days": {
+      "2026-06-08": {
+        "tokens": 16142,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 16142,
+        "models": {},
+        "unattributed": 16142
+      }
+    }
+  },
+  {
+    "key": "cx-34b65c71a75b",
+    "tool": "codex",
+    "title": "Review Contact Report workflow",
+    "days": {
+      "2026-08-27": {
+        "tokens": 36613360,
+        "cost_usd": 25.024221,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1873899,
+            "cache_read": 34554112,
+            "output": 185349,
+            "tokens": 36613360
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-28": {
+        "tokens": 4924485,
+        "cost_usd": 2.773962,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 177184,
+            "cache_read": 4738816,
+            "output": 8485,
+            "tokens": 4924485
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-37239dd5546e",
+    "tool": "codex",
+    "title": "Find meeting about skill",
+    "days": {
+      "2026-08-13": {
+        "tokens": 71959,
+        "cost_usd": 0.111215,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 16201,
+            "cache_read": 54528,
+            "output": 1230,
+            "tokens": 71959
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-39a8278d61a6",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-27": {
+        "tokens": 1129729,
+        "cost_usd": 0.93987,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 100901,
+            "cache_read": 1022464,
+            "output": 6364,
+            "tokens": 1129729
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-3b4c3ee3fd3f",
+    "tool": "codex",
+    "title": "Clean up portal",
+    "days": {
+      "2026-09-05": {
+        "tokens": 3001186,
+        "cost_usd": 1.854088,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 91922,
+            "cache_read": 2892800,
+            "output": 16464,
+            "tokens": 3001186
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-3baf6e3ea13c",
+    "tool": "codex",
+    "title": "Fix person dashboard giving overview",
+    "days": {
+      "2026-08-05": {
+        "tokens": 1732655,
+        "cost_usd": 1.614914,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 211197,
+            "cache_read": 1513216,
+            "output": 8242,
+            "tokens": 1732655
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-3e30c939f032",
+    "tool": "codex",
+    "title": "Draft checkout PRD",
+    "days": {
+      "2026-07-13": {
+        "tokens": 2637554,
+        "cost_usd": 2.539403,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 311753,
+            "cache_read": 2307328,
+            "output": 18473,
+            "tokens": 2637554
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-3e622b6f2509",
+    "tool": "codex",
+    "title": "Plan Gmail MGO contact report",
+    "days": {
+      "2026-09-10": {
+        "tokens": 15554770,
+        "cost_usd": 27.154492,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-6-astra": {
+            "input": 690421,
+            "cache_read": 14754432,
+            "output": 109917,
+            "tokens": 15554770
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-11": {
+        "tokens": 17217469,
+        "cost_usd": 31.110946,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-6-astra": {
+            "input": 1124933,
+            "cache_read": 16015616,
+            "output": 76920,
+            "tokens": 17217469
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-3ef8b50d766c",
+    "tool": "codex",
+    "title": "Find Person Dashboard load logic",
+    "days": {
+      "2026-07-28": {
+        "tokens": 449022,
+        "cost_usd": 0.469586,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 69682,
+            "cache_read": 377344,
+            "output": 1996,
+            "tokens": 449022
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-424c3aaaced4",
+    "tool": "codex",
+    "title": "<command-message>init</command-message>",
+    "days": {
+      "2026-06-08": {
+        "tokens": 10257,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 10257,
+        "models": {},
+        "unattributed": 10257
+      }
+    }
+  },
+  {
+    "key": "cx-42c2b972ad8e",
+    "tool": "codex",
+    "title": "Create Summit scavenger hunt items",
+    "days": {
+      "2026-08-06": {
+        "tokens": 6109171,
+        "cost_usd": 4.278489,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 436303,
+            "cache_read": 5659392,
+            "output": 13476,
+            "tokens": 6109171
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-44073b6dff2c",
+    "tool": "codex",
+    "title": "Recreate source format CSV",
+    "days": {
+      "2026-08-27": {
+        "tokens": 7827051,
+        "cost_usd": 4.205049,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 171955,
+            "cache_read": 7631872,
+            "output": 23224,
+            "tokens": 7827051
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-44ec6a689a3f",
+    "tool": "codex",
+    "title": "Set up project monitor",
+    "days": {
+      "2026-06-10": {
+        "tokens": 44662,
+        "cost_usd": 0.127007,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 21629,
+            "cache_read": 22784,
+            "output": 249,
+            "tokens": 44662
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-476ebd94c4d8",
+    "tool": "codex",
+    "title": "Assess Slate site security",
+    "days": {
+      "2026-06-17": {
+        "tokens": 8072532,
+        "cost_usd": 8.303978,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 627486,
+            "cache_read": 7396096,
+            "output": 48950,
+            "tokens": 8072532
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-499a20f9ae00",
+    "tool": "codex",
+    "title": "Fix podcast category filtering",
+    "days": {
+      "2026-07-31": {
+        "tokens": 1728101,
+        "cost_usd": 1.41787,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 93007,
+            "cache_read": 1615104,
+            "output": 19990,
+            "tokens": 1728101
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-4adf93626cbd",
+    "tool": "codex",
+    "title": "Prepare Shilad Sen meeting update",
+    "days": {
+      "2026-08-27": {
+        "tokens": 5458071,
+        "cost_usd": 3.474066,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 195162,
+            "cache_read": 5232896,
+            "output": 30013,
+            "tokens": 5458071
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-01": {
+        "tokens": 26685881,
+        "cost_usd": 17.396772,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1133493,
+            "cache_read": 25417600,
+            "output": 134788,
+            "tokens": 26685881
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-4eda0667da69",
+    "tool": "codex",
+    "title": "We have a user who reports that they clicked the send me a link from within the app and when they click the link in thei",
+    "days": {
+      "2026-09-04": {
+        "tokens": 10131039,
+        "cost_usd": 6.371017,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 517527,
+            "cache_read": 9590272,
+            "output": 23240,
+            "tokens": 10131039
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-05": {
+        "tokens": 48935480,
+        "cost_usd": 27.09583,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1379579,
+            "cache_read": 47425536,
+            "output": 130365,
+            "tokens": 48935480
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-5004bc4b83c6",
+    "tool": "codex",
+    "title": "Build secure Slate document viewer",
+    "days": {
+      "2026-08-29": {
+        "tokens": 69047360,
+        "cost_usd": 35.903238,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1298054,
+            "cache_read": 67565056,
+            "output": 184250,
+            "tokens": 69047360
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-30": {
+        "tokens": 6566539,
+        "cost_usd": 3.722729,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 214844,
+            "cache_read": 6335232,
+            "output": 16463,
+            "tokens": 6566539
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-01": {
+        "tokens": 32716922,
+        "cost_usd": 17.281573,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 703235,
+            "cache_read": 31928832,
+            "output": 84855,
+            "tokens": 32716922
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-513c2baa87fc",
+    "tool": "codex",
+    "title": "Find outstanding meeting items",
+    "days": {
+      "2026-09-08": {
+        "tokens": 1606302,
+        "cost_usd": 1.23453,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 126265,
+            "cache_read": 1473024,
+            "output": 7013,
+            "tokens": 1606302
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-527b4847987b",
+    "tool": "codex",
+    "title": "Organize repo for collaborators",
+    "days": {
+      "2026-09-02": {
+        "tokens": 12981460,
+        "cost_usd": 7.689722,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 321331,
+            "cache_read": 12591744,
+            "output": 68385,
+            "tokens": 12981460
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-552b47fda1d1",
+    "tool": "codex",
+    "title": "Prompt gen and automation",
+    "days": {
+      "2026-09-02": {
+        "tokens": 23724703,
+        "cost_usd": 14.701644,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 883074,
+            "cache_read": 22737920,
+            "output": 103709,
+            "tokens": 23724703
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-05": {
+        "tokens": 7411991,
+        "cost_usd": 4.394988,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 239294,
+            "cache_read": 7143680,
+            "output": 29017,
+            "tokens": 7411991
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-55d215cb7ada",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-03": {
+        "tokens": 1106576,
+        "cost_usd": 0.97233,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 104427,
+            "cache_read": 994304,
+            "output": 7845,
+            "tokens": 1106576
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-561a4d8d0cd5",
+    "tool": "codex",
+    "title": "Update GitHub ownership references",
+    "days": {
+      "2026-08-27": {
+        "tokens": 202023,
+        "cost_usd": 0.247743,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 38536,
+            "cache_read": 162048,
+            "output": 1439,
+            "tokens": 202023
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-561bb1b8c970",
+    "tool": "codex",
+    "title": "Find advancement office emails",
+    "days": {
+      "2026-09-02": {
+        "tokens": 816299,
+        "cost_usd": 0.035758,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-luna": {
+            "input": 88612,
+            "cache_read": 724736,
+            "output": 2951,
+            "tokens": 816299
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-58be1a10fcc2",
+    "tool": "codex",
+    "title": "Fix Google Sheets cell limit",
+    "days": {
+      "2026-08-12": {
+        "tokens": 1193665,
+        "cost_usd": 1.989194,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 389011,
+            "cache_read": 798976,
+            "output": 5678,
+            "tokens": 1193665
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-59c124a1d9ec",
+    "tool": "codex",
+    "title": "Build ChatGPT usage site",
+    "days": {
+      "2026-09-01": {
+        "tokens": 4137100,
+        "cost_usd": 2.726768,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 177784,
+            "cache_read": 3937280,
+            "output": 22036,
+            "tokens": 4137100
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-5a577993f848",
+    "tool": "codex",
+    "title": "Customize Claude to your role",
+    "days": {
+      "2026-06-08": {
+        "tokens": 6708,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 6708,
+        "models": {},
+        "unattributed": 6708
+      }
+    }
+  },
+  {
+    "key": "cx-626f0b6d7580",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-07": {
+        "tokens": 1251534,
+        "cost_usd": 1.02636,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 100830,
+            "cache_read": 1142400,
+            "output": 8304,
+            "tokens": 1251534
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-08": {
+        "tokens": 1422667,
+        "cost_usd": 1.104684,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 135019,
+            "cache_read": 1285120,
+            "output": 2528,
+            "tokens": 1422667
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-626f930e7cc8",
+    "tool": "codex",
+    "title": "Add Ryanair flight to calendar",
+    "days": {
+      "2026-06-08": {
+        "tokens": 8662,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 8662,
+        "models": {},
+        "unattributed": 8662
+      }
+    }
+  },
+  {
+    "key": "cx-636c6462d0fe",
+    "tool": "codex",
+    "title": "Review tasks for ITS update",
+    "days": {
+      "2026-08-26": {
+        "tokens": 577672,
+        "cost_usd": 0.60343,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 85086,
+            "cache_read": 489216,
+            "output": 3370,
+            "tokens": 577672
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-63e8d6631204",
+    "tool": "codex",
+    "title": "Check Student Cohort housing data",
+    "days": {
+      "2026-08-07": {
+        "tokens": 3730883,
+        "cost_usd": 1.155745,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 116959,
+            "cache_read": 3597056,
+            "output": 16868,
+            "tokens": 3730883
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-65d17fbffc2c",
+    "tool": "codex",
+    "title": "Investigate missing Giving Society\u5e74",
+    "days": {
+      "2026-08-12": {
+        "tokens": 3599265,
+        "cost_usd": 2.260228,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 132057,
+            "cache_read": 3449600,
+            "output": 17608,
+            "tokens": 3599265
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-665880239764",
+    "tool": "codex",
+    "title": "\u2705 Diagnose new assignment records",
+    "days": {
+      "2026-09-09": {
+        "tokens": 12273847,
+        "cost_usd": 6.923356,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 218223,
+            "cache_read": 11992960,
+            "output": 62664,
+            "tokens": 12273847
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-10": {
+        "tokens": 7824111,
+        "cost_usd": 5.380556,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 365134,
+            "cache_read": 7411200,
+            "output": 47777,
+            "tokens": 7824111
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-66f2b1cecc41",
+    "tool": "codex",
+    "title": "\u2705 Review dashboard name suggestions",
+    "days": {
+      "2026-09-06": {
+        "tokens": 9410024,
+        "cost_usd": 4.887616,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 246638,
+            "cache_read": 9151360,
+            "output": 12026,
+            "tokens": 9410024
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-07": {
+        "tokens": 1804074,
+        "cost_usd": 1.304571,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 132648,
+            "cache_read": 1666048,
+            "output": 5378,
+            "tokens": 1804074
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-67668558bc39",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-09": {
+        "tokens": 1200453,
+        "cost_usd": 0.963892,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 96547,
+            "cache_read": 1096960,
+            "output": 6946,
+            "tokens": 1200453
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-67a57cc9ecbe",
+    "tool": "codex",
+    "title": "Explore MGO Gmail contact tracking",
+    "days": {
+      "2026-09-10": {
+        "tokens": 7940700,
+        "cost_usd": 5.522304,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 317771,
+            "cache_read": 7561600,
+            "output": 61329,
+            "tokens": 7940700
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-67cb8a4b2032",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-01": {
+        "tokens": 873857,
+        "cost_usd": 1.062996,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 168188,
+            "cache_read": 700160,
+            "output": 5509,
+            "tokens": 873857
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-67e55b4e2af0",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-11": {
+        "tokens": 1270353,
+        "cost_usd": 1.009191,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 110374,
+            "cache_read": 1154688,
+            "output": 5291,
+            "tokens": 1270353
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-691330760290",
+    "tool": "codex",
+    "title": "Build token-burn dashboard",
+    "days": {
+      "2026-06-12": {
+        "tokens": 3901746,
+        "cost_usd": 4.175462,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 373862,
+            "cache_read": 3509504,
+            "output": 18380,
+            "tokens": 3901746
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-6bc13478936e",
+    "tool": "codex",
+    "title": "Prepare for Jenn meeting",
+    "days": {
+      "2026-09-03": {
+        "tokens": 5389674,
+        "cost_usd": 0.155222,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-luna": {
+            "input": 193454,
+            "cache_read": 5185536,
+            "output": 10684,
+            "tokens": 5389674
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-6f219ea691c6",
+    "tool": "codex",
+    "title": "tag-reporting-enhancements",
+    "days": {
+      "2026-06-08": {
+        "tokens": 70954,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 70954,
+        "models": {},
+        "unattributed": 70954
+      }
+    }
+  },
+  {
+    "key": "cx-71abd8a70c7f",
+    "tool": "codex",
+    "title": "Locate Slate gold set applications",
+    "days": {
+      "2026-09-03": {
+        "tokens": 19929677,
+        "cost_usd": 2.000675,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-luna": {
+            "input": 300866,
+            "cache_read": 15926400,
+            "output": 37688,
+            "tokens": 16264954
+          },
+          "gpt-5.6-terra": {
+            "input": 359171,
+            "cache_read": 3288832,
+            "output": 16720,
+            "tokens": 3664723
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-04": {
+        "tokens": 5120748,
+        "cost_usd": 1.952136,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 440651,
+            "cache_read": 4668672,
+            "output": 11425,
+            "tokens": 5120748
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-05": {
+        "tokens": 23651915,
+        "cost_usd": 7.200918,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 1040802,
+            "cache_read": 22560512,
+            "output": 50601,
+            "tokens": 23651915
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-06": {
+        "tokens": 15569411,
+        "cost_usd": 4.499477,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 608941,
+            "cache_read": 14935936,
+            "output": 24534,
+            "tokens": 15569411
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-07": {
+        "tokens": 15934470,
+        "cost_usd": 4.884448,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 790413,
+            "cache_read": 15120768,
+            "output": 23289,
+            "tokens": 15934470
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-08": {
+        "tokens": 2118784,
+        "cost_usd": 0.82093,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-terra": {
+            "input": 169020,
+            "cache_read": 1941888,
+            "output": 7876,
+            "tokens": 2118784
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-723ded7a44b8",
+    "tool": "codex",
+    "title": "Find Posse tracking",
+    "days": {
+      "2026-06-30": {
+        "tokens": 1934753,
+        "cost_usd": 2.226993,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 220469,
+            "cache_read": 1705216,
+            "output": 9068,
+            "tokens": 1934753
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-7347043dea29",
+    "tool": "codex",
+    "title": "Create Jenn update log",
+    "days": {
+      "2026-06-10": {
+        "tokens": 1936105,
+        "cost_usd": 1.885028,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 141370,
+            "cache_read": 1785216,
+            "output": 9519,
+            "tokens": 1936105
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-07": {
+        "tokens": 2366234,
+        "cost_usd": 3.447383,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 449277,
+            "cache_read": 1908736,
+            "output": 8221,
+            "tokens": 2366234
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-7450827401fe",
+    "tool": "codex",
+    "title": "Morning digest",
+    "days": {
+      "2026-06-08": {
+        "tokens": 11095,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 11095,
+        "models": {},
+        "unattributed": 11095
+      }
+    }
+  },
+  {
+    "key": "cx-75cdd7bff7f1",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-08": {
+        "tokens": 1658627,
+        "cost_usd": 1.498706,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 184725,
+            "cache_read": 1465216,
+            "output": 8686,
+            "tokens": 1658627
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-7686ae119094",
+    "tool": "codex",
+    "title": "Add transaction views and reports",
+    "days": {
+      "2026-08-07": {
+        "tokens": 11551664,
+        "cost_usd": 7.974699,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 633177,
+            "cache_read": 8313856,
+            "output": 57718,
+            "tokens": 9004751
+          },
+          "gpt-5.6-terra": {
+            "input": 128993,
+            "cache_read": 2399232,
+            "output": 18688,
+            "tokens": 2546913
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-773cbb311c91",
+    "tool": "codex",
+    "title": "Schedule a recurring task",
+    "days": {
+      "2026-06-08": {
+        "tokens": 2660,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 2660,
+        "models": {},
+        "unattributed": 2660
+      }
+    }
+  },
+  {
+    "key": "cx-7870fd25a919",
+    "tool": "codex",
+    "title": "Compare car rental versus train travel options",
+    "days": {
+      "2026-06-08": {
+        "tokens": 4366,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 4366,
+        "models": {},
+        "unattributed": 4366
+      }
+    }
+  },
+  {
+    "key": "cx-7da5506300da",
+    "tool": "codex",
+    "title": "Resolve macadv merge conflict",
+    "days": {
+      "2026-07-30": {
+        "tokens": 240999,
+        "cost_usd": 0.25399,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 33240,
+            "cache_read": 205824,
+            "output": 1935,
+            "tokens": 240999
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-80014282028b",
+    "tool": "codex",
+    "title": "Check folder access",
+    "days": {
+      "2026-07-07": {
+        "tokens": 129855,
+        "cost_usd": 0.284377,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 42801,
+            "cache_read": 86144,
+            "output": 910,
+            "tokens": 129855
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-808e95b69697",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-13": {
+        "tokens": 678768,
+        "cost_usd": 0.660298,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 89361,
+            "cache_read": 585984,
+            "output": 3423,
+            "tokens": 678768
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-811dfdc8d59c",
+    "tool": "codex",
+    "title": "Count applications by year",
+    "days": {
+      "2026-08-04": {
+        "tokens": 315209,
+        "cost_usd": 0.347294,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 38635,
+            "cache_read": 272384,
+            "output": 4190,
+            "tokens": 315209
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-05": {
+        "tokens": 3402337,
+        "cost_usd": 2.050884,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 94981,
+            "cache_read": 3289600,
+            "output": 17756,
+            "tokens": 3402337
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-89d3991d5dea",
+    "tool": "codex",
+    "title": "Add pre-health advising tab",
+    "days": {
+      "2026-07-30": {
+        "tokens": 728037,
+        "cost_usd": 0.870324,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 131235,
+            "cache_read": 591360,
+            "output": 5442,
+            "tokens": 728037
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-8a8627186741",
+    "tool": "codex",
+    "title": "Review Elyon inbox priorities",
+    "days": {
+      "2026-07-14": {
+        "tokens": 3992477,
+        "cost_usd": 2.563527,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 127003,
+            "cache_read": 3839488,
+            "output": 25986,
+            "tokens": 3992477
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-15": {
+        "tokens": 2172508,
+        "cost_usd": 1.611712,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 129623,
+            "cache_read": 2028800,
+            "output": 14085,
+            "tokens": 2172508
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-18": {
+        "tokens": 6894250,
+        "cost_usd": 4.623387,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 434598,
+            "cache_read": 6444288,
+            "output": 15364,
+            "tokens": 6894250
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-19": {
+        "tokens": 4593436,
+        "cost_usd": 3.30584,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 362348,
+            "cache_read": 4222720,
+            "output": 8368,
+            "tokens": 4593436
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-20": {
+        "tokens": 1965002,
+        "cost_usd": 1.952462,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 248470,
+            "cache_read": 1702656,
+            "output": 13876,
+            "tokens": 1965002
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-03": {
+        "tokens": 7719024,
+        "cost_usd": 6.292928,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 750640,
+            "cache_read": 6942720,
+            "output": 25664,
+            "tokens": 7719024
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-8d30ad4d2121",
+    "tool": "codex",
+    "title": "Compare transactions with finances",
+    "days": {
+      "2026-08-26": {
+        "tokens": 596851,
+        "cost_usd": 0.461282,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 39544,
+            "cache_read": 553216,
+            "output": 4091,
+            "tokens": 596851
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-8fe868460f47",
+    "tool": "codex",
+    "title": "Plan App Store rejection fixes",
+    "days": {
+      "2026-08-04": {
+        "tokens": 1184018,
+        "cost_usd": 1.234222,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 130922,
+            "cache_read": 1038336,
+            "output": 14760,
+            "tokens": 1184018
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-9097a80b5e2b",
+    "tool": "codex",
+    "title": "Crontab scheduled task troubleshooting",
+    "days": {
+      "2026-06-08": {
+        "tokens": 515,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 515,
+        "models": {},
+        "unattributed": 515
+      }
+    }
+  },
+  {
+    "key": "cx-937579cc1876",
+    "tool": "codex",
+    "title": "Create Google Doc replica",
+    "days": {
+      "2026-08-26": {
+        "tokens": 11694015,
+        "cost_usd": 7.259772,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 491607,
+            "cache_read": 11160960,
+            "output": 41448,
+            "tokens": 11694015
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-957659618a0e",
+    "tool": "codex",
+    "title": "Find linked CSS in Slate forms",
+    "days": {
+      "2026-07-27": {
+        "tokens": 1635980,
+        "cost_usd": 1.431142,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 184943,
+            "cache_read": 1445376,
+            "output": 5661,
+            "tokens": 1635980
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-95f1a8fd0788",
+    "tool": "codex",
+    "title": "Attach file to ai-eco-footprint",
+    "days": {
+      "2026-06-16": {
+        "tokens": 181857,
+        "cost_usd": 0.470661,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 71169,
+            "cache_read": 108672,
+            "output": 2016,
+            "tokens": 181857
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-9d08670e0211",
+    "tool": "codex",
+    "title": "Commit Victor reference documents",
+    "days": {
+      "2026-09-02": {
+        "tokens": 2200216,
+        "cost_usd": 1.103672,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 45026,
+            "cache_read": 384128,
+            "output": 4055,
+            "tokens": 433209
+          },
+          "gpt-5.6-terra": {
+            "input": 108095,
+            "cache_read": 1646976,
+            "output": 11936,
+            "tokens": 1767007
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-9e507d94edde",
+    "tool": "codex",
+    "title": "Troubleshoot cron cleanup",
+    "days": {
+      "2026-07-16": {
+        "tokens": 82314,
+        "cost_usd": 0.138411,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 22741,
+            "cache_read": 58368,
+            "output": 1205,
+            "tokens": 82314
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-22": {
+        "tokens": 93418,
+        "cost_usd": 0.139458,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 23698,
+            "cache_read": 68864,
+            "output": 856,
+            "tokens": 93418
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-08": {
+        "tokens": 47869,
+        "cost_usd": 0.148065,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 32707,
+            "cache_read": 14592,
+            "output": 570,
+            "tokens": 47869
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a006369e0c60",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-28": {
+        "tokens": 1034489,
+        "cost_usd": 0.906049,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 105328,
+            "cache_read": 923392,
+            "output": 5769,
+            "tokens": 1034489
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a20ecbdaa595",
+    "tool": "codex",
+    "title": "Review Kathryn\u2019s FY26 forms",
+    "days": {
+      "2026-07-21": {
+        "tokens": 488720,
+        "cost_usd": 0.495344,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 68773,
+            "cache_read": 417280,
+            "output": 2667,
+            "tokens": 488720
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-22": {
+        "tokens": 262283,
+        "cost_usd": 0.41669,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 81977,
+            "cache_read": 179456,
+            "output": 850,
+            "tokens": 262283
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a5b1def7a18c",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-24": {
+        "tokens": 1715444,
+        "cost_usd": 1.374656,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 154837,
+            "cache_read": 1553920,
+            "output": 6687,
+            "tokens": 1715444
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a61c7f49a995",
+    "tool": "codex",
+    "title": "Remove slate user roles",
+    "days": {
+      "2026-09-01": {
+        "tokens": 8009935,
+        "cost_usd": 4.122287,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 204715,
+            "cache_read": 7795968,
+            "output": 9252,
+            "tokens": 8009935
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a731a9f1ac51",
+    "tool": "codex",
+    "title": "Analyze giving pyramid movement",
+    "days": {
+      "2026-09-08": {
+        "tokens": 6137398,
+        "cost_usd": 3.868379,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 138617,
+            "cache_read": 5952128,
+            "output": 46653,
+            "tokens": 6137398
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a88b1e026bb4",
+    "tool": "codex",
+    "title": "Troubleshoot Google Maps links",
+    "days": {
+      "2026-09-02": {
+        "tokens": 224368,
+        "cost_usd": 0.018233,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-luna": {
+            "input": 45896,
+            "cache_read": 173824,
+            "output": 4648,
+            "tokens": 224368
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a9507a517591",
+    "tool": "codex",
+    "title": "Enable remote control",
+    "days": {
+      "2026-07-08": {
+        "tokens": 92489,
+        "cost_usd": 0.18575,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 25016,
+            "cache_read": 66560,
+            "output": 913,
+            "tokens": 92489
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-aa4c87874ecf",
+    "tool": "codex",
+    "title": "Update AGENTS project tracking",
+    "days": {
+      "2026-08-05": {
+        "tokens": 412775,
+        "cost_usd": 0.446457,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 64078,
+            "cache_read": 346112,
+            "output": 2585,
+            "tokens": 412775
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-add176f9e85c",
+    "tool": "codex",
+    "title": "Update Lauren planning notes",
+    "days": {
+      "2026-08-14": {
+        "tokens": 1051842,
+        "cost_usd": 0.870632,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 81252,
+            "cache_read": 962560,
+            "output": 8030,
+            "tokens": 1051842
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-26": {
+        "tokens": 1552249,
+        "cost_usd": 1.489934,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 188560,
+            "cache_read": 1353984,
+            "output": 9705,
+            "tokens": 1552249
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-27": {
+        "tokens": 7684377,
+        "cost_usd": 4.897908,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 371160,
+            "cache_read": 7288320,
+            "output": 24897,
+            "tokens": 7684377
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ae8d4fe9cd16",
+    "tool": "codex",
+    "title": "Fix pip install error",
+    "days": {
+      "2026-06-12": {
+        "tokens": 20719,
+        "cost_usd": 0.085356,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 15558,
+            "cache_read": 4992,
+            "output": 169,
+            "tokens": 20719
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-af1a4081b9b2",
+    "tool": "codex",
+    "title": "Investigate Duplicate FYC email",
+    "days": {
+      "2026-09-01": {
+        "tokens": 7500829,
+        "cost_usd": 4.238334,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 202078,
+            "cache_read": 7272704,
+            "output": 26047,
+            "tokens": 7500829
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-afc97cf0b570",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-14": {
+        "tokens": 931428,
+        "cost_usd": 0.857581,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 108107,
+            "cache_read": 818432,
+            "output": 4889,
+            "tokens": 931428
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-b02df5485d9e",
+    "tool": "codex",
+    "title": "Update AF Asks donor rules",
+    "days": {
+      "2026-08-26": {
+        "tokens": 5393471,
+        "cost_usd": 3.188582,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 183058,
+            "cache_read": 5191424,
+            "output": 18989,
+            "tokens": 5393471
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-b43ed664a6a0",
+    "tool": "codex",
+    "title": "Start Kathryn annual review",
+    "days": {
+      "2026-08-03": {
+        "tokens": 2926766,
+        "cost_usd": 1.933173,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 143855,
+            "cache_read": 2770432,
+            "output": 12479,
+            "tokens": 2926766
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-b76a306da40c",
+    "tool": "codex",
+    "title": "Prepare Kathryn one-on-one",
+    "days": {
+      "2026-07-23": {
+        "tokens": 572463,
+        "cost_usd": 0.562457,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 74550,
+            "cache_read": 494592,
+            "output": 3321,
+            "tokens": 572463
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-29": {
+        "tokens": 1153601,
+        "cost_usd": 0.900878,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 104954,
+            "cache_read": 1045504,
+            "output": 3143,
+            "tokens": 1153601
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-b98d07bc0daa",
+    "tool": "codex",
+    "title": "Create branding guidelines",
+    "days": {
+      "2026-06-19": {
+        "tokens": 717203,
+        "cost_usd": 1.039217,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 105713,
+            "cache_read": 604544,
+            "output": 6946,
+            "tokens": 717203
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-bad49c06a851",
+    "tool": "codex",
+    "title": "Clarify tutoring shift workflows",
+    "days": {
+      "2026-06-15": {
+        "tokens": 638921,
+        "cost_usd": 0.944152,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 101670,
+            "cache_read": 531584,
+            "output": 5667,
+            "tokens": 638921
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-bb24685da846",
+    "tool": "codex",
+    "title": "per-firing-timezone-luxon-chart",
+    "days": {
+      "2026-06-08": {
+        "tokens": 234386,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 234386,
+        "models": {},
+        "unattributed": 234386
+      }
+    }
+  },
+  {
+    "key": "cx-c43e8a60548e",
+    "tool": "codex",
+    "title": "Review project effectiveness",
+    "days": {
+      "2026-07-29": {
+        "tokens": 252157,
+        "cost_usd": 0.315854,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 48025,
+            "cache_read": 201984,
+            "output": 2148,
+            "tokens": 252157
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-c508e9033000",
+    "tool": "codex",
+    "title": "Prep Shalad and Elyon meeting",
+    "days": {
+      "2026-07-17": {
+        "tokens": 4727036,
+        "cost_usd": 3.193453,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 270753,
+            "cache_read": 4439552,
+            "output": 16731,
+            "tokens": 4727036
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-c59b03632d34",
+    "tool": "codex",
+    "title": "Assign Fall 2026 Scottish Houses",
+    "days": {
+      "2026-07-27": {
+        "tokens": 2257471,
+        "cost_usd": 1.509663,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 115824,
+            "cache_read": 2131968,
+            "output": 9679,
+            "tokens": 2257471
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-c5b9e4802256",
+    "tool": "codex",
+    "title": "Read VIN from image",
+    "days": {
+      "2026-09-08": {
+        "tokens": 117799,
+        "cost_usd": 0.150274,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 24647,
+            "cache_read": 92416,
+            "output": 736,
+            "tokens": 117799
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-c6ccad9a483b",
+    "tool": "codex",
+    "title": "Find other school image model",
+    "days": {
+      "2026-08-03": {
+        "tokens": 88895,
+        "cost_usd": 0.152534,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 29771,
+            "cache_read": 58624,
+            "output": 500,
+            "tokens": 88895
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-cb4588051b28",
+    "tool": "codex",
+    "title": "Add individual event attendance",
+    "days": {
+      "2026-08-10": {
+        "tokens": 3621916,
+        "cost_usd": 2.414694,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 178627,
+            "cache_read": 3426816,
+            "output": 16473,
+            "tokens": 3621916
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-11": {
+        "tokens": 5061439,
+        "cost_usd": 3.674441,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 403111,
+            "cache_read": 4648192,
+            "output": 10136,
+            "tokens": 5061439
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-cbda9d55c075",
+    "tool": "codex",
+    "title": "Add smart summary editing",
+    "days": {
+      "2026-08-11": {
+        "tokens": 7966034,
+        "cost_usd": 6.181451,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 654613,
+            "cache_read": 7278848,
+            "output": 32573,
+            "tokens": 7966034
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-12": {
+        "tokens": 1423594,
+        "cost_usd": 1.199765,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 159400,
+            "cache_read": 1261312,
+            "output": 2882,
+            "tokens": 1423594
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-cc1e19df5e26",
+    "tool": "codex",
+    "title": "Find Slate IDs for names",
+    "days": {
+      "2026-08-10": {
+        "tokens": 2213970,
+        "cost_usd": 1.615454,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 129159,
+            "cache_read": 2071296,
+            "output": 13515,
+            "tokens": 2213970
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d0e8264cd569",
+    "tool": "codex",
+    "title": "Prepare AI literacy proposal",
+    "days": {
+      "2026-07-17": {
+        "tokens": 1645905,
+        "cost_usd": 1.187873,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 118160,
+            "cache_read": 1522432,
+            "output": 5313,
+            "tokens": 1645905
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d22b7999deaf",
+    "tool": "codex",
+    "title": "Give me a morning brief with what's on my calendar, important unread emails, and anything that needs my attention today.",
+    "days": {
+      "2026-08-07": {
+        "tokens": 990748,
+        "cost_usd": 1.163318,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 190118,
+            "cache_read": 796416,
+            "output": 4214,
+            "tokens": 990748
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-10": {
+        "tokens": 2811918,
+        "cost_usd": 1.579525,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 78846,
+            "cache_read": 2724352,
+            "output": 8720,
+            "tokens": 2811918
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-11": {
+        "tokens": 2032440,
+        "cost_usd": 1.727392,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 221708,
+            "cache_read": 1804800,
+            "output": 5932,
+            "tokens": 2032440
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-12": {
+        "tokens": 532958,
+        "cost_usd": 0.66148,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 90167,
+            "cache_read": 436480,
+            "output": 6311,
+            "tokens": 532958
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-13": {
+        "tokens": 845294,
+        "cost_usd": 0.912021,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 136589,
+            "cache_read": 704512,
+            "output": 4193,
+            "tokens": 845294
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-14": {
+        "tokens": 1368402,
+        "cost_usd": 0.837013,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 55066,
+            "cache_read": 1308672,
+            "output": 4664,
+            "tokens": 1368402
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-19": {
+        "tokens": 1923050,
+        "cost_usd": 1.980226,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 301546,
+            "cache_read": 1615104,
+            "output": 6400,
+            "tokens": 1923050
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-20": {
+        "tokens": 817252,
+        "cost_usd": 0.745795,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 92796,
+            "cache_read": 720128,
+            "output": 4328,
+            "tokens": 817252
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-21": {
+        "tokens": 718226,
+        "cost_usd": 0.801653,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 125772,
+            "cache_read": 589312,
+            "output": 3142,
+            "tokens": 718226
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-24": {
+        "tokens": 1452463,
+        "cost_usd": 1.28607,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 173785,
+            "cache_read": 1274624,
+            "output": 4054,
+            "tokens": 1452463
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-25": {
+        "tokens": 1440658,
+        "cost_usd": 0.768046,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 33978,
+            "cache_read": 1403136,
+            "output": 3544,
+            "tokens": 1440658
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-26": {
+        "tokens": 1343566,
+        "cost_usd": 0.910763,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 86522,
+            "cache_read": 1253888,
+            "output": 3156,
+            "tokens": 1343566
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-28": {
+        "tokens": 974961,
+        "cost_usd": 0.888295,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 116386,
+            "cache_read": 854528,
+            "output": 4047,
+            "tokens": 974961
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-08-31": {
+        "tokens": 864892,
+        "cost_usd": 1.432602,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 284723,
+            "cache_read": 577024,
+            "output": 3145,
+            "tokens": 864892
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-01": {
+        "tokens": 1109057,
+        "cost_usd": 1.215089,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 199607,
+            "cache_read": 906752,
+            "output": 2698,
+            "tokens": 1109057
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-02": {
+        "tokens": 680896,
+        "cost_usd": 1.862352,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 429747,
+            "cache_read": 248960,
+            "output": 2189,
+            "tokens": 680896
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-03": {
+        "tokens": 1211976,
+        "cost_usd": 0.881834,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 87385,
+            "cache_read": 1120384,
+            "output": 4207,
+            "tokens": 1211976
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-04": {
+        "tokens": 1371087,
+        "cost_usd": 1.548012,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 252164,
+            "cache_read": 1114240,
+            "output": 4683,
+            "tokens": 1371087
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-07": {
+        "tokens": 1088098,
+        "cost_usd": 1.124363,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 175629,
+            "cache_read": 909568,
+            "output": 2901,
+            "tokens": 1088098
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-09": {
+        "tokens": 2225985,
+        "cost_usd": 2.501018,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 423598,
+            "cache_read": 1798016,
+            "output": 4371,
+            "tokens": 2225985
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-10": {
+        "tokens": 750704,
+        "cost_usd": 1.442547,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 300832,
+            "cache_read": 446848,
+            "output": 3024,
+            "tokens": 750704
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-11": {
+        "tokens": 843983,
+        "cost_usd": 0.843404,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 124970,
+            "cache_read": 716160,
+            "output": 2853,
+            "tokens": 843983
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d282c70f4453",
+    "tool": "codex",
+    "title": "Review project management doc",
+    "days": {
+      "2026-07-01": {
+        "tokens": 133203,
+        "cost_usd": 0.487736,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 79314,
+            "cache_read": 51712,
+            "output": 2177,
+            "tokens": 133203
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-02": {
+        "tokens": 885765,
+        "cost_usd": 1.660555,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 189187,
+            "cache_read": 684160,
+            "output": 12418,
+            "tokens": 885765
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-21": {
+        "tokens": 3777712,
+        "cost_usd": 3.710122,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 350118,
+            "cache_read": 3419264,
+            "output": 8330,
+            "tokens": 3777712
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d3a95c194b30",
+    "tool": "codex",
+    "title": "Evaluate MacConnect address settings",
+    "days": {
+      "2026-08-11": {
+        "tokens": 2444638,
+        "cost_usd": 1.681378,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 108241,
+            "cache_read": 2320384,
+            "output": 16013,
+            "tokens": 2444638
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d437e1c01338",
+    "tool": "codex",
+    "title": "Start ad hoc giving review",
+    "days": {
+      "2026-06-30": {
+        "tokens": 4366437,
+        "cost_usd": 4.833004,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 438778,
+            "cache_read": 3904768,
+            "output": 22891,
+            "tokens": 4366437
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d63425feb741",
+    "tool": "codex",
+    "title": "Investigate course dashboard issue",
+    "days": {
+      "2026-07-16": {
+        "tokens": 10730237,
+        "cost_usd": 6.380612,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 476280,
+            "cache_read": 10234880,
+            "output": 19077,
+            "tokens": 10730237
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-17": {
+        "tokens": 1180031,
+        "cost_usd": 1.347154,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 238048,
+            "cache_read": 941056,
+            "output": 927,
+            "tokens": 1180031
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d7313a85cf0a",
+    "tool": "codex",
+    "title": "Check Type S pyrometer compatibility with Adafruit amplifier",
+    "days": {
+      "2026-06-08": {
+        "tokens": 1255,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1255,
+        "models": {},
+        "unattributed": 1255
+      }
+    }
+  },
+  {
+    "key": "cx-d77e07242097",
+    "tool": "codex",
+    "title": "Build material-base document export",
+    "days": {
+      "2026-08-28": {
+        "tokens": 5677257,
+        "cost_usd": 3.523946,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 237099,
+            "cache_read": 5419776,
+            "output": 20382,
+            "tokens": 5677257
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-d9847f3a314b",
+    "tool": "codex",
+    "title": "Add interactive timeline range",
+    "days": {
+      "2026-09-10": {
+        "tokens": 12769335,
+        "cost_usd": 19.357014,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-6-astra": {
+            "input": 461321,
+            "cache_read": 12258304,
+            "output": 49710,
+            "tokens": 12769335
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-11": {
+        "tokens": 14855837,
+        "cost_usd": 19.99717,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-6-astra": {
+            "input": 385179,
+            "cache_read": 14436480,
+            "output": 34178,
+            "tokens": 14855837
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-dbe35372d182",
+    "tool": "codex",
+    "title": "Extract transcript course table",
+    "days": {
+      "2026-09-02": {
+        "tokens": 2448572,
+        "cost_usd": 1.78303,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 111666,
+            "cache_read": 2316416,
+            "output": 20490,
+            "tokens": 2448572
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ddd3ee6915ec",
+    "tool": "codex",
+    "title": "Summarize recent spending",
+    "days": {
+      "2026-08-26": {
+        "tokens": 68095,
+        "cost_usd": 0.121868,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 24190,
+            "cache_read": 43520,
+            "output": 385,
+            "tokens": 68095
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-de4a30e27157",
+    "tool": "codex",
+    "title": "Verify Academic Advising tracker",
+    "days": {
+      "2026-08-12": {
+        "tokens": 2077427,
+        "cost_usd": 1.304386,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 92386,
+            "cache_read": 1977856,
+            "output": 7185,
+            "tokens": 2077427
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-dec08f01e767",
+    "tool": "codex",
+    "title": "Improve SRM portal usability",
+    "days": {
+      "2026-09-09": {
+        "tokens": 90430270,
+        "cost_usd": 44.18085,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1147184,
+            "cache_read": 89085184,
+            "output": 197902,
+            "tokens": 90430270
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-10": {
+        "tokens": 20017619,
+        "cost_usd": 10.200716,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 420735,
+            "cache_read": 19562240,
+            "output": 34644,
+            "tokens": 20017619
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-11": {
+        "tokens": 10643966,
+        "cost_usd": 6.563144,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 530297,
+            "cache_read": 10093440,
+            "output": 20229,
+            "tokens": 10643966
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-12": {
+        "tokens": 10743189,
+        "cost_usd": 5.690292,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 285519,
+            "cache_read": 10439040,
+            "output": 18630,
+            "tokens": 10743189
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e0ecbbcb2323",
+    "tool": "codex",
+    "title": "Set approved messaging goal",
+    "days": {
+      "2026-08-03": {
+        "tokens": 194382,
+        "cost_usd": 0.216706,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 30611,
+            "cache_read": 162304,
+            "output": 1467,
+            "tokens": 194382
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e158312daa40",
+    "tool": "codex",
+    "title": "Write announcement email for device owners",
+    "days": {
+      "2026-06-08": {
+        "tokens": 4601,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 4601,
+        "models": {},
+        "unattributed": 4601
+      }
+    }
+  },
+  {
+    "key": "cx-e343d59cbdbd",
+    "tool": "codex",
+    "title": "Review Slate AI evaluation",
+    "days": {
+      "2026-07-07": {
+        "tokens": 525050,
+        "cost_usd": 0.920014,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 123374,
+            "cache_read": 398208,
+            "output": 3468,
+            "tokens": 525050
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-08": {
+        "tokens": 47085027,
+        "cost_usd": 38.62144,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 2562154,
+            "cache_read": 44402560,
+            "output": 120313,
+            "tokens": 47085027
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-09": {
+        "tokens": 208732,
+        "cost_usd": 1.028821,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 203435,
+            "cache_read": 4992,
+            "output": 305,
+            "tokens": 208732
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-10": {
+        "tokens": 38710416,
+        "cost_usd": 29.387889,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 1348359,
+            "cache_read": 37227648,
+            "output": 134409,
+            "tokens": 38710416
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-13": {
+        "tokens": 198857,
+        "cost_usd": 1.005195,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 196155,
+            "cache_read": 1920,
+            "output": 782,
+            "tokens": 198857
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-14": {
+        "tokens": 2073959,
+        "cost_usd": 2.340832,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 197324,
+            "cache_read": 1920,
+            "output": 723,
+            "tokens": 199967
+          },
+          "gpt-5.6-sol": {
+            "input": 109853,
+            "cache_read": 1754624,
+            "output": 9515,
+            "tokens": 1873992
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-16": {
+        "tokens": 106439,
+        "cost_usd": 0.420703,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 99542,
+            "cache_read": 5888,
+            "output": 1009,
+            "tokens": 106439
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-17": {
+        "tokens": 10938483,
+        "cost_usd": 6.963698,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 483447,
+            "cache_read": 10411776,
+            "output": 43260,
+            "tokens": 10938483
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-20": {
+        "tokens": 993286,
+        "cost_usd": 0.875602,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 120956,
+            "cache_read": 870144,
+            "output": 2186,
+            "tokens": 993286
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-23": {
+        "tokens": 4146599,
+        "cost_usd": 2.651145,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 240797,
+            "cache_read": 3899392,
+            "output": 6410,
+            "tokens": 4146599
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e4cd8f041c18",
+    "tool": "codex",
+    "title": "Analyze water bills",
+    "days": {
+      "2026-09-08": {
+        "tokens": 2731737,
+        "cost_usd": 1.809738,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 95473,
+            "cache_read": 2617216,
+            "output": 19048,
+            "tokens": 2731737
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-09": {
+        "tokens": 6435236,
+        "cost_usd": 4.197958,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 386671,
+            "cache_read": 6036736,
+            "output": 11829,
+            "tokens": 6435236
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e54ccd62ce32",
+    "tool": "codex",
+    "title": "Attach file to GitHub repo",
+    "days": {
+      "2026-06-16": {
+        "tokens": 1650293,
+        "cost_usd": 1.758628,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 137250,
+            "cache_read": 1502336,
+            "output": 10707,
+            "tokens": 1650293
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e5e85d29e5c3",
+    "tool": "codex",
+    "title": "Find student in email",
+    "days": {
+      "2026-07-11": {
+        "tokens": 613563,
+        "cost_usd": 0.884072,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 112914,
+            "cache_read": 498304,
+            "output": 2345,
+            "tokens": 613563
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-e800a77447e7",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-10": {
+        "tokens": 6838399,
+        "cost_usd": 3.613599,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 198184,
+            "cache_read": 6631808,
+            "output": 8407,
+            "tokens": 6838399
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-eb7dd763c0bf",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-09-04": {
+        "tokens": 1549815,
+        "cost_usd": 1.210393,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 116592,
+            "cache_read": 1424512,
+            "output": 8711,
+            "tokens": 1549815
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ede8c3b597e6",
+    "tool": "codex",
+    "title": "Create DRC portal scaffold",
+    "days": {
+      "2026-07-29": {
+        "tokens": 11541955,
+        "cost_usd": 7.951679,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 579571,
+            "cache_read": 10898688,
+            "output": 63696,
+            "tokens": 11541955
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-07-30": {
+        "tokens": 9839639,
+        "cost_usd": 6.46853,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 487752,
+            "cache_read": 9312256,
+            "output": 39631,
+            "tokens": 9839639
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f015d881b036",
+    "tool": "codex",
+    "title": "Refine migration update email",
+    "days": {
+      "2026-06-30": {
+        "tokens": 18545,
+        "cost_usd": 0.076011,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 13323,
+            "cache_read": 4992,
+            "output": 230,
+            "tokens": 18545
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f1ff6b33c29e",
+    "tool": "codex",
+    "title": "Review project effectiveness",
+    "days": {
+      "2026-07-29": {
+        "tokens": 904155,
+        "cost_usd": 0.79838,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 78343,
+            "cache_read": 817920,
+            "output": 7892,
+            "tokens": 904155
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f247ddd72c96",
+    "tool": "codex",
+    "title": "ITS CRM and Slate updates summary",
+    "days": {
+      "2026-06-08": {
+        "tokens": 21052,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 21052,
+        "models": {},
+        "unattributed": 21052
+      }
+    }
+  },
+  {
+    "key": "cx-f2a75aa25607",
+    "tool": "codex",
+    "title": "Add daily meeting docs list",
+    "days": {
+      "2026-07-10": {
+        "tokens": 148939,
+        "cost_usd": 0.22735,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 23124,
+            "cache_read": 124160,
+            "output": 1655,
+            "tokens": 148939
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f3f3bfb569ca",
+    "tool": "codex",
+    "title": "In the firebase logins. Those who are not members, what is the breakdown of the email domains",
+    "days": {
+      "2026-09-07": {
+        "tokens": 288807,
+        "cost_usd": 0.278009,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 33326,
+            "cache_read": 253312,
+            "output": 2169,
+            "tokens": 288807
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f42ed05cd691",
+    "tool": "codex",
+    "title": "Build MGO portfolio layout",
+    "days": {
+      "2026-09-09": {
+        "tokens": 106239523,
+        "cost_usd": 50.14693,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 1062251,
+            "cache_read": 104982016,
+            "output": 195256,
+            "tokens": 106239523
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-10": {
+        "tokens": 10750256,
+        "cost_usd": 7.125814,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 677855,
+            "cache_read": 10052736,
+            "output": 19665,
+            "tokens": 10750256
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-11": {
+        "tokens": 30677415,
+        "cost_usd": 17.069871,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 867649,
+            "cache_read": 29724288,
+            "output": 85478,
+            "tokens": 30677415
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-12": {
+        "tokens": 3524864,
+        "cost_usd": 2.084736,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 115128,
+            "cache_read": 2868352,
+            "output": 7401,
+            "tokens": 2990881
+          },
+          "gpt-5.6-terra": {
+            "input": 119732,
+            "cache_read": 413696,
+            "output": 555,
+            "tokens": 533983
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f53955fb7de3",
+    "tool": "codex",
+    "title": "Resolve Git merge and push",
+    "days": {
+      "2026-09-10": {
+        "tokens": 326236,
+        "cost_usd": 0.277869,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 30729,
+            "cache_read": 293632,
+            "output": 1875,
+            "tokens": 326236
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f7115fcc6b9c",
+    "tool": "codex",
+    "title": "Find next project step",
+    "days": {
+      "2026-09-08": {
+        "tokens": 2888040,
+        "cost_usd": 2.232115,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 189346,
+            "cache_read": 2678528,
+            "output": 20166,
+            "tokens": 2888040
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-09": {
+        "tokens": 23703817,
+        "cost_usd": 12.063476,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 404060,
+            "cache_read": 23242240,
+            "output": 57517,
+            "tokens": 23703817
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-fcdc4b579499",
+    "tool": "codex",
+    "title": "Choose mobile app stack",
+    "days": {
+      "2026-07-03": {
+        "tokens": 4472937,
+        "cost_usd": 4.930251,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.5": {
+            "input": 445179,
+            "cache_read": 4004352,
+            "output": 23406,
+            "tokens": 4472937
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-fdee01297711",
+    "tool": "codex",
+    "title": "Check assignment update failure",
+    "days": {
+      "2026-09-08": {
+        "tokens": 2594551,
+        "cost_usd": 1.721078,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 116751,
+            "cache_read": 2464384,
+            "output": 13416,
+            "tokens": 2594551
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-febb101a8f8c",
+    "tool": "codex",
+    "title": "Create engagement student users",
+    "days": {
+      "2026-08-31": {
+        "tokens": 21325543,
+        "cost_usd": 10.86549,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 460674,
+            "cache_read": 20830336,
+            "output": 34533,
+            "tokens": 21325543
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ff36dde70685",
+    "tool": "codex",
+    "title": "Follow-up monitor",
+    "days": {
+      "2026-08-20": {
+        "tokens": 1002456,
+        "cost_usd": 0.85001,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 94818,
+            "cache_read": 902144,
+            "output": 5494,
+            "tokens": 1002456
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  }
+]
