@@ -5065,50 +5065,59 @@
   },
   {
     "date": "2026-09-13",
-    "codex_tokens": 0,
-    "claude_code_tokens": 8261008,
-    "claude_code_calls": 15,
+    "codex_tokens": 2960676,
+    "claude_code_tokens": 12163091,
+    "claude_code_calls": 30,
     "claude_chat_est": 0,
     "chatgpt_est": 0,
     "gemini_est": 0,
-    "total": 8261008,
+    "total": 15123767,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
         "models": {
           "claude-opus-5": {
-            "calls": 15,
-            "input": 362,
+            "calls": 30,
+            "input": 754,
             "cache_write_5m": 0,
-            "cache_write_1h": 529519,
-            "cache_read": 7685202,
-            "output": 45925,
-            "tokens": 8261008,
-            "cost_usd": 10.287726,
+            "cache_write_1h": 687323,
+            "cache_read": 11389580,
+            "output": 85434,
+            "tokens": 12163091,
+            "cost_usd": 14.70764,
             "unpriced_tokens": 0
           }
         },
         "unattributed": 0
       },
       "codex": {
-        "models": {},
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 185882,
+            "cache_read": 2759552,
+            "output": 15242,
+            "tokens": 2960676,
+            "cost_usd": 2.152189,
+            "unpriced_tokens": 0
+          }
+        },
         "unattributed": 0
       }
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 10.287726,
+      "total": 16.859829,
       "by_tool": {
-        "claude_code": 10.287726,
-        "codex": 0.0
+        "claude_code": 14.70764,
+        "codex": 2.152189
       },
       "by_type": {
-        "input": 0.00181,
+        "input": 0.747298,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 5.29519,
-        "cache_read": 3.842601,
-        "output": 1.148125
+        "cache_write_1h": 6.87323,
+        "cache_read": 6.798611,
+        "output": 2.44069
       },
       "unpriced_tokens": 0
     }
