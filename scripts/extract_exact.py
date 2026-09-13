@@ -90,12 +90,35 @@ CLAUDE_CODE_TYPES = TOKEN_TYPES
 CODEX_TYPES = ("input", "cache_read", "output")
 
 
-def local_date(iso_ts: str) -> str:
-    ts = iso_ts.replace("Z", "+00:00")
-    dt = datetime.fromisoformat(ts)
+def _instant(iso_ts: str) -> datetime:
+    """Parse a log timestamp; a naive one is taken to be UTC."""
+    dt = datetime.fromisoformat(iso_ts.replace("Z", "+00:00"))
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(TZ).strftime("%Y-%m-%d")
+    return dt
+
+
+def local_date(iso_ts: str) -> str:
+    return _instant(iso_ts).astimezone(TZ).strftime("%Y-%m-%d")
+
+
+def _is_counter_restart(total: int, last_total: int | None, mark: int,
+                        when: datetime, latest: datetime | None) -> bool:
+    """Is this Codex token_count event a fresh counter rather than a stale line?
+
+    A restarted counter holds exactly one response, so its cumulative total
+    equals the same event's `last_token_usage` total. Nothing else has that
+    shape: an advancing event mid-segment totals mark + last with a positive
+    mark, a flat repeat sits at the mark, and a replayed line carries a
+    timestamp older than one already seen. See extract_codex.
+    """
+    return (
+        mark > 0
+        and total > 0
+        and total == last_total
+        and total != mark
+        and (latest is None or when >= latest)
+    )
 
 
 def _new_model_bucket():
@@ -213,38 +236,67 @@ def extract_codex():
     work actually happened rather than dumping the whole accumulated
     total onto the day the session finally closed.
 
-    The counter is tracked as a HIGH-WATER MARK: only a total above the
-    highest one seen so far in the file contributes, and a total at or
-    below the mark contributes nothing and does not lower the baseline.
-    An earlier version instead treated a drop as a context-window reset
-    and added the entire new total. A survey of the real logs (55 rollout
-    files, 54 with token data, 2,137 token_count events) says that was
-    both unnecessary and unsafe:
+    COUNTER SEGMENTS: RESTARTS VERSUS STALE LINES
+    ---------------------------------------------
+    Within a run of the counter, the total is tracked as a HIGH-WATER MARK:
+    only a total above the highest one seen so far contributes, and a total
+    at or below the mark contributes nothing and does not lower the
+    baseline. An earlier version read every drop as a context-window reset
+    and added the entire new total, which turns a stale or replayed line
+    into an overcount the append-only ledger freezes forever (totals
+    5000 -> 2000 -> 5200 scored 10,200 against a true 5,200).
 
-      * The cumulative total never decreased -- 0 decreases in 2,137
-        events -- so the reset branch had never actually fired.
-      * Events are already in timestamp order within a file (0 out-of-order
-        events), so there is nothing for a sort to fix.
-      * Compaction does NOT reset the counter. 27 of the 54 sessions run
-        their cumulative total past model_context_window (258,400); the
-        largest reaches 104,986,848, some 406x the window. Codex keeps
-        accumulating for the life of the rollout and opens a new file for
-        a new session, so a genuine "counter went back to zero" event is
-        not a thing the format produces.
+    The July 2026 survey behind the mark (55 rollout files, 2,137
+    token_count events) found the total never decreased and events were
+    always in timestamp order, so the mark alone was enough. It no longer
+    is: newer Codex Desktop builds RESTART the counter mid-session. A
+    September 12, 2026 survey of 170 rollouts found 38 restarts in 21 of
+    them, with daily impact from 2026-08-27. What triggers one is not
+    recorded (they happen in rollouts with no compaction at all). The bare
+    mark ignored every token after a restart until the counter climbed
+    past the old peak, which it rarely does: 266.6M tokens, 24.7% of all
+    Codex usage, went uncounted. Codex's own state database shows the same
+    symptom from the other side -- `threads.tokens_used` holds only the
+    running total since the last restart, so it is no per-thread total
+    either.
 
-    That makes any future decrease a stale, duplicated or out-of-order
-    line rather than a real reset -- and the old branch turned exactly
-    that into an overcount that the append-only ledger would freeze
-    forever (totals 5000 -> 2000 -> 5200 scored 10,200 against a true
-    5,200). The high-water mark scores that sequence at its true 5,200
-    and does not recount tokens below that mark.
+    A restart has an exact signature that a stale line does not share. A
+    fresh counter holds one response, so its total equals the same event's
+    `last_token_usage.total_tokens` -- true of all 38, with every per-type
+    field matching too. An advancing event mid-segment never has that shape
+    (its total is mark + last, and the mark is positive); a flat repeat
+    sits at the mark; a replayed line carries a timestamp older than one
+    already seen. `_is_counter_restart` encodes exactly that. A restart
+    closes the segment: the total mark and every per-type mark return to
+    zero together and the event counts as a rise from zero, so a session
+    contributes the sum of its segments' peaks. Any other drop is still a
+    stale line. Two real cases pin the rule down: back-to-back restarts
+    where the second single response is the larger (44,399 then 46,059;
+    Codex's own response records confirm both), and a restart line written
+    twice (111,014, 111,014), which contributes once.
 
     (`info.last_token_usage.total_tokens` looks like a ready-made
-    per-event delta and matches the rise exactly on all 2,115 events that
-    moved the counter -- but 22 events repeat a *nonzero* last_token_usage
-    while the cumulative total stands still. Summing that field would
-    overcount by 1,350,469 tokens, so the cumulative total stays the
-    authoritative signal.)
+    per-event delta and matches the rise on every event that moves the
+    counter -- but some events repeat a *nonzero* last_token_usage while
+    the cumulative total stands still (22 in the July survey, overcounting
+    by 1,350,469 tokens if summed). So the cumulative total stays the
+    authoritative signal, and `last` is read only to recognise a restart.)
+
+    WHY token_count RATHER THAN token_usage_record
+    ----------------------------------------------
+    About 30 recent rollouts also carry `token_usage_record` rows: one per
+    model response, keyed by `response_id`, with a monotonic
+    `thread_token_usage`. They corroborate the restart rule --
+    restart-aware token_count never exceeds them in any file -- and run
+    7,980,349 tokens (0.6%) higher overall. Every record token_count lacks
+    sits immediately before a `compacted` entry: those are the
+    context-compaction calls, which token_count never reports. token_count
+    remains the authority regardless. It is the only counter in older
+    rollouts, it carries the per-type split this function validates, and
+    choosing a source per file would make the ledger's meaning depend on
+    which Codex version wrote each log. Never add records on top of
+    token_count; the uncounted compaction calls are a known, documented
+    undercount.
 
     PER-TYPE SPLIT, AND WHY IT USES THE SAME GUARD
     ----------------------------------------------
@@ -263,21 +315,26 @@ def extract_codex():
                                            out would add a non-additive key
                                            for no pricing benefit)
 
-    A September 10, 2026 audit found seven advancing events across August 27,
-    September 1, 5, 6, 8 and 9 whose type deltas violated either the total or
-    cached-input nesting. Their totals remain measured; their entire event
-    splits are now unattributed. Never proportionally invent a type split.
-    The six captured days were rebuilt using --repair-codex-days with complete
-    aggregate coverage and private backups. Future split/total disagreement
-    stops the ledger build, rather than freezing an inflated split.
-
     Every one of these is tracked with its OWN high-water mark, by the same
     rule as the total: a value at or below the mark contributes nothing and
-    does not lower the baseline. A stale or replayed event therefore cannot
+    does not lower the baseline, and all of them return to zero together
+    at a counter restart. A stale or replayed event therefore cannot
     inflate a per-type figure any more than it can inflate the aggregate.
     The original July survey found per-event deltas preserved nesting (0 events
     where the cached delta exceeds the input delta, so the uncached
     remainder is never negative); it is still clamped defensively.
+
+    A September 10, 2026 audit found seven advancing events across August 27,
+    September 1, 5, 6, 8 and 9 whose type deltas violated either the total or
+    cached-input nesting, quarantined their splits as unattributed, and
+    rebuilt the six captured days with --repair-codex-days (complete
+    aggregate coverage, private backups). Those seven -- and three later
+    ones -- were counter restarts read against the previous segment's
+    marks. With segment-aware marks every one of them splits cleanly, and
+    no event in the real logs is ambiguous. The quarantine stays for
+    anything that still disagrees: never proportionally invent a type
+    split, and a split/total disagreement stops the ledger build rather
+    than freezing an inflated split.
 
     `cache_write_input_tokens` appears on 244 recent events but is 0 on
     every one of them, so Codex contributes no cache-write tokens and the
@@ -317,14 +374,20 @@ def extract_codex():
     day_projects = defaultdict(lambda: defaultdict(int))
     day_models = _day_models()
     day_unattributed = defaultdict(int)
+    restarts = restarted_files = 0
     session_dirs = [HOME / ".codex" / "sessions", HOME / ".codex" / "archived_sessions"]
 
     for root in session_dirs:
         if not root.exists():
             continue
         for path in root.rglob("*.jsonl"):
+            # The marks belong to the current counter segment. `latest` is
+            # the newest event time seen, so a back-dated line can never pose
+            # as a restart.
             high_water = 0
             marks = {"input_tokens": 0, "cached_input_tokens": 0, "output_tokens": 0}
+            latest = None
+            file_restarts = 0
             project = None
             model = None
             with open(path) as fh:
@@ -355,11 +418,23 @@ def extract_codex():
                     ts = entry.get("timestamp")
                     if total is None or not ts:
                         continue
-                    # Only a new high-water mark contributes. A total that
-                    # is flat or lower is a repeat/stale line: it adds
-                    # nothing and must not drag the baseline down, or the
-                    # tokens between the mark and the stale value would be
-                    # counted a second time when the counter climbs again.
+                    when = _instant(ts)
+                    last_total = (info.get("last_token_usage") or {}).get("total_tokens")
+                    if _is_counter_restart(total, last_total, high_water, when, latest):
+                        # A fresh counter closes the segment. Every mark
+                        # returns to zero together, so this event's whole
+                        # total -- one response -- counts as the new
+                        # segment's first rise.
+                        high_water = 0
+                        marks = dict.fromkeys(marks, 0)
+                        file_restarts += 1
+                    latest = when if latest is None else max(latest, when)
+                    # Within a segment only a new high-water mark
+                    # contributes. A total that is flat or lower is a
+                    # repeat/stale line: it adds nothing and must not drag
+                    # the baseline down, or the tokens between the mark and
+                    # the stale value would be counted a second time when
+                    # the counter climbs again.
                     if total <= high_water:
                         continue
                     delta = total - high_water
@@ -372,11 +447,12 @@ def extract_codex():
                         typed[field] = max(0, value - marks[field])
                         marks[field] = max(marks[field], value)
 
-                    # September 2026 logs contain advancing totals whose type
-                    # counters disagree (including cached deltas larger than
-                    # input deltas). Independent marks must never manufacture
-                    # a split larger than the authoritative total. Keep the
-                    # total high-water rule; quarantine just this event's split.
+                    # Independent per-type marks must never manufacture a
+                    # split larger than the authoritative total. The
+                    # September 2026 disagreements were restarts read against
+                    # the previous segment's marks; anything that still
+                    # disagrees keeps its total and quarantines just this
+                    # event's split.
                     ambiguous = (
                         typed["input_tokens"] + typed["output_tokens"] > delta
                         or typed["cached_input_tokens"] > typed["input_tokens"]
@@ -403,7 +479,12 @@ def extract_codex():
                     bucket["input"] += uncached_input
                     bucket["cache_read"] += cache_read
                     bucket["output"] += output
+            if file_restarts:
+                restarts += file_restarts
+                restarted_files += 1
 
+    if restarts:
+        print(f"  codex: {restarts} counter restarts in {restarted_files} rollouts, each counted as a new segment")
     return daily_tokens, day_projects, day_models, day_unattributed
 
 

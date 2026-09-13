@@ -11,7 +11,7 @@ patterns in `scripts/build_daily_burn.py` and this file together.
 | --- | --- | --- |
 | `claude_code_tokens` | `~/.claude/projects/**/*.jsonl` | Sum of input + cache-creation + cache-read + output tokens per assistant API call, deduplicated by message/request id, bucketed by America/Chicago day. |
 | `claude_code_calls` | same | Count of deduplicated assistant API calls. |
-| `codex_tokens` | `~/.codex/sessions/**/*.jsonl` and `~/.codex/archived_sessions/**/*.jsonl` | Each session's `token_count` events carry a cumulative `total_token_usage.total_tokens`, tracked as a **high-water mark**: only a total above the highest seen so far in that file contributes, and a flat or lower total contributes nothing without lowering the baseline. The rise is attributed to the America/Chicago day of *that* event, so a multi-day session spreads across the days work actually happened instead of dumping its whole total on the closing day. A survey of 55 rollout files / 2,137 events found 0 decreases and 0 out-of-order events, so a decrease can only be a stale or replayed line — never a counter reset. |
+| `codex_tokens` | `~/.codex/sessions/**/*.jsonl` and `~/.codex/archived_sessions/**/*.jsonl` | Each session's `token_count` events carry a cumulative `total_token_usage.total_tokens`. Within a run of the counter it is tracked as a **high-water mark**: only a total above the highest seen so far contributes, and a flat or lower total contributes nothing without lowering the baseline. Newer Codex Desktop builds also **restart** the counter mid-session; a restart is recognised by its exact signature and opens a new segment counted from zero (see [Codex counter restarts](#codex-counter-restarts-september-12-2026)). The rise is attributed to the America/Chicago day of *that* event, so a multi-day session spreads across the days work actually happened instead of dumping its whole total on the closing day. |
 
 These three columns are measurements, not estimates, and their meaning has
 not changed. Everything below is layered on top of them.
@@ -48,7 +48,8 @@ all 2,137 real events). So `cache_read` takes the cached figure, `input`
 takes the uncached remainder, and reasoning is folded into `output` because
 it bills at the output rate. Summing all four fields would double-count
 every cache hit. Each type carries its own high-water mark, by the same rule
-as the aggregate, so a stale event cannot lower its baseline. Advancing but contradictory type deltas are quarantined as described in the September correction below.
+as the aggregate, so a stale event cannot lower its baseline, and every mark
+restarts together with the counter. Advancing but contradictory type deltas are quarantined as described in the September correction below.
 Codex reports no cache-write tokens (`cache_write_input_tokens` appears on
 244 recent events and is 0 on every one), so its `cache_write_*` keys are
 **absent rather than zero**.
@@ -201,6 +202,49 @@ A per-leaf maximum can exceed a daily aggregate maximum when composition
 changes. Such a mismatch now fails the build before output is replaced.
 Corrections must use complete source coverage and explicit repair rather than
 silently changing frozen measurements.
+
+## Codex counter restarts (September 12, 2026)
+
+The seven events above were not bad counters. They were **counter restarts**
+read against the previous segment's per-type marks.
+
+The July survey behind the high-water mark (55 rollouts, 2,137 events) found
+the cumulative total never decreased. Newer Codex Desktop builds do restart it
+mid-session: a survey of 170 rollouts on September 12 found 38 restarts in 21
+of them, from 2026-08-27 on. The bare high-water mark skipped every token
+after a restart until the counter climbed past its old peak, which it rarely
+does.
+
+A restart has an exact signature. A fresh counter holds one response, so its
+total equals the same event's `last_token_usage.total_tokens`, and every
+per-type field matches too — true of all 38. A normal advance cannot have that
+shape (its total is the mark plus its last response), a flat repeat sits at
+the mark, and a replayed line carries an older timestamp than one already
+seen. An event with the signature closes the segment: the total and per-type
+marks return to zero and it counts from zero. Any other drop is still a stale
+line and adds nothing. Codex's own `threads.tokens_used` (in its state
+database) holds only the running total since the last restart, so it cannot
+serve as a check.
+
+| | before | after |
+| --- | ---: | ---: |
+| `codex_tokens`, all days | 1,078,369,395 | 1,344,984,336 (+24.7%) |
+| Codex `unattributed` | 1,295,608 | 449,154 (the 2026-06-08 import only) |
+
+Affected days: August 27–28, September 1–2 and 5–12. Every ambiguous split in
+the audit above, and three later ones, now splits cleanly. The ledger's
+per-column maximum admits the higher counts on the next build without
+`--repair-codex-days`: no fresh split falls below a captured leaf, and
+`unattributed` is recomputed as the residual.
+
+About 30 recent rollouts also carry `token_usage_record` rows, one per model
+response keyed by `response_id`. Restart-aware `token_count` never exceeds
+them in any file. They total 7,980,349 more (0.6%), and every record that
+`token_count` lacks sits immediately before a `compacted` entry: these are
+context-compaction calls. `token_count` stays the only source, because it is
+the only counter in older rollouts and switching per file would make the
+column's meaning depend on which Codex version wrote the log. The compaction
+calls are a known undercount.
 
 ## Calendar metrics and labels
 

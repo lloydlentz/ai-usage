@@ -38,7 +38,8 @@ Fixture ground truth (America/Chicago days):
       cumulative totals 1000, 3000 (07-16) then 8000, 8000 (07-17)
       => 07-16: 3000    07-17: 5000    (deltas, not the 8000 cumulative)
     sessions/.../rollout-stale-replay.jsonl  cwd /Users/demo/project-b
-      cumulative totals 5000, 2000 (stale replay), 5200 all on 07-18
+      cumulative totals 5000, 2000 (stale replay), 5200 all on 07-18; the
+      2000 line's last_token_usage is 400, so it lacks the restart signature
       => 07-18: 5200 -- the high-water mark ignores the dip, so the
          session scores its true final total, not 5000+2000+3200
     sessions/.../rollout-no-meta.jsonl   no session_meta line
@@ -56,6 +57,11 @@ Fixture ground truth (America/Chicago days):
       then turn_context gpt-5.6-sol, cumulative
         in 1500 (900 cached) / out 700 (400 reasoning) / total 2200
       => 07-22: 2200, split terra 1400 / sol 800
+    sessions/.../rollout-restart.jsonl  cwd /Users/demo/project-a
+      turn_context gpt-5.6-sol, cumulative totals 100, 250, then a counter
+      restart to 40 (its last_token_usage is also 40: one response), then 90
+      => 07-24: 340 -- two segments, 250 + 90, split cached 155 /
+         uncached 115 / output 70 because every mark restarts with the total
 """
 
 import json
@@ -264,12 +270,13 @@ class ExtractClaudeCodeTests(FixtureHomeTestCase):
 class ExtractCodexTests(FixtureHomeTestCase):
     def setUp(self):
         super().setUp()
-        (
-            self.tokens,
-            self.projects,
-            self.models,
-            self.unattributed,
-        ) = extract_exact.extract_codex()
+        with redirect_stdout(StringIO()):  # the restart summary line
+            (
+                self.tokens,
+                self.projects,
+                self.models,
+                self.unattributed,
+            ) = extract_exact.extract_codex()
 
     def test_multiday_session_splits_deltas_across_chicago_days(self):
         # This is the subtlest rule in the file: the cumulative counter
@@ -290,21 +297,16 @@ class ExtractCodexTests(FixtureHomeTestCase):
         # The whole point of the high-water mark. Totals go 5000 -> 2000
         # (a stale/duplicated line) -> 5200, and the true burn is 5200.
         #
-        # The previous implementation read the dip as a context-window
-        # reset and added the entire 2000, then 3200 more when the counter
+        # An early implementation read every dip as a context-window reset
+        # and added the entire 2000, then 3200 more when the counter
         # climbed past it again: 5000 + 2000 + 3200 = 10200, nearly 2x --
         # and daily-burn.json freezes captured numbers, so that would be
         # permanent.
         #
-        # Evidence that the dip is never a real reset, from a survey of
-        # the author's 55 real rollout files / 2,137 token_count events:
-        # the cumulative total decreased 0 times; events were already in
-        # timestamp order (0 out-of-order); and compaction does not zero
-        # the counter -- 27 of 54 sessions run past model_context_window
-        # (258,400), the largest reaching 104,986,848, about 406x. Codex
-        # accumulates for the life of a rollout and starts a new file for
-        # a new session. So a decrease can only be a bad line, and the
-        # high-water mark is the reading that cannot inflate.
+        # Codex does now restart its counter mid-session (see the restart
+        # tests below), but a restart holds one response, so its total
+        # equals its own last_token_usage total. This dip's last is 400,
+        # not 2000: it is a bad line, and the mark must not move.
         self.assertEqual(self.tokens["2026-07-18"], 5200)
         self.assertEqual(dict(self.projects["2026-07-18"]), {PROJECT_B: 5200})
 
@@ -342,6 +344,7 @@ class ExtractCodexTests(FixtureHomeTestCase):
                 "2026-07-20": 250,
                 "2026-07-21": 9000,
                 "2026-07-22": 2200,
+                "2026-07-24": 340,
             },
         )
 
@@ -456,6 +459,26 @@ class ExtractCodexTests(FixtureHomeTestCase):
         self.assertNotIn("2026-07-22", self.unattributed)
         self.assertNotIn("2026-07-16", self.unattributed)
 
+    # --- counter restarts -------------------------------------------------
+
+    def test_counter_restart_opens_a_new_segment(self):
+        # 100 -> 250, then a restart to 40 whose last_token_usage is also
+        # 40, then 90. The bare high-water mark scored 250 and dropped the
+        # whole second segment; newer Codex Desktop builds restart like this
+        # mid-session, which undercounted September by about a quarter.
+        self.assertEqual(self.tokens["2026-07-24"], 340)
+        self.assertEqual(dict(self.projects["2026-07-24"]), {PROJECT_A: 340})
+
+    def test_per_type_marks_restart_with_the_counter(self):
+        # Marks left at the first segment's peak (200 in / 120 cached /
+        # 50 out) would read the second segment's split as nothing, or as
+        # ambiguous. They restart together with the total instead.
+        entry = self.models["2026-07-24"]["gpt-5.6-sol"]
+        self.assertEqual(entry["cache_read"], 155)  # 120 + 35
+        self.assertEqual(entry["input"], 115)  # (200 - 120) + (70 - 35)
+        self.assertEqual(entry["output"], 70)  # 50 + 20
+        self.assertNotIn("2026-07-24", self.unattributed)
+
 
 class ToolBreakdownTests(unittest.TestCase):
     """The rendered shape has to stay byte-stable across hourly cron runs."""
@@ -548,6 +571,7 @@ class ExtractMainTests(FixtureHomeTestCase):
                 "2026-07-21",
                 "2026-07-22",
                 "2026-07-23",
+                "2026-07-24",
             ],
         )
 

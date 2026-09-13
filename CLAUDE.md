@@ -169,7 +169,9 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
   - Bucketed to America/Chicago timezone day
 - **Codex** source: `~/.codex/sessions/**/*.jsonl` and `~/.codex/archived_sessions/**/*.jsonl` (Codex CLI session rollouts)
   - `token_count` events carry a cumulative running total per session; the script attributes the *delta* between consecutive events to the day of each event, so a multi-day session spreads across the days work actually happened
-  - Attribution is a **high-water mark**, not a raw delta: only a total that exceeds the session's previous maximum contributes, and a lower total is treated as an out-of-order or duplicated line rather than a context reset. Each token field carries its own mark. (An earlier version treated a drop as a counter reset and double-counted; see the docstring in `extract_exact.py` for the session evidence.)
+  - Attribution is a **high-water mark within each counter segment**, not a raw delta: only a total that exceeds the segment's previous maximum contributes, and a lower total is treated as an out-of-order or duplicated line. (An earlier version read every drop as a reset and double-counted.)
+  - Newer Codex Desktop builds also **restart** the counter mid-session. A restart is recognized by its exact signature — the total equals the event's own `last_token_usage.total_tokens` (one response), is not a flat repeat of the mark, and is not back-dated — and it opens a new segment whose rise counts from zero. Each token field carries its own mark, and all marks restart together. The bare high-water mark missed about a quarter of Codex usage from 2026-08-27 on
+  - `token_count` stays the authority even where `token_usage_record` rows exist: those add only the context-compaction calls (~0.6%), which older rollouts never recorded. See the docstring in `extract_exact.py` for the evidence
   - Per-project attribution keys off the session's `session_meta` `payload.cwd`, slash-to-dash normalized so it matches Claude Code's project-directory keys
   - Bucketed to America/Chicago day
 - Outputs:
@@ -307,7 +309,8 @@ validation and requires an explicit audited correction.
   after verifying that no refresh is running.
 - Browser tests cover both themes, mobile layout, filters, label export and
   keyboard navigation. Frontend tests cover calendar math and cost states;
-  pipeline regression fixtures cover contradictory advancing token counters.
+  pipeline regression fixtures cover contradictory advancing token counters
+  and mid-session counter restarts.
 
 ### Model share bar
 
