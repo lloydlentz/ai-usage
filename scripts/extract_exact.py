@@ -67,6 +67,7 @@ Design notes, because both matter downstream:
   from before this breakdown existed have no `breakdown` key at all, which
   is the signal for "never captured", as distinct from a breakdown of zeros.
 """
+from __future__ import annotations  # allow X | Y union syntax on Python 3.9
 
 import hashlib
 import json

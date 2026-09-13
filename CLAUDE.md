@@ -203,6 +203,12 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 - Uses SSH key authentication (not stored credentials)
 - Runs pipeline tests directly with Python, so cron does not need Node/npm or
   an interactive shell's PATH. Frontend checks still run in GitHub Actions.
+- Cron's minimal PATH resolves `python3` to macOS's `/usr/bin/python3` (3.9),
+  not the newer Homebrew Python an interactive shell finds. The pipeline and
+  its tests must run on 3.9: a module with `X | None` annotations needs
+  `from __future__ import annotations` (`tests/test_cron_runtime.py` enforces
+  it), and pipeline changes should be checked with
+  `/usr/bin/python3 -m unittest discover -s tests -t .`
 
 ### Deployment
 
