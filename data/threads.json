@@ -2171,18 +2171,18 @@
         "unattributed": 0
       },
       "2026-09-13": {
-        "tokens": 1061979,
-        "cost_usd": 5.43794,
+        "tokens": 8261008,
+        "cost_usd": 10.287726,
         "unpriced_tokens": 0,
         "models": {
           "claude-opus-5": {
-            "calls": 2,
-            "input": 34,
+            "calls": 15,
+            "input": 362,
             "cache_write_5m": 0,
-            "cache_write_1h": 486419,
-            "cache_read": 563860,
-            "output": 11666,
-            "tokens": 1061979
+            "cache_write_1h": 529519,
+            "cache_read": 7685202,
+            "output": 45925,
+            "tokens": 8261008
           }
         },
         "unattributed": 0
