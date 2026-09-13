@@ -496,6 +496,118 @@ def build_row(key: str, ex: dict, prev_exact: dict | None,
     return row
 
 
+def thread_day_tokens(entry: dict) -> int:
+    """A thread-day's tokens: every model's split plus the unattributed rest."""
+    models = (entry.get("models") or {}).values()
+    return sum((m.get("tokens") or 0) for m in models) + (entry.get("unattributed") or 0)
+
+
+def build_threads(fresh: list[dict], captured: list[dict], rows: list[dict],
+                  rates: dict) -> list[dict]:
+    """Merge extracted thread days with the captured ones, then price them.
+
+    A thread-day is the part of one tool's daily column that one conversation
+    spent. The ledger freezes the column; this freezes its split across
+    threads -- but WHOLE, one (day, tool) at a time, never thread by thread.
+    Attribution can legitimately move: Claude Code writes a forked session's
+    replayed calls into both transcripts and counts them once, so when the
+    original transcript is pruned the survivor claims them. A per-thread
+    maximum would then count those tokens under both threads. Instead each
+    (day, tool) takes the split from one source:
+
+      * the fresh extraction, when it accounts for the whole column (the
+        logs for that day are still complete), otherwise
+      * whichever of the fresh and captured splits accounts for more of it.
+
+    Neither may exceed the column, and the build stops if both do. Tokens a
+    day's split does not reach (logs pruned before threads were captured) stay
+    in the ledger unattributed to any thread. Titles come from the freshest
+    source that has one; cost is re-derived from the rate card on every run.
+    """
+    columns = {row["date"]: row for row in rows}
+
+    def splits(threads: list[dict]) -> dict:
+        out = defaultdict(dict)
+        for thread in threads:
+            for day, entry in (thread.get("days") or {}).items():
+                out[(day, thread["tool"])][thread["key"]] = entry
+        return out
+
+    fresh_splits, captured_splits = splits(fresh), splits(captured)
+    known: dict[str, dict] = {}
+    for thread in (*captured, *fresh):  # fresh last, so a fresh title wins
+        entry = known.setdefault(thread["key"], {"tool": thread["tool"], "title": None})
+        entry["title"] = thread.get("title") or entry["title"]
+
+    chosen: dict[str, dict] = defaultdict(dict)
+    for day, tool in sorted(set(fresh_splits) | set(captured_splits)):
+        column = exact_count(columns.get(day), BREAKDOWN_TOOLS[tool])
+        candidates = [
+            (sum(thread_day_tokens(entry) for entry in split.values()), split)
+            for split in (fresh_splits.get((day, tool)), captured_splits.get((day, tool)))
+            if split
+        ]
+        fitting = [candidate for candidate in candidates if candidate[0] <= column]
+        if not fitting:
+            raise ValueError(
+                f"{day} {tool} threads sum to at least "
+                f"{min(total for total, _ in candidates):,} but "
+                f"{BREAKDOWN_TOOLS[tool]} is {column:,}; the thread split exceeds its column"
+            )
+        # max() keeps the first of equal totals, and fresh is listed first.
+        _, split = max(fitting, key=lambda candidate: candidate[0])
+        for key, entry in split.items():
+            if thread_day_tokens(entry) > 0:
+                chosen[key][day] = entry
+
+    out = []
+    for key in sorted(chosen):
+        tool = known[key]["tool"]
+        days = {}
+        for day in sorted(chosen[key]):
+            entry = chosen[key][day]
+            models = {
+                model: {k: v for k, v in counts.items() if k not in ("cost_usd", "unpriced_tokens")}
+                for model, counts in sorted((entry.get("models") or {}).items())
+            }
+            unattributed = entry.get("unattributed") or 0
+            cost, _ = price_breakdown({tool: {"models": deepcopy(models), "unattributed": unattributed}}, rates)
+            days[day] = {
+                "tokens": thread_day_tokens(entry),
+                "cost_usd": cost["total"],
+                "unpriced_tokens": cost["unpriced_tokens"],
+                "models": models,
+                "unattributed": unattributed,
+            }
+        out.append({"key": key, "tool": tool, "title": known[key]["title"], "days": days})
+    return out
+
+
+def validate_threads(threads: list[dict], rows: list[dict]) -> None:
+    """Fail before publishing a thread split that contradicts the ledger."""
+    columns = {row["date"]: row for row in rows}
+    keys = [thread["key"] for thread in threads]
+    if keys != sorted(set(keys)):
+        raise ValueError("Thread keys must be unique and sorted")
+    per_column: dict[tuple[str, str], int] = defaultdict(int)
+    for thread in threads:
+        if thread["tool"] not in BREAKDOWN_TOOLS:
+            raise ValueError(f"{thread['key']}: unknown tool {thread['tool']!r}")
+        for day, entry in thread["days"].items():
+            for counts in entry["models"].values():
+                if counts["tokens"] != sum(counts.get(t) or 0 for t in TOKEN_TYPES):
+                    raise ValueError(f"{thread['key']} {day}: invalid model split")
+            if entry["tokens"] <= 0 or entry["tokens"] != thread_day_tokens(entry):
+                raise ValueError(f"{thread['key']} {day}: thread tokens do not reconcile")
+            per_column[(day, thread["tool"])] += entry["tokens"]
+    for (day, tool), tokens in sorted(per_column.items()):
+        column = exact_count(columns.get(day), BREAKDOWN_TOOLS[tool])
+        if tokens > column:
+            raise ValueError(
+                f"{day}: {tool} threads sum to {tokens:,} but {BREAKDOWN_TOOLS[tool]} is {column:,}"
+            )
+
+
 def repair_codex_breakdowns(existing: dict, exact: dict, days: list[str]) -> dict:
     """Explicit, audited correction; never lower the aggregate or repair pruned days."""
     repaired = deepcopy(existing)
@@ -601,10 +713,24 @@ def main(repair_days: list[str] | None = None):
         day += timedelta(days=1)
 
     validate_rows(rows)
+    threads_path = DATA / "threads.json"
+    fresh_threads_path = DATA / "private" / "thread-daily.json"
+    threads = build_threads(
+        json.loads(fresh_threads_path.read_text()) if fresh_threads_path.exists() else [],
+        json.loads(threads_path.read_text()) if threads_path.exists() else [],
+        rows,
+        rates,
+    )
+    validate_threads(threads, rows)
+
     staged_path = out_path.with_suffix(".tmp")
     with open(staged_path, "w") as fh:
         json.dump(rows, fh, indent=2)
     staged_path.replace(out_path)
+    staged_threads = threads_path.with_suffix(".tmp")
+    with open(staged_threads, "w") as fh:
+        json.dump(threads, fh, indent=2)
+    staged_threads.replace(threads_path)
 
     total_cost = round(sum((r.get("cost_usd") or {}).get("total") or 0 for r in rows), 6)
     unpriced_tokens = sum(
@@ -636,6 +762,9 @@ def main(repair_days: list[str] | None = None):
 
     print(f"wrote {len(rows)} rows  ({frozen_count} frozen from previous capture, {new_count} live/new)")
     print(f"grand total: {sum(r['total'] for r in rows):,} tokens")
+    attributed = sum(day["tokens"] for thread in threads for day in thread["days"].values())
+    measured = sum(r["codex_tokens"] + r["claude_code_tokens"] for r in rows)
+    print(f"threads: {len(threads)}, holding {attributed:,} of {measured:,} measured tokens")
 
     by_type = defaultdict(float)
     for row in rows:

@@ -6,6 +6,7 @@ import { movingAverage7 } from "../lib/token-math";
 import { lastCalendarDays, freshness, getWindowRows, getWindowRange, moveDateRange, dayNumber } from "../lib/date-windows";
 import { modelTokenShares, UNATTRIBUTED_MODEL } from "../lib/model-share";
 import { parseDriverLabels } from "../lib/driver-labels";
+import { normalizeThreads, summarizeThreads } from "../lib/threads";
 import { CellCost, BasisPill } from "../app/components/cost";
 
 const rows = normalizeRows([
@@ -91,4 +92,38 @@ test("sliding preserves inclusive duration across DST, gaps, and both history bo
   assert.deepEqual(moveDateRange(range, 100, bounds), { start: "2026-03-29", end: "2026-03-31" });
   assert.deepEqual(moveDateRange(bounds, 100, bounds), bounds);
   assert.equal(dayNumber("2026-03-09") - dayNumber("2026-03-07"), 2);
+});
+
+test("thread summaries count only days inside the range and keep partial pricing", () => {
+  const threads = normalizeThreads([
+    { key: "cx-a", tool: "codex", title: "Long thread", days: {
+      "2026-09-01": { tokens: 100, cost_usd: 1, unpriced_tokens: 0, models: { "gpt-5.6-sol": { tokens: 100 } } },
+      "2026-09-05": { tokens: 900, cost_usd: 2, unpriced_tokens: 0, models: { "gpt-6-astra": { tokens: 900 } } },
+    } },
+    { key: "cc-b", tool: "claude_code", title: "  ", days: {
+      "2026-09-04": { tokens: 500, cost_usd: 3, unpriced_tokens: 50, models: { "claude-opus-5": { tokens: 450 }, "<synthetic>": { tokens: 0 } } },
+    } },
+    { key: "cc-empty", tool: "claude_code", title: "no tokens", days: { "2026-09-04": { tokens: 0 } } },
+    { key: "xx-other", tool: "chatgpt", title: "unknown tool", days: { "2026-09-04": { tokens: 5 } } },
+  ]);
+  assert.deepEqual(threads.map((thread) => [thread.key, thread.title]), [["cx-a", "Long thread"], ["cc-b", null]]);
+  const early = { start: "2026-09-01", end: "2026-09-04" };
+  const month = { start: "2026-09-01", end: "2026-09-30" };
+  assert.deepEqual(summarizeThreads(threads, early).map((t) => [t.key, t.tokens, t.model]),
+    [["cc-b", 500, "claude-opus-5"], ["cx-a", 100, "gpt-5.6-sol"]]);
+  assert.equal(summarizeThreads(threads, early)[0].cost.kind, "lower-bound");
+  assert.deepEqual(summarizeThreads(threads, month).map((t) => [t.key, t.tokens, t.activeDays, t.firstDay, t.lastDay, t.model]),
+    [["cx-a", 1000, 2, "2026-09-01", "2026-09-05", "gpt-6-astra"], ["cc-b", 500, 1, "2026-09-04", "2026-09-04", "claude-opus-5"]]);
+  assert.deepEqual(summarizeThreads(threads, early, { sort: "recent" }).map((t) => t.key), ["cc-b", "cx-a"]);
+  assert.deepEqual(summarizeThreads(threads, month, { tool: "claude_code" }).map((t) => t.key), ["cc-b"]);
+  assert.deepEqual(summarizeThreads(threads, { start: "2026-09-10", end: "2026-09-30" }), []);
+});
+
+test("a thread whose tokens are all unpriced is not priced, never $0", () => {
+  const [thread] = summarizeThreads(normalizeThreads([
+    { key: "cx-i", tool: "codex", title: "Import", days: { "2026-06-08": { tokens: 9000, cost_usd: 0, unpriced_tokens: 9000, models: {} } } },
+  ]), { start: "2026-06-01", end: "2026-06-30" });
+  assert.equal(thread.cost.kind, "unknown");
+  assert.equal(thread.model, null);
+  assert.doesNotMatch(renderToStaticMarkup(<CellCost cost={thread.cost} />), /\$0/);
 });

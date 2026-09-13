@@ -58,12 +58,13 @@ The choice persists to `localStorage` under `dashboard-theme`, and is applied bo
 2. **Hero row** (`.heroRow`): full-width `TickerHeroContent` / `PrintRunHero`
 3. **Usage timeline** (`.timelineRow`): "Daily burn" labels the compact tool totals and "Usage timeline" sits above the selected dates;, all-time chart with a movable date selection, and the selected period's model-share bar
 4. **Ledger** (`.ledger`): the `ShapeShift` chart shows selected-period token volume beside its cost at API list prices. See "The ledger" below
-5. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
-6. **Stats**: total burn, peak day, 7d average, active days
-7. **Where the money went** (cost by model) + **Which agent spent it** (cost by tool)
-8. **Exact beside estimated** (source split) + **What is burning tokens** (drivers)
-9. **How much of it was writing** (fermi equivalents) + **Peak day**
-10. **Last 30 days** moving-average table, then the footer note
+5. **Thread drilldown** (`.threadRow`): "Which threads burned it" ranks Claude Code and Codex conversation threads by their tokens inside the selected dates. See "Thread drilldown" below
+6. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
+7. **Stats**: total burn, peak day, 7d average, active days
+8. **Where the money went** (cost by model) + **Which agent spent it** (cost by tool)
+9. **Exact beside estimated** (source split) + **What is burning tokens** (drivers)
+10. **How much of it was writing** (fermi equivalents) + **Peak day**
+11. **Last 30 days** moving-average table, then the footer note
 
 ### The ledger
 
@@ -118,6 +119,7 @@ one. Table columns carry the qualifier in the column header
 - Ticker-only: `TickerTape`, `TickerHeroContent`
 - Print Run-only: `PrintRunHero`
 - `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with today's, last-seven-day, selected-period and all-time measured tokens. "Today" is the viewer's America/Chicago day (the same `today` state the ticker tape reads); a day with no row shows "no reading", never 0. Recent trends span 14 calendar days; missing days break the line.
+- `ThreadDrilldown` (`app/components/thread-drilldown.tsx`): top-10 table of threads for the selected dates, with Tool and Order (most tokens / most recent) selects, a "Show all" toggle, cost with the `.thBasis` header, and a "Not attributed to a thread" footer row so the table adds up to the period's measured tokens
 - Shared: `ThemeToggle`, `Metric`, `Panel`, and the `buildDriverRows()` helper
 
 **Styling:** `app/globals.css`
@@ -153,6 +155,10 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 - `WindowKey`: 1, 3, 7, or 31 days, 3 or 6 calendar months, or all time; defaults to all time, with period and custom date controls hidden by default; click the refresh wording after the updated timestamp to toggle them
 - `getWindowRange()`: inclusive, history-clamped calendar boundaries for presets, even when days are missing. `moveDateRange()` shifts without changing duration and stops at history bounds. `getWindowRows()` filters using these boundaries; `toUtcDate()` parses dates on a fixed UTC clock.
 
+**threads.ts**: Thread drilldown data
+- `normalizeThreads()`: parse `data/threads.json`, dropping unknown tools and empty days; a missing title is `null` (rendered "Untitled thread")
+- `summarizeThreads(threads, range, { tool, sort })`: each thread's tokens, cost (`CostKnowledge` via `subtotalCost`), active dates and dominant model **inside the range only**, sorted by tokens or by most recent activity
+
 **token-math.ts**: Calculations
 - `formatTokens()`: B above 1B, M above 1M, K above 1K, otherwise the raw number (e.g., "2.48B", "263.3M")
 - `formatUsd()` / `formatPct()`: hand-rolled, not `Intl` — the page is prerendered in CI and hydrated in the browser, and the two do not have to share ICU data
@@ -177,6 +183,7 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 - Outputs:
   - `data/exact-daily.json` — one row per day (`date`, `codex_tokens`, `claude_code_tokens`, `claude_code_calls`)
   - `data/private/day-detail.json` — per-project breakdown used to hand-label drivers. Gitignored; never ship or deploy it
+  - `data/private/thread-daily.json` — the same counts per conversation thread: an opaque `cc-`/`cx-` key (a hash of the session id), a title, and a per-day, per-model split. A Claude Code session plus its sub-agent transcripts is one thread; a Codex sub-agent thread folds into its parent. Titles are Claude's latest `custom-title`, else its `ai-title`; for Codex, `threads.name`/`title` in `~/.codex/state_5.sqlite`, else `session_index.jsonl`. Transcripts are walked in sorted order so a replayed call is claimed by the same thread every run
 
 **build_daily_burn.py**: Merge exact + estimates into final dataset
 - Reads `data/exact-daily.json` and existing `data/daily-burn.json`
@@ -187,11 +194,11 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
   - ChatGPT: 15k Mon/Wed/Fri
   - Gemini: 50k Tue/Thu + 8k Mon/Fri
 - **Driver labels**: hand-maintained `DRIVERS` dict keyed by date. A day with exact usage but no entry falls back to `"unlabeled"`; a day with only estimates gets the `CHAT_ONLY` label
-- Output: `data/daily-burn.json` (full merged dataset) + `data/meta.json` (refreshed_at timestamp)
+- Output: `data/daily-burn.json` (full merged dataset) + `data/meta.json` (refreshed_at timestamp) + `data/threads.json` (the priced thread split; see "Thread drilldown")
 
 **refresh_and_push.sh**: Cron entry point
 - Runs extract → build → commit → push via SSH
-- Stages only `data/daily-burn.json` and `data/meta.json`; skips the push if nothing changed
+- Stages only `data/daily-burn.json`, `data/meta.json` and `data/threads.json`; skips the push if nothing changed
 - Installed in `crontab -e` as: `0 * * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh`
 - Uses SSH key authentication (not stored credentials)
 - Runs pipeline tests directly with Python, so cron does not need Node/npm or
@@ -200,7 +207,7 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 ### Deployment
 
 **GitHub Actions** (`.github/workflows/deploy.yml`)
-- Triggered by pushes to main that touch `data/daily-burn.json`, `data/meta.json`, `data/pricing.json`, `app/**`, `lib/**`, `public/**`, `next.config.ts`, or `package.json` — plus manual `workflow_dispatch`
+- Triggered by pushes to main that touch `data/daily-burn.json`, `data/meta.json`, `data/threads.json`, `data/pricing.json`, `app/**`, `lib/**`, `public/**`, `next.config.ts`, or `package.json` — plus manual `workflow_dispatch`
 - Costs are precomputed into `daily-burn.json`, so a rate change normally arrives with a data refresh; `data/pricing.json` is listed so a pricing-only correction still rebuilds
 - Builds with Node 22 and Python 3.12 → `npm ci` → `npm run check` → browser tests → out/. Pull requests run the same checks in `check.yml`.
 - Deploys out/ to GitHub Pages
@@ -278,7 +285,7 @@ validation and requires an explicit audited correction.
 
 - **basePath logic**: In production, basePath is `/ai-usage`; in development (NODE_ENV), it's empty for local testing. `app/layout.tsx` repeats the same expression for the favicon path, because metadata icon paths aren't auto-prefixed — keep the two in sync
 - **Pre-commit hooks**: None configured
-- **Committed data**: `data/private/` and `data/exact-daily.json` are gitignored. `data/daily-burn.json`, `data/meta.json`, and `data/pricing.json` are committed and deployed. `pricing.json` is the hand-maintained rate card — no pipeline logic hard-codes a price; edit it and re-run `build_daily_burn.py` and the whole ledger reprices (cost is derived, never frozen)
+- **Committed data**: `data/private/` and `data/exact-daily.json` are gitignored. `data/daily-burn.json`, `data/meta.json`, and `data/pricing.json` are committed and deployed. So is `data/threads.json`, **thread titles included**: the owner chose to publish them. Anything that must not ship belongs in `data/private/`. `pricing.json` is the hand-maintained rate card — no pipeline logic hard-codes a price; edit it and re-run `build_daily_burn.py` and the whole ledger reprices (cost is derived, never frozen)
 - **Permissions** (`.claude/settings.local.json`, itself gitignored): Allows `npm run *`, reads under `~/.claude` and `~/.gemini`, and the preview-server tool
 - **GitHub Auth**: Uses SSH key-based authentication (ed25519, added to GitHub account)
 - **Static export**: Next.js builds to `out/` directory (no server runtime)
@@ -323,3 +330,23 @@ segment widths), and the legend offers keyboard/touch inspection for tiny
 segments. The bar follows the selected period while the timeline keeps all history. Periods are
 anchored to the latest recorded day; month windows use clamped calendar-month
 arithmetic, and short day windows include the ending day.
+
+### Thread drilldown
+
+`app/components/thread-drilldown.tsx` ranks conversation threads from both
+tools for the selected dates. `data/threads.json` holds each thread's measured
+tokens per day, with its per-model split and cost at API list prices, so a
+thread counts only its days inside the selection and the table follows the
+timeline like every other panel. A "Not attributed to a thread" row carries
+the measured tokens no captured thread accounts for (Claude Code logs pruned
+before thread capture began), so the table always adds up to the period's
+measured total. Chat estimates never appear here.
+
+The thread split is frozen like the ledger, but **whole per (day, tool)**.
+`build_threads()` takes the fresh extraction's split when it accounts for the
+entire column, and otherwise whichever of the fresh and captured splits covers
+more. Per-thread maxima would double-count: Claude Code writes a forked
+session's replayed calls into both transcripts and counts them once, so when
+the original transcript is pruned the survivor claims them. `validate_threads()`
+stops the build if a day's threads ever exceed its column, and a published-data
+test re-checks the committed file against the ledger and the rate card.

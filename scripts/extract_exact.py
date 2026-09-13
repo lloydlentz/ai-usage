@@ -8,6 +8,10 @@ Outputs:
                                  directory) and Codex (keyed by session cwd)
                                  usage. Stays local; never ship or deploy this
                                  file.
+  data/private/thread-daily.json - the same exact counts per conversation
+                                 thread, with titles. build_daily_burn.py
+                                 reconciles it with the ledger and publishes
+                                 the result as data/threads.json.
 
 Day bucketing uses America/Chicago.
 
@@ -64,8 +68,11 @@ Design notes, because both matter downstream:
   is the signal for "never captured", as distinct from a breakdown of zeros.
 """
 
+import hashlib
 import json
+import sqlite3
 from collections import defaultdict
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -136,8 +143,96 @@ def _day_models():
     return defaultdict(_new_model_map)
 
 
-def extract_claude_code():
+def thread_key(tool: str, session_id: str) -> str:
+    """Stable, opaque key for one conversation thread.
+
+    The raw session id is never published. A short hash of it is stable
+    across runs, which is all build_daily_burn needs to freeze a thread's days.
+    """
+    prefix = {"claude_code": "cc", "codex": "cx"}[tool]
+    return f"{prefix}-{hashlib.sha1(session_id.encode()).hexdigest()[:12]}"
+
+
+def _clean_title(value) -> str | None:
+    """A title on one line, capped; None when there is nothing to show."""
+    if not isinstance(value, str):
+        return None
+    return " ".join(value.split())[:120] or None
+
+
+def _new_thread_day():
+    return {"models": _new_model_map(), "unattributed": 0}
+
+
+def _thread(threads: dict, tool: str, session_id: str) -> dict:
+    """The collector entry for one thread, created on first use."""
+    return threads.setdefault(
+        thread_key(tool, session_id),
+        {"tool": tool, "title": None, "days": defaultdict(_new_thread_day)},
+    )
+
+
+def _codex_thread(threads: dict, meta: dict, session_id: str) -> dict:
+    """A Codex rollout's thread: its own, or its parent's for a sub-agent."""
+    title, parent = meta.get(session_id, (None, None))
+    if parent:
+        session_id, title = parent, meta.get(parent, (None, None))[0]
+    thread = _thread(threads, "codex", session_id)
+    thread["title"] = thread["title"] or title
+    return thread
+
+
+def _codex_thread_meta() -> dict:
+    """{session id: (title, parent id)} from Codex's own thread records.
+
+    Codex keeps thread names in its state database (`threads.name` for a
+    rename, `threads.title` otherwise) and, for older threads, in
+    session_index.jsonl. Both are optional: a missing, locked or reshaped
+    database costs the titles, never a token. A sub-agent thread records its
+    parent in `source`, and its tokens roll into the parent's thread -- the
+    way Claude Code's sub-agent transcripts sit inside their session.
+    """
+    meta = {}
+    index = HOME / ".codex" / "session_index.jsonl"
+    if index.exists():
+        for line in index.open():
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(entry, dict) and entry.get("id"):
+                meta[entry["id"]] = (_clean_title(entry.get("thread_name")), None)
+
+    databases = [
+        path for path in (HOME / ".codex").glob("state_*.sqlite")
+        if path.stem.rpartition("_")[2].isdigit()
+    ]
+    if not databases:
+        return meta
+    database = max(databases, key=lambda path: int(path.stem.rpartition("_")[2]))
+    try:
+        with closing(sqlite3.connect(f"{database.as_uri()}?mode=ro", uri=True)) as db:
+            records = db.execute("select id, name, title, source from threads").fetchall()
+    except sqlite3.Error:
+        return meta
+    for thread_id, name, title, source in records:
+        parent = None
+        if isinstance(source, str) and source.startswith("{"):
+            try:
+                parent = json.loads(source)["subagent"]["thread_spawn"]["parent_thread_id"]
+            except (KeyError, TypeError, json.JSONDecodeError):
+                parent = None
+        indexed = meta.get(thread_id, (None, None))[0]
+        meta[thread_id] = (_clean_title(name) or _clean_title(title) or indexed, parent)
+    return meta
+
+
+def extract_claude_code(threads: dict | None = None):
     """Per-day exact tokens, API call counts and per-model type splits.
+
+    Pass a dict as `threads` to collect the same counts per conversation as
+    well: a session and its sub-agent transcripts are one thread, titled by
+    its latest rename, else by Claude's own summary title.
 
     Source: ~/.claude/projects/**/*.jsonl, `assistant` entries, `message.usage`.
 
@@ -166,16 +261,32 @@ def extract_claude_code():
     day_projects = defaultdict(lambda: defaultdict(int))
     day_models = _day_models()
     seen = set()
+    titles = defaultdict(dict)
+    root = HOME / ".claude" / "projects"
 
-    for path in (HOME / ".claude" / "projects").rglob("*.jsonl"):
-        project = path.parent.name
+    # Sorted, so the transcript that claims a replayed call (see `seen`) is the
+    # same on every run and a thread's share of a day does not flap hourly.
+    for path in sorted(root.rglob("*.jsonl")):
+        # <project>/<session>.jsonl, or <project>/<session>/subagents/*.jsonl
+        # for a sub-agent's transcript, which belongs to its session's thread.
+        parts = path.relative_to(root).parts
+        project = parts[0]
+        session_id = parts[1] if len(parts) > 2 else path.stem
         with open(path) as fh:
             for line in fh:
                 try:
                     entry = json.loads(line)
                 except json.JSONDecodeError:
                     continue
-                if entry.get("type") != "assistant":
+                kind = entry.get("type")
+                if kind in ("custom-title", "ai-title"):
+                    # A rename (custom-title) outranks Claude's own summary
+                    # (ai-title); within each kind the latest line wins.
+                    title = _clean_title(entry.get("customTitle" if kind == "custom-title" else "aiTitle"))
+                    if title:
+                        titles[session_id][kind] = title
+                    continue
+                if kind != "assistant":
                     continue
                 message = entry.get("message") or {}
                 usage = message.get("usage")
@@ -216,19 +327,30 @@ def extract_claude_code():
                 daily_calls[day] += 1
                 day_projects[day][project] += tokens
 
-                bucket = day_models[day][model]
-                bucket["calls"] += 1
-                bucket["input"] += inp
-                bucket["cache_write_5m"] += write_5m
-                bucket["cache_write_1h"] += write_1h
-                bucket["cache_read"] += cache_read
-                bucket["output"] += out
+                buckets = [day_models[day][model]]
+                if threads is not None:
+                    buckets.append(_thread(threads, "claude_code", session_id)["days"][day]["models"][model])
+                for bucket in buckets:
+                    bucket["calls"] += 1
+                    bucket["input"] += inp
+                    bucket["cache_write_5m"] += write_5m
+                    bucket["cache_write_1h"] += write_1h
+                    bucket["cache_read"] += cache_read
+                    bucket["output"] += out
 
+    if threads is not None:
+        for session_id, found in titles.items():
+            thread = threads.get(thread_key("claude_code", session_id))
+            if thread is not None:
+                thread["title"] = found.get("custom-title") or found.get("ai-title")
     return daily_tokens, daily_calls, day_projects, day_models
 
 
-def extract_codex():
+def extract_codex(threads: dict | None = None):
     """Per-day exact tokens and per-model type splits from ~/.codex rollouts.
+
+    Pass a dict as `threads` to collect the same counts per conversation as
+    well (see _codex_thread_meta for titles and sub-agent threads).
 
     token_count events carry a cumulative running total per session.
     We attribute the *rise* in that total to the day of each event, so a
@@ -375,6 +497,7 @@ def extract_codex():
     day_models = _day_models()
     day_unattributed = defaultdict(int)
     restarts = restarted_files = 0
+    codex_meta = _codex_thread_meta() if threads is not None else {}
     session_dirs = [HOME / ".codex" / "sessions", HOME / ".codex" / "archived_sessions"]
 
     for root in session_dirs:
@@ -390,6 +513,8 @@ def extract_codex():
             file_restarts = 0
             project = None
             model = None
+            session_id = None
+            thread = None
             with open(path) as fh:
                 for line in fh:
                     try:
@@ -404,6 +529,7 @@ def extract_codex():
                         cwd = payload.get("cwd")
                         if cwd:
                             project = cwd.replace("/", "-")
+                        session_id = session_id or payload.get("id") or payload.get("session_id")
                         continue
 
                     # turn_context announces the model in force from here on.
@@ -475,10 +601,17 @@ def extract_codex():
                     if unattributed:
                         day_unattributed[day] += unattributed
 
-                    bucket = day_models[day][model or "<unknown>"]
-                    bucket["input"] += uncached_input
-                    bucket["cache_read"] += cache_read
-                    bucket["output"] += output
+                    buckets = [day_models[day][model or "<unknown>"]]
+                    if threads is not None:
+                        if thread is None:
+                            thread = _codex_thread(threads, codex_meta, session_id or path.stem)
+                        thread_day = thread["days"][day]
+                        thread_day["unattributed"] += unattributed
+                        buckets.append(thread_day["models"][model or "<unknown>"])
+                    for bucket in buckets:
+                        bucket["input"] += uncached_input
+                        bucket["cache_read"] += cache_read
+                        bucket["output"] += output
             if file_restarts:
                 restarts += file_restarts
                 restarted_files += 1
@@ -517,8 +650,9 @@ def tool_breakdown(models: dict, types: tuple, unattributed: int = 0,
 
 
 def main():
-    cc_tokens, cc_calls, day_projects, cc_models = extract_claude_code()
-    codex_tokens, codex_day_projects, codex_models, codex_unattributed = extract_codex()
+    threads = {}
+    cc_tokens, cc_calls, day_projects, cc_models = extract_claude_code(threads)
+    codex_tokens, codex_day_projects, codex_models, codex_unattributed = extract_codex(threads)
 
     for day, projects in codex_day_projects.items():
         for project, tokens in projects.items():
@@ -559,6 +693,28 @@ def main():
     with open(PRIVATE_DIR / "day-detail.json", "w") as fh:
         json.dump(detail, fh, indent=2)
 
+    # The same counts per thread, titles included. build_daily_burn.py
+    # reconciles this with the ledger before anything is published.
+    thread_rows = [
+        {
+            "key": key,
+            "tool": thread["tool"],
+            "title": thread["title"],
+            "days": {
+                day: tool_breakdown(
+                    counts["models"],
+                    CLAUDE_CODE_TYPES if thread["tool"] == "claude_code" else CODEX_TYPES,
+                    unattributed=counts["unattributed"],
+                    with_calls=thread["tool"] == "claude_code",
+                )
+                for day, counts in sorted(thread["days"].items())
+            },
+        }
+        for key, thread in sorted(threads.items())
+    ]
+    with open(PRIVATE_DIR / "thread-daily.json", "w") as fh:
+        json.dump(thread_rows, fh, indent=2)
+
     # This clock is independent of repricing/building the ledger. Never claim
     # a fresh collection merely because build_daily_burn ran again.
     collection = {
@@ -594,7 +750,9 @@ def main():
             f"  unattributed    {unattributed:>15,}         "
             f"(real tokens, no per-type split; days: {', '.join(days)})"
         )
-    print(f"wrote {OUT_DIR / 'exact-daily.json'} and {PRIVATE_DIR / 'day-detail.json'}")
+    codex_threads = sum(1 for thread in thread_rows if thread["tool"] == "codex")
+    print(f"  threads         {len(thread_rows):>15,}         ({len(thread_rows) - codex_threads} Claude Code, {codex_threads} Codex)")
+    print(f"wrote {OUT_DIR / 'exact-daily.json'}, {PRIVATE_DIR / 'day-detail.json'} and {PRIVATE_DIR / 'thread-daily.json'}")
 
 
 if __name__ == "__main__":

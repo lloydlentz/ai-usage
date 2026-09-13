@@ -177,3 +177,15 @@ class PublishedDataTests(unittest.TestCase):
         for day, category in overrides.items():
             self.assertIn(day, rows)
             self.assertEqual(rows[day]["driver"], category)
+
+    def test_committed_threads_fit_the_ledger_and_match_the_card(self):
+        threads = json.loads((build.DATA / "threads.json").read_text())
+        rows = json.loads((build.DATA / "daily-burn.json").read_text())
+        build.validate_threads(threads, rows)
+        rates = build.load_pricing()
+        for thread in threads:
+            for day, entry in thread["days"].items():
+                with self.subTest(thread=thread["key"], day=day):
+                    split = copy.deepcopy({"models": entry["models"], "unattributed": entry["unattributed"]})
+                    cost, _ = build.price_breakdown({thread["tool"]: split}, rates)
+                    self.assertEqual((entry["cost_usd"], entry["unpriced_tokens"]), (cost["total"], cost["unpriced_tokens"]))

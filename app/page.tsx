@@ -8,7 +8,10 @@ import { UsageTimeline } from "./components/usage-timeline";
 import rawRows from "../data/daily-burn.json";
 import pricing from "../data/pricing.json";
 import { UsageExplorer } from "./components/usage-explorer";
+import { ThreadDrilldown } from "./components/thread-drilldown";
 import meta from "../data/meta.json";
+import rawThreads from "../data/threads.json";
+import { normalizeThreads } from "../lib/threads";
 import {
   emptyByType,
   normalizeRows,
@@ -39,6 +42,7 @@ import {
 
 const rows = normalizeRows(rawRows);
 const modelNames = [...new Set(rows.flatMap((row) => row.breakdown?.flatMap((tool) => tool.models.map((model) => model.model)) || []))].sort();
+const threads = normalizeThreads(rawThreads);
 
 type Theme = "ticker" | "printrun";
 const THEME_STORAGE_KEY = "dashboard-theme";
@@ -333,6 +337,14 @@ export default function TokenBurnDashboard() {
           token count far faster than the bill.
         </p>
         <UnpricedNote cost={cost} unattributed={measured.unattributed} />
+      </section>
+
+      <section className="threadRow">
+        <ThreadDrilldown
+          threads={threads}
+          range={range}
+          measured={{ claude_code: sumSource(selectedRows, "claude_code_tokens"), codex: sumSource(selectedRows, "codex_tokens") }}
+        />
       </section>
 
       <section className="calendarRow">

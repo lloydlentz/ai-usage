@@ -214,3 +214,60 @@ test("touch can select and slide a date range", async ({ page, isMobile }) => {
   expect(after.start > before.start).toBe(true);
   await session.detach();
 });
+
+test("thread drilldown ranks threads within the selected dates", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await openDashboard(page);
+  const panel = page.locator(".threadDrilldown");
+  await panel.scrollIntoViewIfNeeded();
+  await expect(panel.getByRole("heading", { name: "Which threads burned it" })).toBeVisible();
+  const threads: { tool: string; days: Record<string, { tokens: number }> }[] = JSON.parse(readFileSync("data/threads.json", "utf8"));
+  const timeline = page.locator(".timeline");
+  // The expected ranking, computed from the committed data for the dates the timeline selected.
+  const ranked = async (tool?: string) => {
+    const start = (await timeline.getAttribute("data-start"))!;
+    const end = (await timeline.getAttribute("data-end"))!;
+    return threads
+      .filter((thread) => !tool || thread.tool === tool)
+      .map((thread) => {
+        const days = Object.keys(thread.days).filter((day) => day >= start && day <= end).sort();
+        return { tokens: days.reduce((sum, day) => sum + thread.days[day].tokens, 0), last: days.at(-1) ?? "" };
+      })
+      .filter((thread) => thread.tokens > 0)
+      .sort((a, b) => b.tokens - a.tokens);
+  };
+  const rows = panel.locator("tbody tr");
+  const firstTokens = rows.first().locator(".threadTokens strong");
+
+  const allTime = await ranked();
+  expect(allTime.length).toBeGreaterThan(0);
+  await expect(rows).toHaveCount(Math.min(10, allTime.length));
+  await expect(firstTokens).toHaveText(formatTokens(allTime[0].tokens));
+
+  await page.locator(".refreshToggle").click();
+  await page.getByRole("combobox", { name: "Period", exact: true }).selectOption("7");
+  const week = await ranked();
+  await expect(rows).toHaveCount(Math.min(10, week.length));
+  if (week.length) {
+    await expect(firstTokens).toHaveText(formatTokens(week[0].tokens));
+    await panel.getByRole("combobox", { name: "Order", exact: true }).selectOption("recent");
+    const latest = week.reduce((max, thread) => (thread.last > max ? thread.last : max), "");
+    await expect(rows.first().locator(".threadActive")).toContainText(latest);
+  }
+
+  await panel.getByRole("combobox", { name: "Tool", exact: true }).selectOption("codex");
+  await expect(rows).toHaveCount(Math.min(10, (await ranked("codex")).length));
+  for (const label of await panel.locator("tbody .threadTool").allTextContents()) expect(label).toContain("Codex CLI");
+
+  await panel.getByRole("combobox", { name: "Tool", exact: true }).selectOption("all");
+  await page.getByRole("button", { name: "Reset dates" }).click();
+  if (allTime.length > 10) {
+    await panel.getByRole("button", { name: `Show all ${allTime.length} threads` }).click();
+    await expect(rows).toHaveCount(allTime.length);
+  }
+  await page.getByRole("button", { name: /ticker/i }).click();
+  await expect(panel.getByRole("heading", { name: "Which threads burned it" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+});
