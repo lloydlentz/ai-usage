@@ -5462,6 +5462,27 @@
     }
   },
   {
+    "key": "cx-a74e2960e168",
+    "tool": "codex",
+    "title": "Persist daily portfolio summary",
+    "days": {
+      "2026-09-14": {
+        "tokens": 4486708,
+        "cost_usd": 2.864426,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 144728,
+            "cache_read": 4313984,
+            "output": 27996,
+            "tokens": 4486708
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-a88b1e026bb4",
     "tool": "codex",
     "title": "Troubleshoot Google Maps links",
