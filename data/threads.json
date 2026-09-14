@@ -611,6 +611,30 @@
     }
   },
   {
+    "key": "cc-41b2ec79123a",
+    "tool": "claude_code",
+    "title": "Base64 image loading on tutoring pages",
+    "days": {
+      "2026-09-14": {
+        "tokens": 526589,
+        "cost_usd": 1.286612,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 6,
+            "input": 162,
+            "cache_write_5m": 0,
+            "cache_write_1h": 67889,
+            "cache_read": 443124,
+            "output": 15414,
+            "tokens": 526589
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-4591e829d0d3",
     "tool": "claude_code",
     "title": "SQL query debugging",
@@ -2166,6 +2190,23 @@
             "cache_read": 8356500,
             "output": 180093,
             "tokens": 8866931
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-14": {
+        "tokens": 2835124,
+        "cost_usd": 5.080424,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 7,
+            "input": 164,
+            "cache_write_5m": 0,
+            "cache_write_1h": 364378,
+            "cache_read": 2462397,
+            "output": 8185,
+            "tokens": 2835124
           }
         },
         "unattributed": 0
