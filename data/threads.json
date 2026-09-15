@@ -3889,27 +3889,6 @@
     }
   },
   {
-    "key": "cx-3d53624e9048",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 596183,
-        "cost_usd": 0.686678,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 67585,
-            "cache_read": 518144,
-            "output": 10454,
-            "tokens": 596183
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-3e30c939f032",
     "tool": "codex",
     "title": "Draft checkout PRD",
@@ -4125,15 +4104,15 @@
         "unattributed": 0
       },
       "2026-09-01": {
-        "tokens": 18327102,
-        "cost_usd": 11.179528,
+        "tokens": 26685881,
+        "cost_usd": 17.396772,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 716013,
-            "cache_read": 17546240,
-            "output": 64849,
-            "tokens": 18327102
+            "input": 1133493,
+            "cache_read": 25417600,
+            "output": 134788,
+            "tokens": 26685881
           }
         },
         "unattributed": 0
@@ -4391,15 +4370,15 @@
     "title": "Build ChatGPT usage site",
     "days": {
       "2026-09-01": {
-        "tokens": 3933168,
-        "cost_usd": 2.434909,
+        "tokens": 4137100,
+        "cost_usd": 2.726768,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 128643,
-            "cache_read": 3784192,
-            "output": 20333,
-            "tokens": 3933168
+            "input": 177784,
+            "cache_read": 3937280,
+            "output": 22036,
+            "tokens": 4137100
           }
         },
         "unattributed": 0
@@ -6408,6 +6387,20 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-15": {
+        "tokens": 1064434,
+        "cost_usd": 1.990776,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 419767,
+            "cache_read": 641920,
+            "output": 2747,
+            "tokens": 1064434
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -6454,27 +6447,6 @@
             "cache_read": 3419264,
             "output": 8330,
             "tokens": 3777712
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-d2b5b52addc7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 1727125,
-        "cost_usd": 1.305818,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 101299,
-            "cache_read": 1613056,
-            "output": 12770,
-            "tokens": 1727125
           }
         },
         "unattributed": 0
@@ -6622,27 +6594,6 @@
             "cache_read": 14436480,
             "output": 34178,
             "tokens": 14855837
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-da3790d3f29a",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 203932,
-        "cost_usd": 0.291859,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 49141,
-            "cache_read": 153088,
-            "output": 1703,
-            "tokens": 203932
           }
         },
         "unattributed": 0
@@ -6964,27 +6915,6 @@
     }
   },
   {
-    "key": "cx-e4adf31439a7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 5088627,
-        "cost_usd": 3.250582,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 155632,
-            "cache_read": 4899584,
-            "output": 33411,
-            "tokens": 5088627
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-e4cd8f041c18",
     "tool": "codex",
     "title": "Analyze water bills",
@@ -7104,27 +7034,6 @@
     }
   },
   {
-    "key": "cx-ec6657ce3e62",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 129476,
-        "cost_usd": 0.164301,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 23157,
-            "cache_read": 104832,
-            "output": 1487,
-            "tokens": 129476
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-ede8c3b597e6",
     "tool": "codex",
     "title": "Create DRC portal scaffold",
@@ -7230,27 +7139,6 @@
             "cache_read": 124160,
             "output": 1655,
             "tokens": 148939
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-f366a2f81301",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 817368,
-        "cost_usd": 0.809866,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 69807,
-            "cache_read": 735744,
-            "output": 11817,
-            "tokens": 817368
           }
         },
         "unattributed": 0
