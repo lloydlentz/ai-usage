@@ -616,18 +616,18 @@
     "title": "Base64 image loading on tutoring pages",
     "days": {
       "2026-09-14": {
-        "tokens": 774022,
-        "cost_usd": 2.234611,
+        "tokens": 1869799,
+        "cost_usd": 3.787141,
         "unpriced_tokens": 0,
         "models": {
           "claude-opus-5": {
-            "calls": 8,
-            "input": 196,
+            "calls": 15,
+            "input": 360,
             "cache_write_5m": 0,
-            "cache_write_1h": 147550,
-            "cache_read": 608113,
-            "output": 18163,
-            "tokens": 774022
+            "cache_write_1h": 187564,
+            "cache_read": 1638252,
+            "output": 43623,
+            "tokens": 1869799
           }
         },
         "unattributed": 0
@@ -5089,8 +5089,8 @@
     "title": "Fix IACUC animal-order workflow",
     "days": {
       "2026-09-14": {
-        "tokens": 2144472,
-        "cost_usd": 1.452925,
+        "tokens": 8293292,
+        "cost_usd": 3.352206,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
@@ -5098,6 +5098,12 @@
             "cache_read": 2035712,
             "output": 12725,
             "tokens": 2144472
+          },
+          "gpt-5.6-terra": {
+            "input": 233868,
+            "cache_read": 5893888,
+            "output": 21064,
+            "tokens": 6148820
           }
         },
         "unattributed": 0
