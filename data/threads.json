@@ -616,18 +616,18 @@
     "title": "Base64 image loading on tutoring pages",
     "days": {
       "2026-09-14": {
-        "tokens": 526589,
-        "cost_usd": 1.286612,
+        "tokens": 774022,
+        "cost_usd": 2.234611,
         "unpriced_tokens": 0,
         "models": {
           "claude-opus-5": {
-            "calls": 6,
-            "input": 162,
+            "calls": 8,
+            "input": 196,
             "cache_write_5m": 0,
-            "cache_write_1h": 67889,
-            "cache_read": 443124,
-            "output": 15414,
-            "tokens": 526589
+            "cache_write_1h": 147550,
+            "cache_read": 608113,
+            "output": 18163,
+            "tokens": 774022
           }
         },
         "unattributed": 0
@@ -1158,6 +1158,30 @@
             "cache_read": 2950020,
             "output": 25924,
             "tokens": 3045853
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-77bea2e4823c",
+    "tool": "claude_code",
+    "title": "Thread categorization options",
+    "days": {
+      "2026-09-14": {
+        "tokens": 455268,
+        "cost_usd": 1.361571,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 5,
+            "input": 130,
+            "cache_write_5m": 0,
+            "cache_write_1h": 52196,
+            "cache_read": 376922,
+            "output": 26020,
+            "tokens": 455268
           }
         },
         "unattributed": 0
@@ -2166,6 +2190,30 @@
             "cache_read": 493403,
             "output": 5924,
             "tokens": 539446
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-c58f0876195c",
+    "tool": "claude_code",
+    "title": "Calendar Event Sync duplicate reports",
+    "days": {
+      "2026-09-14": {
+        "tokens": 756268,
+        "cost_usd": 0.38649,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 49260,
+            "cache_read": 702092,
+            "output": 4900,
+            "tokens": 756268
           }
         },
         "unattributed": 0
@@ -5029,6 +5077,27 @@
             "cache_read": 3289600,
             "output": 17756,
             "tokens": 3402337
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-85405560ef5b",
+    "tool": "codex",
+    "title": "Fix IACUC animal-order workflow",
+    "days": {
+      "2026-09-14": {
+        "tokens": 2144472,
+        "cost_usd": 1.452925,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 96035,
+            "cache_read": 2035712,
+            "output": 12725,
+            "tokens": 2144472
           }
         },
         "unattributed": 0
