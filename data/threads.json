@@ -613,7 +613,7 @@
   {
     "key": "cc-41b2ec79123a",
     "tool": "claude_code",
-    "title": "Base64 image loading on tutoring pages",
+    "title": "\u2714Base64 image loading on tutoring pages",
     "days": {
       "2026-09-14": {
         "tokens": 1869799,
@@ -916,18 +916,18 @@
     "title": "Admin-Usage portal design and data discovery",
     "days": {
       "2026-09-15": {
-        "tokens": 2094615,
-        "cost_usd": 0.919329,
+        "tokens": 13929497,
+        "cost_usd": 4.565909,
         "unpriced_tokens": 0,
         "models": {
           "claude-sonnet-5": {
-            "calls": 18,
-            "input": 36,
+            "calls": 74,
+            "input": 148,
             "cache_write_5m": 0,
-            "cache_write_1h": 98341,
-            "cache_read": 1983315,
-            "output": 12923,
-            "tokens": 2094615
+            "cache_write_1h": 240769,
+            "cache_read": 13600333,
+            "output": 88247,
+            "tokens": 13929497
           }
         },
         "unattributed": 0
@@ -964,18 +964,18 @@
     "title": "Squarespace mentor library rendering",
     "days": {
       "2026-09-15": {
-        "tokens": 1643699,
-        "cost_usd": 0.642844,
+        "tokens": 2488645,
+        "cost_usd": 0.915388,
         "unpriced_tokens": 0,
         "models": {
           "claude-sonnet-5": {
-            "calls": 18,
-            "input": 36,
+            "calls": 26,
+            "input": 52,
             "cache_write_5m": 0,
-            "cache_write_1h": 54320,
-            "cache_read": 1578361,
-            "output": 10982,
-            "tokens": 1643699
+            "cache_write_1h": 63609,
+            "cache_read": 2407040,
+            "output": 17944,
+            "tokens": 2488645
           }
         },
         "unattributed": 0
@@ -1109,21 +1109,21 @@
   {
     "key": "cc-66c59d64866a",
     "tool": "claude_code",
-    "title": "Usage portal Dynamic SQL rework",
+    "title": "\u2714Usage portal Dynamic SQL rework",
     "days": {
       "2026-09-15": {
-        "tokens": 148040799,
-        "cost_usd": 36.564045,
+        "tokens": 148658847,
+        "cost_usd": 36.690539,
         "unpriced_tokens": 0,
         "models": {
           "claude-sonnet-5": {
-            "calls": 403,
-            "input": 806,
+            "calls": 404,
+            "input": 808,
             "cache_write_5m": 0,
-            "cache_write_1h": 1191959,
-            "cache_read": 146600586,
-            "output": 247448,
-            "tokens": 148040799
+            "cache_write_1h": 1192196,
+            "cache_read": 147218193,
+            "output": 247650,
+            "tokens": 148658847
           }
         },
         "unattributed": 0
@@ -3985,6 +3985,27 @@
     }
   },
   {
+    "key": "cx-3d53624e9048",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 596183,
+        "cost_usd": 0.686678,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 67585,
+            "cache_read": 518144,
+            "output": 10454,
+            "tokens": 596183
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-3e30c939f032",
     "tool": "codex",
     "title": "Draft checkout PRD",
@@ -4200,15 +4221,15 @@
         "unattributed": 0
       },
       "2026-09-01": {
-        "tokens": 26685881,
-        "cost_usd": 17.396772,
+        "tokens": 18327102,
+        "cost_usd": 11.179528,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 1133493,
-            "cache_read": 25417600,
-            "output": 134788,
-            "tokens": 26685881
+            "input": 716013,
+            "cache_read": 17546240,
+            "output": 64849,
+            "tokens": 18327102
           }
         },
         "unattributed": 0
@@ -4466,15 +4487,15 @@
     "title": "Build ChatGPT usage site",
     "days": {
       "2026-09-01": {
-        "tokens": 4137100,
-        "cost_usd": 2.726768,
+        "tokens": 3933168,
+        "cost_usd": 2.434909,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 177784,
-            "cache_read": 3937280,
-            "output": 22036,
-            "tokens": 4137100
+            "input": 128643,
+            "cache_read": 3784192,
+            "output": 20333,
+            "tokens": 3933168
           }
         },
         "unattributed": 0
@@ -6571,6 +6592,27 @@
     }
   },
   {
+    "key": "cx-d2b5b52addc7",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 1727125,
+        "cost_usd": 1.305818,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 101299,
+            "cache_read": 1613056,
+            "output": 12770,
+            "tokens": 1727125
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-d3a95c194b30",
     "tool": "codex",
     "title": "Evaluate MacConnect address settings",
@@ -6718,6 +6760,27 @@
     }
   },
   {
+    "key": "cx-da3790d3f29a",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 203932,
+        "cost_usd": 0.291859,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 49141,
+            "cache_read": 153088,
+            "output": 1703,
+            "tokens": 203932
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-dbe35372d182",
     "tool": "codex",
     "title": "Extract transcript course table",
@@ -6837,6 +6900,20 @@
             "cache_read": 10439040,
             "output": 18630,
             "tokens": 10743189
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-15": {
+        "tokens": 1301689,
+        "cost_usd": 0.941985,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 85066,
+            "cache_read": 1210752,
+            "output": 5871,
+            "tokens": 1301689
           }
         },
         "unattributed": 0
@@ -7032,6 +7109,27 @@
     }
   },
   {
+    "key": "cx-e4adf31439a7",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 5088627,
+        "cost_usd": 3.250582,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 155632,
+            "cache_read": 4899584,
+            "output": 33411,
+            "tokens": 5088627
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-e4cd8f041c18",
     "tool": "codex",
     "title": "Analyze water bills",
@@ -7151,6 +7249,27 @@
     }
   },
   {
+    "key": "cx-ec6657ce3e62",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 129476,
+        "cost_usd": 0.164301,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 23157,
+            "cache_read": 104832,
+            "output": 1487,
+            "tokens": 129476
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-ede8c3b597e6",
     "tool": "codex",
     "title": "Create DRC portal scaffold",
@@ -7256,6 +7375,27 @@
             "cache_read": 124160,
             "output": 1655,
             "tokens": 148939
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f366a2f81301",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-01": {
+        "tokens": 817368,
+        "cost_usd": 0.809866,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 69807,
+            "cache_read": 735744,
+            "output": 11817,
+            "tokens": 817368
           }
         },
         "unattributed": 0
