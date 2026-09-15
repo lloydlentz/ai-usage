@@ -935,6 +935,30 @@
     }
   },
   {
+    "key": "cc-6459e2583f28",
+    "tool": "claude_code",
+    "title": "Tutor names under images",
+    "days": {
+      "2026-09-15": {
+        "tokens": 7244283,
+        "cost_usd": 2.981546,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 60,
+            "input": 120,
+            "cache_write_5m": 0,
+            "cache_write_1h": 257719,
+            "cache_read": 6930001,
+            "output": 56443,
+            "tokens": 7244283
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-65b716b8b6bd",
     "tool": "claude_code",
     "title": "Copy Fundraising Initiative plan",
@@ -1028,6 +1052,30 @@
             "cache_read": 1775808,
             "output": 11079,
             "tokens": 1855478
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-66c59d64866a",
+    "tool": "claude_code",
+    "title": "Usage portal Dynamic SQL rework",
+    "days": {
+      "2026-09-15": {
+        "tokens": 7912555,
+        "cost_usd": 2.41513,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 61,
+            "input": 122,
+            "cache_write_5m": 0,
+            "cache_write_1h": 119371,
+            "cache_read": 7754410,
+            "output": 38652,
+            "tokens": 7912555
           }
         },
         "unattributed": 0
