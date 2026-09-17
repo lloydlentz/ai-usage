@@ -913,21 +913,21 @@
   {
     "key": "cc-5ed623551b51",
     "tool": "claude_code",
-    "title": "Admin-Usage portal design and data discovery",
+    "title": "\u2714Admin-Usage portal design and data discovery",
     "days": {
       "2026-09-15": {
-        "tokens": 13929497,
-        "cost_usd": 4.565909,
+        "tokens": 19206975,
+        "cost_usd": 5.747168,
         "unpriced_tokens": 0,
         "models": {
           "claude-sonnet-5": {
-            "calls": 74,
-            "input": 148,
+            "calls": 92,
+            "input": 184,
             "cache_write_5m": 0,
-            "cache_write_1h": 240769,
-            "cache_read": 13600333,
-            "output": 88247,
-            "tokens": 13929497
+            "cache_write_1h": 255519,
+            "cache_read": 18855918,
+            "output": 95354,
+            "tokens": 19206975
           }
         },
         "unattributed": 0
@@ -1237,6 +1237,30 @@
     }
   },
   {
+    "key": "cc-718c9d934b38",
+    "tool": "claude_code",
+    "title": "Cron job GitHub page updates",
+    "days": {
+      "2026-09-17": {
+        "tokens": 624713,
+        "cost_usd": 0.766271,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 42695,
+            "cache_read": 580033,
+            "output": 1969,
+            "tokens": 624713
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-7596c15ca970",
     "tool": "claude_code",
     "title": "Giving Society records missing dates",
@@ -1278,6 +1302,64 @@
             "cache_read": 376922,
             "output": 26020,
             "tokens": 455268
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-15": {
+        "tokens": 5715517,
+        "cost_usd": 9.750239,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 22,
+            "input": 644,
+            "cache_write_5m": 0,
+            "cache_write_1h": 261834,
+            "cache_read": 5273359,
+            "output": 179680,
+            "tokens": 5715517
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-16": {
+        "tokens": 941127,
+        "cost_usd": 3.199674,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 3,
+            "input": 6,
+            "cache_write_5m": 0,
+            "cache_write_1h": 270434,
+            "cache_read": 664158,
+            "output": 6529,
+            "tokens": 941127
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-77c0799b2d05",
+    "tool": "claude_code",
+    "title": "Advancement ticket diagnosis",
+    "days": {
+      "2026-09-16": {
+        "tokens": 3010318,
+        "cost_usd": 1.735742,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 10,
+            "input": 20,
+            "cache_write_5m": 0,
+            "cache_write_1h": 264272,
+            "cache_read": 2732821,
+            "output": 13205,
+            "tokens": 3010318
           }
         },
         "unattributed": 0
@@ -1434,6 +1516,30 @@
             "cache_read": 49089239,
             "output": 127815,
             "tokens": 49593218
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-8a87f625dbbf",
+    "tool": "claude_code",
+    "title": "Advancement ticket diagnosis",
+    "days": {
+      "2026-09-16": {
+        "tokens": 26456471,
+        "cost_usd": 8.342717,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 148,
+            "input": 296,
+            "cache_write_5m": 0,
+            "cache_write_1h": 531460,
+            "cache_read": 25819476,
+            "output": 105239,
+            "tokens": 26456471
           }
         },
         "unattributed": 0
@@ -1870,6 +1976,30 @@
             "cache_read": 38409,
             "output": 75,
             "tokens": 385850
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-90611e40513a",
+    "tool": "claude_code",
+    "title": "Tutor tiles centering",
+    "days": {
+      "2026-09-16": {
+        "tokens": 177684,
+        "cost_usd": 0.184989,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 3,
+            "input": 6,
+            "cache_write_5m": 0,
+            "cache_write_1h": 31417,
+            "cache_read": 143194,
+            "output": 3067,
+            "tokens": 177684
           }
         },
         "unattributed": 0
@@ -2560,6 +2690,30 @@
     }
   },
   {
+    "key": "cc-ebf6a0c8f305",
+    "tool": "claude_code",
+    "title": "Slate AI community event post",
+    "days": {
+      "2026-09-16": {
+        "tokens": 509256,
+        "cost_usd": 0.278188,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 38618,
+            "cache_read": 467609,
+            "output": 3017,
+            "tokens": 509256
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-ec076a8b2b20",
     "tool": "claude_code",
     "title": "Student Success initiatives",
@@ -2577,6 +2731,30 @@
             "cache_read": 87668,
             "output": 619,
             "tokens": 112468
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-f4d4a9016cf0",
+    "tool": "claude_code",
+    "title": "ID Cards layout redesign",
+    "days": {
+      "2026-09-16": {
+        "tokens": 531072,
+        "cost_usd": 0.717636,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 7,
+            "input": 14,
+            "cache_write_5m": 0,
+            "cache_write_1h": 42247,
+            "cache_read": 486742,
+            "output": 2069,
+            "tokens": 531072
           }
         },
         "unattributed": 0
@@ -3985,27 +4163,6 @@
     }
   },
   {
-    "key": "cx-3d53624e9048",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 596183,
-        "cost_usd": 0.686678,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 67585,
-            "cache_read": 518144,
-            "output": 10454,
-            "tokens": 596183
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-3e30c939f032",
     "tool": "codex",
     "title": "Draft checkout PRD",
@@ -4221,15 +4378,50 @@
         "unattributed": 0
       },
       "2026-09-01": {
-        "tokens": 18327102,
-        "cost_usd": 11.179528,
+        "tokens": 26685881,
+        "cost_usd": 17.396772,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 716013,
-            "cache_read": 17546240,
-            "output": 64849,
-            "tokens": 18327102
+            "input": 1133493,
+            "cache_read": 25417600,
+            "output": 134788,
+            "tokens": 26685881
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-4d4e5450978d",
+    "tool": "codex",
+    "title": "Hide personal threads by default",
+    "days": {
+      "2026-09-15": {
+        "tokens": 1700243,
+        "cost_usd": 1.157954,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 87130,
+            "cache_read": 1604736,
+            "output": 8377,
+            "tokens": 1700243
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-16": {
+        "tokens": 1516266,
+        "cost_usd": 1.019874,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 96912,
+            "cache_read": 1416064,
+            "output": 3290,
+            "tokens": 1516266
           }
         },
         "unattributed": 0
@@ -4487,15 +4679,15 @@
     "title": "Build ChatGPT usage site",
     "days": {
       "2026-09-01": {
-        "tokens": 3933168,
-        "cost_usd": 2.434909,
+        "tokens": 4137100,
+        "cost_usd": 2.726768,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 128643,
-            "cache_read": 3784192,
-            "output": 20333,
-            "tokens": 3933168
+            "input": 177784,
+            "cache_read": 3937280,
+            "output": 22036,
+            "tokens": 4137100
           }
         },
         "unattributed": 0
@@ -4631,7 +4823,7 @@
   {
     "key": "cx-665880239764",
     "tool": "codex",
-    "title": "\u2705 Diagnose new assignment records",
+    "title": "Diagnose new assignment records",
     "days": {
       "2026-09-09": {
         "tokens": 12273847,
@@ -4657,6 +4849,20 @@
             "cache_read": 7411200,
             "output": 47777,
             "tokens": 7824111
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-16": {
+        "tokens": 5900395,
+        "cost_usd": 3.963202,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 270616,
+            "cache_read": 5597696,
+            "output": 32083,
+            "tokens": 5900395
           }
         },
         "unattributed": 0
@@ -4856,6 +5062,27 @@
         "unpriced_tokens": 70954,
         "models": {},
         "unattributed": 70954
+      }
+    }
+  },
+  {
+    "key": "cx-6fd6a93b0497",
+    "tool": "codex",
+    "title": "Explain Summary tab data flow",
+    "days": {
+      "2026-09-17": {
+        "tokens": 730935,
+        "cost_usd": 0.737599,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 81060,
+            "cache_read": 642048,
+            "output": 7827,
+            "tokens": 730935
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -5194,6 +5421,33 @@
             "cache_read": 3289600,
             "output": 17756,
             "tokens": 3402337
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-822fcc03cf47",
+    "tool": "codex",
+    "title": "Find public portal usage insights",
+    "days": {
+      "2026-09-16": {
+        "tokens": 44116201,
+        "cost_usd": 15.867212,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 288979,
+            "cache_read": 14414592,
+            "output": 47640,
+            "tokens": 14751211
+          },
+          "gpt-5.6-terra": {
+            "input": 654397,
+            "cache_read": 28630784,
+            "output": 79809,
+            "tokens": 29364990
           }
         },
         "unattributed": 0
@@ -6539,6 +6793,20 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-16": {
+        "tokens": 1192882,
+        "cost_usd": 1.594597,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 293213,
+            "cache_read": 896512,
+            "output": 3157,
+            "tokens": 1192882
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -6585,27 +6853,6 @@
             "cache_read": 3419264,
             "output": 8330,
             "tokens": 3777712
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-d2b5b52addc7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 1727125,
-        "cost_usd": 1.305818,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 101299,
-            "cache_read": 1613056,
-            "output": 12770,
-            "tokens": 1727125
           }
         },
         "unattributed": 0
@@ -6753,27 +7000,6 @@
             "cache_read": 14436480,
             "output": 34178,
             "tokens": 14855837
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-da3790d3f29a",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 203932,
-        "cost_usd": 0.291859,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 49141,
-            "cache_read": 153088,
-            "output": 1703,
-            "tokens": 203932
           }
         },
         "unattributed": 0
@@ -7109,27 +7335,6 @@
     }
   },
   {
-    "key": "cx-e4adf31439a7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 5088627,
-        "cost_usd": 3.250582,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 155632,
-            "cache_read": 4899584,
-            "output": 33411,
-            "tokens": 5088627
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-e4cd8f041c18",
     "tool": "codex",
     "title": "Analyze water bills",
@@ -7249,27 +7454,6 @@
     }
   },
   {
-    "key": "cx-ec6657ce3e62",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 129476,
-        "cost_usd": 0.164301,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 23157,
-            "cache_read": 104832,
-            "output": 1487,
-            "tokens": 129476
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-ede8c3b597e6",
     "tool": "codex",
     "title": "Create DRC portal scaffold",
@@ -7375,27 +7559,6 @@
             "cache_read": 124160,
             "output": 1655,
             "tokens": 148939
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-f366a2f81301",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 817368,
-        "cost_usd": 0.809866,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 69807,
-            "cache_read": 735744,
-            "output": 11817,
-            "tokens": 817368
           }
         },
         "unattributed": 0
