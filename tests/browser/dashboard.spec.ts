@@ -216,13 +216,14 @@ test("touch can select and slide a date range", async ({ page, isMobile }) => {
 });
 
 test("thread drilldown ranks threads within the selected dates", async ({ page }) => {
+  const hiddenTitles = new Set(["Cohorts.ART", "Set up Apple developer account"]);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await openDashboard(page);
   const panel = page.locator(".threadDrilldown");
   await panel.scrollIntoViewIfNeeded();
   await expect(panel.getByRole("heading", { name: "Which threads burned it" })).toBeVisible();
-  const threads: { tool: string; days: Record<string, { tokens: number }> }[] = JSON.parse(readFileSync("data/threads.json", "utf8"));
+  const threads: { title: string | null; tool: string; days: Record<string, { tokens: number }> }[] = JSON.parse(readFileSync("data/threads.json", "utf8"));
   const timeline = page.locator(".timeline");
   // The expected ranking, computed from the committed data for the dates the timeline selected.
   const ranked = async (tool?: string) => {
@@ -230,6 +231,7 @@ test("thread drilldown ranks threads within the selected dates", async ({ page }
     const end = (await timeline.getAttribute("data-end"))!;
     return threads
       .filter((thread) => !tool || thread.tool === tool)
+      .filter((thread) => !thread.title || !hiddenTitles.has(thread.title))
       .map((thread) => {
         const days = Object.keys(thread.days).filter((day) => day >= start && day <= end).sort();
         return { tokens: days.reduce((sum, day) => sum + thread.days[day].tokens, 0), last: days.at(-1) ?? "" };
@@ -244,6 +246,12 @@ test("thread drilldown ranks threads within the selected dates", async ({ page }
   expect(allTime.length).toBeGreaterThan(0);
   await expect(rows).toHaveCount(Math.min(10, allTime.length));
   await expect(firstTokens).toHaveText(formatTokens(allTime[0].tokens));
+  await expect(panel.getByText("Cohorts.ART", { exact: true })).toHaveCount(0);
+  await expect(panel.getByText("Set up Apple developer account", { exact: true })).toHaveCount(0);
+  await panel.getByRole("button", { name: "Show 2 hidden threads" }).click();
+  await expect(panel.getByText("Cohorts.ART", { exact: true })).toBeVisible();
+  await expect(panel.getByText("Set up Apple developer account", { exact: true })).toBeVisible();
+  await panel.getByRole("button", { name: "Hide 2 hidden threads" }).click();
 
   await page.locator(".refreshToggle").click();
   await page.getByRole("combobox", { name: "Period", exact: true }).selectOption("7");

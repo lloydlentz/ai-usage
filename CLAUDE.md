@@ -346,7 +346,10 @@ thread counts only its days inside the selection and the table follows the
 timeline like every other panel. A "Not attributed to a thread" row carries
 the measured tokens no captured thread accounts for (Claude Code logs pruned
 before thread capture began), so the table always adds up to the period's
-measured total. Chat estimates never appear here.
+measured total. Chat estimates never appear here. Threads listed in
+`HIDDEN_BY_DEFAULT` remain in those accounting totals but are omitted from the
+default ranking; the drilldown heading is an accessible disclosure that reveals
+them in their proper rank.
 
 The thread split is frozen like the ledger, but **whole per (day, tool)**.
 `build_threads()` takes the fresh extraction's split when it accounts for the

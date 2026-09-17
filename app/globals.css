@@ -1547,6 +1547,12 @@ h1 {
 .threadRow { margin-top: 18px; }
 .threadDrilldown > .dashboardControls,
 .threadDrilldown > .threadEmpty { margin-left: 16px; margin-right: 16px; }
+.threadDisclosure { display: inline-flex; align-items: baseline; gap: 8px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.threadDisclosure:focus-visible { outline: 2px solid var(--good); outline-offset: 4px; }
+.threadHiddenCount { color: var(--muted); font-family: var(--font-body); font-size: 11px; font-weight: 400; white-space: nowrap; }
+.threadDisclosure i { display: inline-block; width: 7px; height: 7px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 120ms ease; }
+.threadDisclosure[aria-expanded="true"] i { transform: translateY(2px) rotate(225deg); }
+@media (prefers-reduced-motion: reduce) { .threadDisclosure i { transition: none; } }
 .threadTable { min-width: 640px; }
 .threadTable thead th { color: var(--muted); font-size: 11px; font-weight: 600; white-space: nowrap; }
 .threadTable td:nth-child(n + 3) { white-space: nowrap; }
@@ -1564,6 +1570,8 @@ h1 {
 .threadMore { margin: 12px 16px 0; padding: 6px 10px; border: 1px solid var(--line); background: none; color: var(--ink); font: inherit; font-size: 12px; cursor: pointer; }
 .threadDrilldown > .panelFoot { margin: 14px 0 0; padding: 12px 16px; }
 @media (max-width: 560px) {
+  .threadDisclosure { flex-wrap: wrap; gap: 2px 7px; }
+  .threadDisclosure > span:first-child { flex-basis: 100%; }
   /* Share and dates give way first; the thread, tokens and cost stay. */
   .threadTable { min-width: 0; }
   .threadTable th:nth-child(4), .threadTable td:nth-child(4),

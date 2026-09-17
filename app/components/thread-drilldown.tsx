@@ -8,6 +8,13 @@ import { formatPct, formatTokens } from "../../lib/token-math";
 import { BasisPill, CellCost } from "./cost";
 
 const TOP = 10;
+// These threads remain in the published accounting data, but stay out of the
+// default ranking so the dashboard can be shared without leading with personal
+// work. Keys are stable across rebuilds even if a thread title later changes.
+const HIDDEN_BY_DEFAULT = new Set([
+  "cc-8c9f203dbed9", // Cohorts.ART
+  "cc-867efb14c0d0", // Set up Apple developer account
+]);
 // The tool summary's colors: --accent is Claude Code, --good is Codex.
 const toolColor: Record<ToolKey, string> = { claude_code: "var(--accent)", codex: "var(--good)" };
 
@@ -25,19 +32,35 @@ export function ThreadDrilldown({ threads, range, measured }: {
   const [tool, setTool] = useState<ToolKey | "all">("all");
   const [sort, setSort] = useState<ThreadSort>("tokens");
   const [showAll, setShowAll] = useState(false);
+  const [showHidden, setShowHidden] = useState(false);
 
   const summaries = summarizeThreads(threads, range, { tool, sort });
+  const hidden = summaries.filter((thread) => HIDDEN_BY_DEFAULT.has(thread.key));
+  const ranked = showHidden ? summaries : summaries.filter((thread) => !HIDDEN_BY_DEFAULT.has(thread.key));
   const periodTotal = tool === "all" ? measured.claude_code + measured.codex : measured[tool];
   const attributed = summaries.reduce((sum, thread) => sum + thread.tokens, 0);
   const remainder = Math.max(0, periodTotal - attributed);
-  const peak = summaries.reduce((max, thread) => Math.max(max, thread.tokens), 0);
-  const visible = showAll ? summaries : summaries.slice(0, TOP);
+  const peak = ranked.reduce((max, thread) => Math.max(max, thread.tokens), 0);
+  const visible = showAll ? ranked : ranked.slice(0, TOP);
   const share = (tokens: number) => (periodTotal ? (tokens / periodTotal) * 100 : 0);
+  const hiddenLabel = `${hidden.length} hidden ${hidden.length === 1 ? "thread" : "threads"}`;
 
   return <section className="panel threadDrilldown" aria-labelledby="threads-title">
     <div className="panelHeader">
-      <div><p className="label">Drill down</p><h2 id="threads-title">Which threads burned it</h2></div>
-      <p>{summaries.length} {summaries.length === 1 ? "thread" : "threads"} · {formatTokens(attributed)} of {formatTokens(periodTotal)} measured tokens in this period</p>
+      <div><p className="label">Drill down</p><h2 id="threads-title" aria-label="Which threads burned it">
+        <button
+          type="button"
+          className="threadDisclosure"
+          aria-expanded={showHidden}
+          aria-label={showHidden ? `Hide ${hiddenLabel}` : `Show ${hiddenLabel}`}
+          onClick={() => { setShowHidden((shown) => !shown); setShowAll(false); }}
+        >
+          <span>Which threads burned it</span>
+          <span className="threadHiddenCount" aria-hidden="true">{showHidden ? `${hidden.length} revealed` : `${hidden.length} hidden`}</span>
+          <i aria-hidden="true" />
+        </button>
+      </h2></div>
+      <p>{ranked.length} {ranked.length === 1 ? "thread" : "threads"} ranked · {formatTokens(attributed)} of {formatTokens(periodTotal)} measured tokens in this period</p>
     </div>
     <div className="dashboardControls">
       <label>Tool<select value={tool} onChange={(e) => { setTool(e.target.value as ToolKey | "all"); setShowAll(false); }}>
@@ -49,7 +72,7 @@ export function ThreadDrilldown({ threads, range, measured }: {
         <option value="recent">Most recent</option>
       </select></label>
     </div>
-    {summaries.length > 0 ? <div className="tableWrap"><table className="table threadTable">
+    {ranked.length > 0 ? <div className="tableWrap"><table className="table threadTable">
       <caption className="srOnly">Threads ranked by {sort === "tokens" ? "measured tokens" : "latest activity"} in the selected dates</caption>
       <thead><tr>
         <th scope="col">#</th>
@@ -91,8 +114,8 @@ export function ThreadDrilldown({ threads, range, measured }: {
         <td />
       </tr></tfoot>}
     </table></div> : <p className="threadEmpty muted">No measured thread activity in these dates.</p>}
-    {summaries.length > TOP && <button type="button" className="threadMore" aria-expanded={showAll} onClick={() => setShowAll((all) => !all)}>
-      {showAll ? `Show top ${TOP}` : `Show all ${summaries.length} threads`}
+    {ranked.length > TOP && <button type="button" className="threadMore" aria-expanded={showAll} onClick={() => setShowAll((all) => !all)}>
+      {showAll ? `Show top ${TOP}` : `Show all ${ranked.length} threads`}
     </button>}
     <p className="panelFoot">
       <BasisPill /> Each thread counts only its tokens inside the selected dates. Sub-agent work rolls into its parent thread.
