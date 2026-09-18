@@ -5806,6 +5806,27 @@
     }
   },
   {
+    "key": "cx-9ea747260cf1",
+    "tool": "codex",
+    "title": "Review MGO Gmail GAS script",
+    "days": {
+      "2026-09-18": {
+        "tokens": 10391782,
+        "cost_usd": 5.50604,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 291328,
+            "cache_read": 10085120,
+            "output": 15334,
+            "tokens": 10391782
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-a006369e0c60",
     "tool": "codex",
     "title": "Follow-up monitor",
@@ -7541,6 +7562,27 @@
             "cache_read": 4992,
             "output": 230,
             "tokens": 18545
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-f0221e3768fc",
+    "tool": "codex",
+    "title": "Add MGO setup instructions",
+    "days": {
+      "2026-09-18": {
+        "tokens": 484066,
+        "cost_usd": 0.465557,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 48510,
+            "cache_read": 430592,
+            "output": 4964,
+            "tokens": 484066
           }
         },
         "unattributed": 0
