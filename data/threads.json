@@ -1363,6 +1363,23 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-18": {
+        "tokens": 6968462,
+        "cost_usd": 2.839519,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 21,
+            "input": 50,
+            "cache_write_5m": 0,
+            "cache_write_1h": 302253,
+            "cache_read": 6635835,
+            "output": 30324,
+            "tokens": 6968462
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -2449,7 +2466,7 @@
   {
     "key": "cc-c61841884667",
     "tool": "claude_code",
-    "title": "Smart AI Brief tab implementation status",
+    "title": "MGO - Smart AI Brief tab implementation status",
     "days": {
       "2026-09-12": {
         "tokens": 8866931,
@@ -2668,7 +2685,7 @@
   {
     "key": "cc-e9bdb4414c78",
     "tool": "claude_code",
-    "title": "Sustainer giving population reports",
+    "title": "adhoc - Sustainer giving population reports",
     "days": {
       "2026-09-11": {
         "tokens": 22947881,
@@ -5850,15 +5867,15 @@
     "title": "Review admissions INBOX meeting",
     "days": {
       "2026-09-18": {
-        "tokens": 838764,
-        "cost_usd": 0.609869,
+        "tokens": 1115046,
+        "cost_usd": 1.050622,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 59503,
-            "cache_read": 776192,
-            "output": 3069,
-            "tokens": 838764
+            "input": 136934,
+            "cache_read": 972416,
+            "output": 5696,
+            "tokens": 1115046
           }
         },
         "unattributed": 0
