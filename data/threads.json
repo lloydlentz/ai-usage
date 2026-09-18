@@ -5845,6 +5845,27 @@
     }
   },
   {
+    "key": "cx-a26cbc264e67",
+    "tool": "codex",
+    "title": "Review admissions INBOX meeting",
+    "days": {
+      "2026-09-18": {
+        "tokens": 838764,
+        "cost_usd": 0.609869,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 59503,
+            "cache_read": 776192,
+            "output": 3069,
+            "tokens": 838764
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-a5b1def7a18c",
     "tool": "codex",
     "title": "Follow-up monitor",
