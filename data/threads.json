@@ -6349,15 +6349,15 @@
     "title": "Plan transcript review portal demo",
     "days": {
       "2026-09-19": {
-        "tokens": 7413525,
-        "cost_usd": 4.570881,
+        "tokens": 13477129,
+        "cost_usd": 8.226356,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 190391,
-            "cache_read": 7176192,
-            "output": 46942,
-            "tokens": 7413525
+            "input": 328472,
+            "cache_read": 13064320,
+            "output": 84337,
+            "tokens": 13477129
           }
         },
         "unattributed": 0
