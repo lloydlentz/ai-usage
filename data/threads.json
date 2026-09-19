@@ -98,6 +98,30 @@
     }
   },
   {
+    "key": "cc-07b609e894a1",
+    "tool": "claude_code",
+    "title": "Citizenship data propagation investigation",
+    "days": {
+      "2026-09-19": {
+        "tokens": 4456473,
+        "cost_usd": 1.621094,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 40,
+            "input": 84,
+            "cache_write_5m": 0,
+            "cache_write_1h": 100772,
+            "cache_read": 4320238,
+            "output": 35379,
+            "tokens": 4456473
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-0a70d608b6a8",
     "tool": "claude_code",
     "title": "MacFund Asks FY27 script reconciliation",
@@ -1993,6 +2017,30 @@
             "cache_read": 38409,
             "output": 75,
             "tokens": 385850
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-8fbb5f5bb14c",
+    "tool": "claude_code",
+    "title": "Banner to Workday data mapping",
+    "days": {
+      "2026-09-19": {
+        "tokens": 4585282,
+        "cost_usd": 2.129974,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 30,
+            "input": 62,
+            "cache_write_5m": 0,
+            "cache_write_1h": 164464,
+            "cache_read": 4360772,
+            "output": 59984,
+            "tokens": 4585282
           }
         },
         "unattributed": 0
@@ -6292,6 +6340,27 @@
         "unpriced_tokens": 234386,
         "models": {},
         "unattributed": 234386
+      }
+    }
+  },
+  {
+    "key": "cx-bbbf3236aaac",
+    "tool": "codex",
+    "title": "Plan transcript review portal demo",
+    "days": {
+      "2026-09-19": {
+        "tokens": 7413525,
+        "cost_usd": 4.570881,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 190391,
+            "cache_read": 7176192,
+            "output": 46942,
+            "tokens": 7413525
+          }
+        },
+        "unattributed": 0
       }
     }
   },
