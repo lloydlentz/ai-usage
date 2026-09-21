@@ -3535,15 +3535,15 @@
     "title": "Capture team read GPA data",
     "days": {
       "2026-09-21": {
-        "tokens": 2309164,
-        "cost_usd": 1.610275,
+        "tokens": 10767707,
+        "cost_usd": 5.787586,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 78504,
-            "cache_read": 2210048,
-            "output": 20612,
-            "tokens": 2309164
+            "input": 134940,
+            "cache_read": 10582016,
+            "output": 50751,
+            "tokens": 10767707
           }
         },
         "unattributed": 0
@@ -4013,6 +4013,27 @@
             "cache_read": 870144,
             "output": 6206,
             "tokens": 969043
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-2d4da78e19be",
+    "tool": "codex",
+    "title": "Summarize page",
+    "days": {
+      "2026-09-21": {
+        "tokens": 43598,
+        "cost_usd": 0.058942,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 10516,
+            "cache_read": 32896,
+            "output": 186,
+            "tokens": 43598
           }
         },
         "unattributed": 0
@@ -5479,15 +5500,15 @@
     "title": "Build transcript pre-run process",
     "days": {
       "2026-09-21": {
-        "tokens": 44040364,
-        "cost_usd": 25.09407,
+        "tokens": 45337743,
+        "cost_usd": 26.081711,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 1037650,
-            "cache_read": 42811776,
-            "output": 190938,
-            "tokens": 44040364
+            "input": 1087819,
+            "cache_read": 44044288,
+            "output": 205636,
+            "tokens": 45337743
           }
         },
         "unattributed": 0
