@@ -367,6 +367,30 @@
     }
   },
   {
+    "key": "cc-203448e569be",
+    "tool": "claude_code",
+    "title": "Scanned documents organization",
+    "days": {
+      "2026-09-21": {
+        "tokens": 2628091,
+        "cost_usd": 1.564776,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 15,
+            "input": 32,
+            "cache_write_5m": 0,
+            "cache_write_1h": 204654,
+            "cache_read": 2396730,
+            "output": 26675,
+            "tokens": 2628091
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-21cc6655a229",
     "tool": "claude_code",
     "title": "Orientation Event Checkin",
@@ -4245,27 +4269,6 @@
     }
   },
   {
-    "key": "cx-3d53624e9048",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 596183,
-        "cost_usd": 0.686678,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 67585,
-            "cache_read": 518144,
-            "output": 10454,
-            "tokens": 596183
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-3e30c939f032",
     "tool": "codex",
     "title": "Draft checkout PRD",
@@ -4481,15 +4484,15 @@
         "unattributed": 0
       },
       "2026-09-01": {
-        "tokens": 18327102,
-        "cost_usd": 11.179528,
+        "tokens": 26685881,
+        "cost_usd": 17.396772,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 716013,
-            "cache_read": 17546240,
-            "output": 64849,
-            "tokens": 18327102
+            "input": 1133493,
+            "cache_read": 25417600,
+            "output": 134788,
+            "tokens": 26685881
           }
         },
         "unattributed": 0
@@ -4782,15 +4785,15 @@
     "title": "Build ChatGPT usage site",
     "days": {
       "2026-09-01": {
-        "tokens": 3933168,
-        "cost_usd": 2.434909,
+        "tokens": 4137100,
+        "cost_usd": 2.726768,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 128643,
-            "cache_read": 3784192,
-            "output": 20333,
-            "tokens": 3933168
+            "input": 177784,
+            "cache_read": 3937280,
+            "output": 22036,
+            "tokens": 4137100
           }
         },
         "unattributed": 0
@@ -5429,6 +5432,27 @@
         "unpriced_tokens": 4366,
         "models": {},
         "unattributed": 4366
+      }
+    }
+  },
+  {
+    "key": "cx-79df408b36a8",
+    "tool": "codex",
+    "title": "Build transcript pre-run process",
+    "days": {
+      "2026-09-21": {
+        "tokens": 1453929,
+        "cost_usd": 1.170529,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 74490,
+            "cache_read": 1363072,
+            "output": 16367,
+            "tokens": 1453929
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -7047,27 +7071,6 @@
     }
   },
   {
-    "key": "cx-d2b5b52addc7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 1727125,
-        "cost_usd": 1.305818,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 101299,
-            "cache_read": 1613056,
-            "output": 12770,
-            "tokens": 1727125
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-d3a95c194b30",
     "tool": "codex",
     "title": "Evaluate MacConnect address settings",
@@ -7208,27 +7211,6 @@
             "cache_read": 14436480,
             "output": 34178,
             "tokens": 14855837
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-da3790d3f29a",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 203932,
-        "cost_usd": 0.291859,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 49141,
-            "cache_read": 153088,
-            "output": 1703,
-            "tokens": 203932
           }
         },
         "unattributed": 0
@@ -7564,27 +7546,6 @@
     }
   },
   {
-    "key": "cx-e4adf31439a7",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 5088627,
-        "cost_usd": 3.250582,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 155632,
-            "cache_read": 4899584,
-            "output": 33411,
-            "tokens": 5088627
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
     "key": "cx-e4cd8f041c18",
     "tool": "codex",
     "title": "Analyze water bills",
@@ -7697,27 +7658,6 @@
             "cache_read": 1424512,
             "output": 8711,
             "tokens": 1549815
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-ec6657ce3e62",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 129476,
-        "cost_usd": 0.164301,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 23157,
-            "cache_read": 104832,
-            "output": 1487,
-            "tokens": 129476
           }
         },
         "unattributed": 0
@@ -7851,27 +7791,6 @@
             "cache_read": 124160,
             "output": 1655,
             "tokens": 148939
-          }
-        },
-        "unattributed": 0
-      }
-    }
-  },
-  {
-    "key": "cx-f366a2f81301",
-    "tool": "codex",
-    "title": null,
-    "days": {
-      "2026-09-01": {
-        "tokens": 817368,
-        "cost_usd": 0.809866,
-        "unpriced_tokens": 0,
-        "models": {
-          "gpt-5.6-sol": {
-            "input": 69807,
-            "cache_read": 735744,
-            "output": 11817,
-            "tokens": 817368
           }
         },
         "unattributed": 0
