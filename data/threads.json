@@ -5458,15 +5458,15 @@
     "title": "Build transcript pre-run process",
     "days": {
       "2026-09-21": {
-        "tokens": 12597620,
-        "cost_usd": 6.771741,
+        "tokens": 21134793,
+        "cost_usd": 10.970225,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 209996,
-            "cache_read": 12337792,
-            "output": 49832,
-            "tokens": 12597620
+            "input": 296129,
+            "cache_read": 20764672,
+            "output": 73992,
+            "tokens": 21134793
           }
         },
         "unattributed": 0
@@ -6470,15 +6470,15 @@
     "title": "Investigate advisor student lists",
     "days": {
       "2026-09-21": {
-        "tokens": 3011580,
-        "cost_usd": 2.13928,
+        "tokens": 4006866,
+        "cost_usd": 2.722494,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 135698,
-            "cache_read": 2853120,
-            "output": 22762,
-            "tokens": 3011580
+            "input": 157633,
+            "cache_read": 3821056,
+            "output": 28177,
+            "tokens": 4006866
           }
         },
         "unattributed": 0
