@@ -5479,15 +5479,15 @@
     "title": "Build transcript pre-run process",
     "days": {
       "2026-09-21": {
-        "tokens": 32776106,
-        "cost_usd": 17.880418,
+        "tokens": 37548866,
+        "cost_usd": 21.605736,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 636456,
-            "cache_read": 32013184,
-            "output": 126466,
-            "tokens": 32776106
+            "input": 963580,
+            "cache_read": 36426240,
+            "output": 159046,
+            "tokens": 37548866
           }
         },
         "unattributed": 0
