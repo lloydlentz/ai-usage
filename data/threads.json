@@ -2549,6 +2549,23 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-21": {
+        "tokens": 1062884,
+        "cost_usd": 0.803136,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 8,
+            "input": 16,
+            "cache_write_5m": 0,
+            "cache_write_1h": 92933,
+            "cache_read": 945712,
+            "output": 24223,
+            "tokens": 1062884
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -5441,15 +5458,15 @@
     "title": "Build transcript pre-run process",
     "days": {
       "2026-09-21": {
-        "tokens": 1453929,
-        "cost_usd": 1.170529,
+        "tokens": 12597620,
+        "cost_usd": 6.771741,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 74490,
-            "cache_read": 1363072,
-            "output": 16367,
-            "tokens": 1453929
+            "input": 209996,
+            "cache_read": 12337792,
+            "output": 49832,
+            "tokens": 12597620
           }
         },
         "unattributed": 0
@@ -6441,6 +6458,27 @@
             "cache_read": 15470464,
             "output": 100612,
             "tokens": 15934318
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-bbd0acf4b959",
+    "tool": "codex",
+    "title": "Investigate advisor student lists",
+    "days": {
+      "2026-09-21": {
+        "tokens": 3011580,
+        "cost_usd": 2.13928,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 135698,
+            "cache_read": 2853120,
+            "output": 22762,
+            "tokens": 3011580
           }
         },
         "unattributed": 0
