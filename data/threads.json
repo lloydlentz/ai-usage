@@ -2440,6 +2440,30 @@
     }
   },
   {
+    "key": "cc-bc5645522664",
+    "tool": "claude_code",
+    "title": "Executive project summary presentation",
+    "days": {
+      "2026-09-22": {
+        "tokens": 2466778,
+        "cost_usd": 1.096446,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 21,
+            "input": 42,
+            "cache_write_5m": 0,
+            "cache_write_1h": 88613,
+            "cache_read": 2350951,
+            "output": 27172,
+            "tokens": 2466778
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-bfebf8de77d2",
     "tool": "claude_code",
     "title": "Dashboard section arrangement",
@@ -2806,6 +2830,30 @@
             "cache_read": 22095021,
             "output": 290578,
             "tokens": 22947881
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-e9cb9ec01b1f",
+    "tool": "claude_code",
+    "title": "Grade review form Slate integration",
+    "days": {
+      "2026-09-22": {
+        "tokens": 1671953,
+        "cost_usd": 0.845959,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 14,
+            "input": 28,
+            "cache_write_5m": 0,
+            "cache_write_1h": 94149,
+            "cache_read": 1562087,
+            "output": 15689,
+            "tokens": 1671953
           }
         },
         "unattributed": 0
@@ -5438,15 +5486,15 @@
     "title": "Review grade form requirements",
     "days": {
       "2026-09-22": {
-        "tokens": 885159,
-        "cost_usd": 0.792575,
+        "tokens": 6496199,
+        "cost_usd": 4.867788,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 86164,
-            "cache_read": 792448,
-            "output": 6547,
-            "tokens": 885159
+            "input": 251980,
+            "cache_read": 6174720,
+            "output": 69499,
+            "tokens": 6496199
           }
         },
         "unattributed": 0
@@ -6535,6 +6583,20 @@
             "cache_read": 15470464,
             "output": 100612,
             "tokens": 15934318
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-22": {
+        "tokens": 349484,
+        "cost_usd": 0.715139,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 156802,
+            "cache_read": 192128,
+            "output": 554,
+            "tokens": 349484
           }
         },
         "unattributed": 0
