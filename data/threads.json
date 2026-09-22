@@ -2590,6 +2590,23 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-22": {
+        "tokens": 1815328,
+        "cost_usd": 0.996049,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-sonnet-5": {
+            "calls": 9,
+            "input": 18,
+            "cache_write_5m": 0,
+            "cache_write_1h": 155113,
+            "cache_read": 1655756,
+            "output": 4441,
+            "tokens": 1815328
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -5486,15 +5503,15 @@
     "title": "Review grade form requirements",
     "days": {
       "2026-09-22": {
-        "tokens": 19304791,
-        "cost_usd": 11.871734,
+        "tokens": 19800516,
+        "cost_usd": 12.144522,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 506711,
-            "cache_read": 18679424,
-            "output": 118656,
-            "tokens": 19304791
+            "input": 519750,
+            "cache_read": 19160704,
+            "output": 120062,
+            "tokens": 19800516
           }
         },
         "unattributed": 0
