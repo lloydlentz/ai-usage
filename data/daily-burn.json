@@ -5646,17 +5646,28 @@
   {
     "date": "2026-09-22",
     "codex_tokens": 24341125,
-    "claude_code_tokens": 19175057,
-    "claude_code_calls": 115,
+    "claude_code_tokens": 19605372,
+    "claude_code_calls": 121,
     "claude_chat_est": 30000,
     "chatgpt_est": 0,
     "gemini_est": 50000,
-    "total": 43596182,
+    "total": 44026497,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
         "models": {
+          "claude-opus-5-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 36955,
+            "cache_read": 392037,
+            "output": 1311,
+            "tokens": 430315,
+            "cost_usd": null,
+            "unpriced_tokens": 430315
+          },
           "claude-sonnet-5": {
             "calls": 115,
             "input": 230,
@@ -5699,7 +5710,7 @@
         "cache_read": 13.021498,
         "output": 3.8282
       },
-      "unpriced_tokens": 0
+      "unpriced_tokens": 430315
     }
   }
 ]

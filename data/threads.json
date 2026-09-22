@@ -2926,6 +2926,30 @@
     }
   },
   {
+    "key": "cc-ef09dce6db4e",
+    "tool": "claude_code",
+    "title": "Project",
+    "days": {
+      "2026-09-22": {
+        "tokens": 430315,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 430315,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 36955,
+            "cache_read": 392037,
+            "output": 1311,
+            "tokens": 430315
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-f4d4a9016cf0",
     "tool": "claude_code",
     "title": "ID Cards layout redesign",
