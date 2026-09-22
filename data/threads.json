@@ -3547,6 +3547,20 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-22": {
+        "tokens": 2059711,
+        "cost_usd": 1.542847,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 151926,
+            "cache_read": 1899008,
+            "output": 8777,
+            "tokens": 2059711
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -5415,6 +5429,27 @@
         "unpriced_tokens": 11095,
         "models": {},
         "unattributed": 11095
+      }
+    }
+  },
+  {
+    "key": "cx-746e42301f11",
+    "tool": "codex",
+    "title": "Review grade form requirements",
+    "days": {
+      "2026-09-22": {
+        "tokens": 885159,
+        "cost_usd": 0.792575,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 86164,
+            "cache_read": 792448,
+            "output": 6547,
+            "tokens": 885159
+          }
+        },
+        "unattributed": 0
       }
     }
   },
