@@ -5716,17 +5716,29 @@
   {
     "date": "2026-09-23",
     "codex_tokens": 24447638,
-    "claude_code_tokens": 0,
-    "claude_code_calls": 0,
+    "claude_code_tokens": 402750,
+    "claude_code_calls": 6,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 0,
-    "total": 24492638,
+    "total": 24895388,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
-        "models": {},
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 58410,
+            "cache_read": 342509,
+            "output": 1819,
+            "tokens": 402750,
+            "cost_usd": null,
+            "unpriced_tokens": 402750
+          }
+        },
         "unattributed": 0
       },
       "codex": {
@@ -5757,7 +5769,7 @@
         "cache_read": 9.471386,
         "output": 1.56948
       },
-      "unpriced_tokens": 0
+      "unpriced_tokens": 402750
     }
   }
 ]
