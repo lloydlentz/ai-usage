@@ -4113,15 +4113,15 @@
     "title": "Find Tiffin Rivetica review round",
     "days": {
       "2026-09-23": {
-        "tokens": 115839,
-        "cost_usd": 0.096089,
+        "tokens": 687288,
+        "cost_usd": 0.470816,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 10374,
-            "cache_read": 104832,
-            "output": 633,
-            "tokens": 115839
+            "input": 40980,
+            "cache_read": 643840,
+            "output": 2468,
+            "tokens": 687288
           }
         },
         "unattributed": 0
@@ -6922,15 +6922,15 @@
     "title": "Fix MGO task popup behavior",
     "days": {
       "2026-09-23": {
-        "tokens": 3227555,
-        "cost_usd": 1.939394,
+        "tokens": 18745735,
+        "cost_usd": 10.137346,
         "unpriced_tokens": 0,
         "models": {
           "gpt-5.6-sol": {
-            "input": 124630,
-            "cache_read": 3092736,
-            "output": 10189,
-            "tokens": 3227555
+            "input": 405663,
+            "cache_read": 18279936,
+            "output": 60136,
+            "tokens": 18745735
           }
         },
         "unattributed": 0
