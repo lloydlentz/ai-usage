@@ -4108,6 +4108,27 @@
     }
   },
   {
+    "key": "cx-27fcabf01c0f",
+    "tool": "codex",
+    "title": "Find Tiffin Rivetica review round",
+    "days": {
+      "2026-09-23": {
+        "tokens": 115839,
+        "cost_usd": 0.096089,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 10374,
+            "cache_read": 104832,
+            "output": 633,
+            "tokens": 115839
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-288370609175",
     "tool": "codex",
     "title": "Assess Slate site security",
@@ -6889,6 +6910,27 @@
             "cache_read": 19328,
             "output": 895,
             "tokens": 32585
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ca684cf5794c",
+    "tool": "codex",
+    "title": "Fix MGO task popup behavior",
+    "days": {
+      "2026-09-23": {
+        "tokens": 3227555,
+        "cost_usd": 1.939394,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 124630,
+            "cache_read": 3092736,
+            "output": 10189,
+            "tokens": 3227555
           }
         },
         "unattributed": 0
