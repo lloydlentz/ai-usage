@@ -4768,6 +4768,27 @@
     }
   },
   {
+    "key": "cx-490e4bec6606",
+    "tool": "codex",
+    "title": "Build GFCR Grants report",
+    "days": {
+      "2026-09-24": {
+        "tokens": 559425,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 559425,
+        "models": {
+          "gpt-6-luna": {
+            "input": 35388,
+            "cache_read": 521984,
+            "output": 2053,
+            "tokens": 559425
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-499a20f9ae00",
     "tool": "codex",
     "title": "Fix podcast category filtering",
@@ -6408,6 +6429,27 @@
             "cache_read": 972416,
             "output": 5696,
             "tokens": 1115046
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a28812441b48",
+    "tool": "codex",
+    "title": "Fix dashboard copy feedback",
+    "days": {
+      "2026-09-24": {
+        "tokens": 529926,
+        "cost_usd": 0.490962,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 36980,
+            "cache_read": 485504,
+            "output": 7442,
+            "tokens": 529926
           }
         },
         "unattributed": 0
