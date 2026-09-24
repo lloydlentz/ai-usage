@@ -3090,6 +3090,23 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-24": {
+        "tokens": 2402231,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 2402231,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 20,
+            "input": 40,
+            "cache_write_5m": 0,
+            "cache_write_1h": 90347,
+            "cache_read": 2303130,
+            "output": 8714,
+            "tokens": 2402231
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -4012,6 +4029,27 @@
             "cache_read": 774400,
             "output": 3570,
             "tokens": 910257
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-1f6da6c8a6c0",
+    "tool": "codex",
+    "title": "Capture Preceptor Check-in Info",
+    "days": {
+      "2026-09-24": {
+        "tokens": 880293,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 880293,
+        "models": {
+          "gpt-6-luna": {
+            "input": 62496,
+            "cache_read": 814336,
+            "output": 3461,
+            "tokens": 880293
           }
         },
         "unattributed": 0
@@ -6373,6 +6411,27 @@
             "cache_read": 923392,
             "output": 5769,
             "tokens": 1034489
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a0ca7a4d0f75",
+    "tool": "codex",
+    "title": "Add bulk attendee email import",
+    "days": {
+      "2026-09-24": {
+        "tokens": 1488836,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1488836,
+        "models": {
+          "gpt-6-luna": {
+            "input": 69302,
+            "cache_read": 1407744,
+            "output": 11790,
+            "tokens": 1488836
           }
         },
         "unattributed": 0
