@@ -4773,15 +4773,15 @@
     "title": "Build GFCR Grants report",
     "days": {
       "2026-09-24": {
-        "tokens": 6382091,
+        "tokens": 9229829,
         "cost_usd": 0.0,
-        "unpriced_tokens": 6382091,
+        "unpriced_tokens": 9229829,
         "models": {
           "gpt-6-luna": {
-            "input": 227876,
-            "cache_read": 6104192,
-            "output": 50023,
-            "tokens": 6382091
+            "input": 361339,
+            "cache_read": 8801280,
+            "output": 67210,
+            "tokens": 9229829
           }
         },
         "unattributed": 0
@@ -7752,6 +7752,27 @@
             "cache_read": 2316416,
             "output": 20490,
             "tokens": 2448572
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-dd6ac8792285",
+    "tool": "codex",
+    "title": "Move portfolio filter up",
+    "days": {
+      "2026-09-24": {
+        "tokens": 853084,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 853084,
+        "models": {
+          "gpt-6-luna": {
+            "input": 47558,
+            "cache_read": 800256,
+            "output": 5270,
+            "tokens": 853084
           }
         },
         "unattributed": 0
