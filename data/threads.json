@@ -4773,15 +4773,15 @@
     "title": "Build GFCR Grants report",
     "days": {
       "2026-09-24": {
-        "tokens": 9229829,
+        "tokens": 10125422,
         "cost_usd": 0.0,
-        "unpriced_tokens": 9229829,
+        "unpriced_tokens": 10125422,
         "models": {
           "gpt-6-luna": {
-            "input": 361339,
-            "cache_read": 8801280,
-            "output": 67210,
-            "tokens": 9229829
+            "input": 394622,
+            "cache_read": 9657600,
+            "output": 73200,
+            "tokens": 10125422
           }
         },
         "unattributed": 0
