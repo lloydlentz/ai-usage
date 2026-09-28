@@ -5888,13 +5888,13 @@
   },
   {
     "date": "2026-09-28",
-    "codex_tokens": 11102329,
+    "codex_tokens": 12176033,
     "claude_code_tokens": 0,
     "claude_code_calls": 0,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 11155329,
+    "total": 12229033,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
@@ -5913,12 +5913,12 @@
             "unpriced_tokens": 0
           },
           "gpt-6-luna": {
-            "input": 159170,
-            "cache_read": 3346176,
-            "output": 14422,
-            "tokens": 3519768,
+            "input": 179132,
+            "cache_read": 4388864,
+            "output": 25476,
+            "tokens": 4593472,
             "cost_usd": null,
-            "unpriced_tokens": 3519768
+            "unpriced_tokens": 4593472
           }
         },
         "unattributed": 0
@@ -5938,7 +5938,7 @@
         "cache_read": 2.905344,
         "output": 0.2986
       },
-      "unpriced_tokens": 3519768
+      "unpriced_tokens": 4593472
     }
   }
 ]
