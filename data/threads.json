@@ -2748,6 +2748,30 @@
     }
   },
   {
+    "key": "cc-d04f9860fc3b",
+    "tool": "claude_code",
+    "title": "Local markdown file",
+    "days": {
+      "2026-09-29": {
+        "tokens": 744991,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 744991,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 11,
+            "input": 24,
+            "cache_write_5m": 0,
+            "cache_write_1h": 42780,
+            "cache_read": 696553,
+            "output": 5634,
+            "tokens": 744991
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-d3a9e8a98a40",
     "tool": "claude_code",
     "title": "Chat thread token usage breakdown",
@@ -2919,6 +2943,30 @@
             "cache_read": 3415988,
             "output": 16572,
             "tokens": 3499856
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-e44649987a47",
+    "tool": "claude_code",
+    "title": null,
+    "days": {
+      "2026-09-29": {
+        "tokens": 58080,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 58080,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 32626,
+            "cache_read": 25038,
+            "output": 414,
+            "tokens": 58080
           }
         },
         "unattributed": 0
@@ -4858,6 +4906,20 @@
           }
         },
         "unattributed": 0
+      },
+      "2026-09-29": {
+        "tokens": 1576400,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1576400,
+        "models": {
+          "gpt-6-luna": {
+            "input": 186135,
+            "cache_read": 1382656,
+            "output": 7609,
+            "tokens": 1576400
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -5834,6 +5896,27 @@
             "cache_read": 19160704,
             "output": 120062,
             "tokens": 19800516
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-7499f914fa44",
+    "tool": "codex",
+    "title": "Configure engineering skills",
+    "days": {
+      "2026-09-29": {
+        "tokens": 392858,
+        "cost_usd": 0.358709,
+        "unpriced_tokens": 0,
+        "models": {
+          "gpt-5.6-sol": {
+            "input": 24282,
+            "cache_read": 362752,
+            "output": 5824,
+            "tokens": 392858
           }
         },
         "unattributed": 0
