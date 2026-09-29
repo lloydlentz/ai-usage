@@ -4208,15 +4208,15 @@
     "title": "Streamline Slate update pushes",
     "days": {
       "2026-09-29": {
-        "tokens": 7428265,
+        "tokens": 12616967,
         "cost_usd": 0.0,
-        "unpriced_tokens": 7428265,
+        "unpriced_tokens": 12616967,
         "models": {
           "gpt-6.1-sol": {
-            "input": 207583,
-            "cache_read": 7179264,
-            "output": 41418,
-            "tokens": 7428265
+            "input": 282997,
+            "cache_read": 12282368,
+            "output": 51602,
+            "tokens": 12616967
           }
         },
         "unattributed": 0
@@ -4929,9 +4929,9 @@
         "unattributed": 0
       },
       "2026-09-29": {
-        "tokens": 9048611,
+        "tokens": 10640664,
         "cost_usd": 0.0,
-        "unpriced_tokens": 9048611,
+        "unpriced_tokens": 10640664,
         "models": {
           "gpt-6-luna": {
             "input": 373271,
@@ -4940,10 +4940,10 @@
             "tokens": 6129610
           },
           "gpt-6-sol": {
-            "input": 110388,
-            "cache_read": 2795136,
-            "output": 13477,
-            "tokens": 2919001
+            "input": 248470,
+            "cache_read": 4241408,
+            "output": 21176,
+            "tokens": 4511054
           }
         },
         "unattributed": 0
