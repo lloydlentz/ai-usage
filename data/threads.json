@@ -4392,6 +4392,27 @@
     }
   },
   {
+    "key": "cx-2d01d0583c98",
+    "tool": "codex",
+    "title": "Prepare ITS meeting talking points",
+    "days": {
+      "2026-09-30": {
+        "tokens": 493174,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 493174,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 75265,
+            "cache_read": 416384,
+            "output": 1525,
+            "tokens": 493174
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-2d4da78e19be",
     "tool": "codex",
     "title": "Summarize page",
@@ -5360,6 +5381,27 @@
         "unpriced_tokens": 6708,
         "models": {},
         "unattributed": 6708
+      }
+    }
+  },
+  {
+    "key": "cx-5b50469bed0c",
+    "tool": "codex",
+    "title": null,
+    "days": {
+      "2026-09-30": {
+        "tokens": 484775,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 484775,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 59457,
+            "cache_read": 423168,
+            "output": 2150,
+            "tokens": 484775
+          }
+        },
+        "unattributed": 0
       }
     }
   },
@@ -6738,6 +6780,27 @@
             "cache_read": 485504,
             "output": 7442,
             "tokens": 529926
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-a3f880bfa1c7",
+    "tool": "codex",
+    "title": "Plan annual strategy retreat",
+    "days": {
+      "2026-09-30": {
+        "tokens": 110282,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 110282,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 16932,
+            "cache_read": 92416,
+            "output": 934,
+            "tokens": 110282
           }
         },
         "unattributed": 0
