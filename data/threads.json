@@ -3747,6 +3747,27 @@
     }
   },
   {
+    "key": "cx-0d20009c2b72",
+    "tool": "codex",
+    "title": "Extract prompt text from video",
+    "days": {
+      "2026-09-30": {
+        "tokens": 794626,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 794626,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 85728,
+            "cache_read": 705664,
+            "output": 3234,
+            "tokens": 794626
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-0d2dc77eb7fb",
     "tool": "codex",
     "title": "Add local Codex import flow",
@@ -7092,15 +7113,15 @@
     "title": "Update transcript review set",
     "days": {
       "2026-09-30": {
-        "tokens": 1816483,
+        "tokens": 3756013,
         "cost_usd": 0.0,
-        "unpriced_tokens": 1816483,
+        "unpriced_tokens": 3756013,
         "models": {
           "gpt-6.1-sol": {
-            "input": 81631,
-            "cache_read": 1718144,
-            "output": 16708,
-            "tokens": 1816483
+            "input": 119501,
+            "cache_read": 3612032,
+            "output": 24480,
+            "tokens": 3756013
           }
         },
         "unattributed": 0
