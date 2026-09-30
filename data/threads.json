@@ -7087,6 +7087,27 @@
     }
   },
   {
+    "key": "cx-b23cfb44062e",
+    "tool": "codex",
+    "title": "Update transcript review set",
+    "days": {
+      "2026-09-30": {
+        "tokens": 1816483,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1816483,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 81631,
+            "cache_read": 1718144,
+            "output": 16708,
+            "tokens": 1816483
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-b43ed664a6a0",
     "tool": "codex",
     "title": "Start Kathryn annual review",
