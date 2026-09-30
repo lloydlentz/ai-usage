@@ -2209,6 +2209,30 @@
     }
   },
   {
+    "key": "cc-9ab682e72008",
+    "tool": "claude_code",
+    "title": "Hardcoded email in deliver messages",
+    "days": {
+      "2026-09-30": {
+        "tokens": 5798690,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 5798690,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 42,
+            "input": 84,
+            "cache_write_5m": 0,
+            "cache_write_1h": 151657,
+            "cache_read": 5601356,
+            "output": 45593,
+            "tokens": 5798690
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-9bbb7779400f",
     "tool": "claude_code",
     "title": "MGO wrapper nav elements",
@@ -2765,6 +2789,23 @@
             "cache_read": 696553,
             "output": 5634,
             "tokens": 744991
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-09-30": {
+        "tokens": 788508,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 788508,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 10,
+            "input": 20,
+            "cache_write_5m": 0,
+            "cache_write_1h": 54523,
+            "cache_read": 729912,
+            "output": 4053,
+            "tokens": 788508
           }
         },
         "unattributed": 0
@@ -5721,6 +5762,27 @@
             "cache_read": 3509504,
             "output": 18380,
             "tokens": 3901746
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-6965293ee96b",
+    "tool": "codex",
+    "title": "Resolve Git working tree issues",
+    "days": {
+      "2026-09-30": {
+        "tokens": 263705,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 263705,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 31575,
+            "cache_read": 231168,
+            "output": 962,
+            "tokens": 263705
           }
         },
         "unattributed": 0
