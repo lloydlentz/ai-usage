@@ -6131,6 +6131,27 @@
     }
   },
   {
+    "key": "cx-78fa926c2772",
+    "tool": "codex",
+    "title": "Fix Slate push mismatch warning",
+    "days": {
+      "2026-09-30": {
+        "tokens": 827937,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 827937,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 44196,
+            "cache_read": 779264,
+            "output": 4477,
+            "tokens": 827937
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-79df408b36a8",
     "tool": "codex",
     "title": "Build transcript pre-run process",
@@ -7113,15 +7134,15 @@
     "title": "Update transcript review set",
     "days": {
       "2026-09-30": {
-        "tokens": 3756013,
+        "tokens": 4626896,
         "cost_usd": 0.0,
-        "unpriced_tokens": 3756013,
+        "unpriced_tokens": 4626896,
         "models": {
           "gpt-6.1-sol": {
-            "input": 119501,
-            "cache_read": 3612032,
-            "output": 24480,
-            "tokens": 3756013
+            "input": 134530,
+            "cache_read": 4465408,
+            "output": 26958,
+            "tokens": 4626896
           }
         },
         "unattributed": 0
@@ -7458,6 +7479,27 @@
             "cache_read": 23034624,
             "output": 76006,
             "tokens": 23760350
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cx-ca9c161721aa",
+    "tool": "codex",
+    "title": "Remove training tabs from Protocol",
+    "days": {
+      "2026-09-30": {
+        "tokens": 1226360,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1226360,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 57274,
+            "cache_read": 1165312,
+            "output": 3774,
+            "tokens": 1226360
           }
         },
         "unattributed": 0
