@@ -6989,6 +6989,27 @@
     }
   },
   {
+    "key": "cx-aa08d0a4921a",
+    "tool": "codex",
+    "title": "Review checklist setup SOP",
+    "days": {
+      "2026-10-01": {
+        "tokens": 1733909,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1733909,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 107200,
+            "cache_read": 1611776,
+            "output": 14933,
+            "tokens": 1733909
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-aa4c87874ecf",
     "tool": "codex",
     "title": "Update AGENTS project tracking",
