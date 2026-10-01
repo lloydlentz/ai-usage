@@ -6097,6 +6097,27 @@
     }
   },
   {
+    "key": "cx-75f2b24d6ce4",
+    "tool": "codex",
+    "title": "Find donors nearing $1M threshold",
+    "days": {
+      "2026-10-01": {
+        "tokens": 3586219,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 3586219,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 129031,
+            "cache_read": 3443200,
+            "output": 13988,
+            "tokens": 3586219
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-7686ae119094",
     "tool": "codex",
     "title": "Add transaction views and reports",
