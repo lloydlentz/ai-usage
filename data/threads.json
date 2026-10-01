@@ -4244,6 +4244,27 @@
     }
   },
   {
+    "key": "cx-223b2ece5781",
+    "tool": "codex",
+    "title": "Review Admissions Inbox AI Snippets",
+    "days": {
+      "2026-10-01": {
+        "tokens": 2010077,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 2010077,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 113462,
+            "cache_read": 1879680,
+            "output": 16935,
+            "tokens": 2010077
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-2254a7590ddf",
     "tool": "codex",
     "title": "Follow-up monitor",
