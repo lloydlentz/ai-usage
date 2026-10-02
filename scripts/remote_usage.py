@@ -21,6 +21,22 @@ TYPES = ("input", "cache_write_5m", "cache_write_1h", "cache_read", "output")
 COLUMNS = {"claude_code": "claude_code_tokens", "codex": "codex_tokens"}
 
 
+def acquire_lock(handle):
+    """Non-blocking exclusive lock on an open file; fcntl has no Windows build.
+
+    The OS releases either lock even after a killed collector, unlike a lock directory.
+    """
+    try:
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        raise RuntimeError("Another remote collector operation is running") from None
+
+
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
@@ -369,14 +385,9 @@ def main():
         parser.error("--input is only supported with collect")
     settings, namespace = config()
     sdk, root = connect(settings, namespace)
-    # OS releases the lock even after a killed collector, unlike a lock directory.
-    import fcntl
     PRIVATE.mkdir(parents=True, exist_ok=True)
     with (PRIVATE / "remote-collector.lock").open("w") as lock:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            raise RuntimeError("Another remote collector operation is running") from None
+        acquire_lock(lock)
         if args.command == "initialize":
             initialize(settings, root, sdk)
         elif args.command == "collect":
