@@ -2404,6 +2404,30 @@
     }
   },
   {
+    "key": "cc-b50545e91f6e",
+    "tool": "claude_code",
+    "title": "Slate AI Lightning talk email review",
+    "days": {
+      "2026-10-02": {
+        "tokens": 82529,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 82529,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 40686,
+            "cache_read": 40753,
+            "output": 1088,
+            "tokens": 82529
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-b677e6698e34",
     "tool": "claude_code",
     "title": "Fundraising Initiative field analysis",
@@ -2859,18 +2883,18 @@
     "title": "Bayesian predictor for transaction categorization",
     "days": {
       "2026-10-02": {
-        "tokens": 6614105,
+        "tokens": 6922354,
         "cost_usd": 0.0,
-        "unpriced_tokens": 6614105,
+        "unpriced_tokens": 6922354,
         "models": {
           "claude-opus-5-5": {
-            "calls": 56,
-            "input": 112,
+            "calls": 58,
+            "input": 116,
             "cache_write_5m": 0,
-            "cache_write_1h": 103813,
-            "cache_read": 6480219,
-            "output": 29961,
-            "tokens": 6614105
+            "cache_write_1h": 104004,
+            "cache_read": 6788120,
+            "output": 30114,
+            "tokens": 6922354
           }
         },
         "unattributed": 0
@@ -2924,18 +2948,18 @@
     "title": "Machine setup review (fork)",
     "days": {
       "2026-10-02": {
-        "tokens": 2787346,
+        "tokens": 3000141,
         "cost_usd": 0.0,
-        "unpriced_tokens": 2787346,
+        "unpriced_tokens": 3000141,
         "models": {
           "claude-opus-5-5": {
-            "calls": 29,
-            "input": 58,
+            "calls": 31,
+            "input": 62,
             "cache_write_5m": 0,
-            "cache_write_1h": 114381,
-            "cache_read": 2660994,
-            "output": 11913,
-            "tokens": 2787346
+            "cache_write_1h": 115646,
+            "cache_read": 2871720,
+            "output": 12713,
+            "tokens": 3000141
           }
         },
         "unattributed": 0
