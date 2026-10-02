@@ -2854,6 +2854,30 @@
     }
   },
   {
+    "key": "cc-d27bf64f2468",
+    "tool": "claude_code",
+    "title": "Bayesian predictor for transaction categorization",
+    "days": {
+      "2026-10-02": {
+        "tokens": 233402,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 233402,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 3,
+            "input": 6,
+            "cache_write_5m": 0,
+            "cache_write_1h": 39103,
+            "cache_read": 192950,
+            "output": 1343,
+            "tokens": 233402
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-d3a9e8a98a40",
     "tool": "claude_code",
     "title": "Chat thread token usage breakdown",
@@ -6742,15 +6766,15 @@
     "title": "Add cloud usage to summary report",
     "days": {
       "2026-10-02": {
-        "tokens": 7303391,
+        "tokens": 7591189,
         "cost_usd": 0.0,
-        "unpriced_tokens": 7303391,
+        "unpriced_tokens": 7591189,
         "models": {
           "gpt-6.1-sol": {
-            "input": 264357,
-            "cache_read": 6992384,
-            "output": 46650,
-            "tokens": 7303391
+            "input": 377540,
+            "cache_read": 7166848,
+            "output": 46801,
+            "tokens": 7591189
           }
         },
         "unattributed": 0
@@ -7716,6 +7740,20 @@
             "cache_read": 745728,
             "output": 6325,
             "tokens": 810067
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-10-02": {
+        "tokens": 596489,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 596489,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 87106,
+            "cache_read": 508928,
+            "output": 455,
+            "tokens": 596489
           }
         },
         "unattributed": 0
