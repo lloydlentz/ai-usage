@@ -40,7 +40,7 @@ def acquire_lock(handle):
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True))
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True), encoding="utf-8")
     temporary.replace(path)
 
 
@@ -190,7 +190,7 @@ def config():
     path = PRIVATE / "remote-config.json"
     if not path.exists():
         raise ValueError("Create data/private/remote-config.json; see REMOTE_USAGE.md")
-    value = json.loads(path.read_text())
+    value = json.loads(path.read_text(encoding="utf-8"))
     for key in ("project_id", "machine_id"):
         if not re.fullmatch(r"[a-zA-Z0-9_-]{1,80}", value.get(key, "")):
             raise ValueError("Invalid " + key)
@@ -235,7 +235,7 @@ def initialize(settings, root, sdk):
     if root.get().exists:
         raise ValueError("Ledger already initialized or initializing; use collect/pull")
     if draft_path.exists():
-        draft = json.loads(draft_path.read_text())
+        draft = json.loads(draft_path.read_text(encoding="utf-8"))
         if draft["project_id"] != settings["project_id"] or draft["machine_id"] != settings["machine_id"] or draft["namespace"] != root.parent.id or draft["database"] != settings.get("database", "(default)"):
             raise ValueError("Migration draft belongs to another project/machine")
     else:
@@ -243,8 +243,8 @@ def initialize(settings, root, sdk):
         records = capture(since=migration_day)
         import build_daily_burn
         build_daily_burn.main()
-        rows = json.loads((ROOT / "data/daily-burn.json").read_text())
-        threads = json.loads((ROOT / "data/threads.json").read_text())
+        rows = json.loads((ROOT / "data/daily-burn.json").read_text(encoding="utf-8"))
+        threads = json.loads((ROOT / "data/threads.json").read_text(encoding="utf-8"))
         cutover = datetime.now(timezone.utc).isoformat()
         today = datetime.fromisoformat(cutover).astimezone(ZoneInfo("America/Chicago")).date().isoformat()
         by_day, _ = aggregate([], [], [{"record": r} for r in records.values()])
@@ -286,14 +286,14 @@ def upload(settings, root, sdk, exported=None):
     queue_path = PRIVATE / "remote-pending.json"
     # Save before networking. A failed run retains all measurements for retry,
     # including requests whose source logs disappear before the next scan.
-    queue = json.loads(queue_path.read_text()) if queue_path.exists() else {"records": {}}
+    queue = json.loads(queue_path.read_text(encoding="utf-8")) if queue_path.exists() else {"records": {}}
     destination = {"project_id": settings["project_id"], "namespace": root.parent.id,
                    "database": settings.get("database", "(default)"), "machine_id": settings["machine_id"]}
     if queue.get("destination", destination) != destination:
         raise ValueError("Pending uploads belong to another destination or machine")
     if exported is None:
         captured = capture(since=cutover_day)
-        scan = json.loads((PRIVATE / "collection.json").read_text())
+        scan = json.loads((PRIVATE / "collection.json").read_text(encoding="utf-8"))
     else:
         # Cloud adapters supply the same measured record contract. No provider
         # integration or token estimate is silently fabricated here.
@@ -391,7 +391,7 @@ def main():
         if args.command == "initialize":
             initialize(settings, root, sdk)
         elif args.command == "collect":
-            upload(settings, root, sdk, json.loads(args.input.read_text()) if args.input else None)
+            upload(settings, root, sdk, json.loads(args.input.read_text(encoding="utf-8")) if args.input else None)
         else:
             pull(root)
 
