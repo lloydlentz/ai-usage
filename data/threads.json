@@ -2488,6 +2488,30 @@
     }
   },
   {
+    "key": "cc-b8c76444765b",
+    "tool": "claude_code",
+    "title": "Slate Push HTML part not found error",
+    "days": {
+      "2026-10-02": {
+        "tokens": 1420972,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1420972,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 21,
+            "input": 42,
+            "cache_write_5m": 0,
+            "cache_write_1h": 87096,
+            "cache_read": 1327073,
+            "output": 6761,
+            "tokens": 1420972
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-b8d644ac1f7e",
     "tool": "claude_code",
     "title": "Custom SQL entity row creation",
@@ -2806,6 +2830,23 @@
             "cache_read": 3148667,
             "output": 15080,
             "tokens": 3309000
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-10-02": {
+        "tokens": 487281,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 487281,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 4,
+            "input": 8,
+            "cache_write_5m": 0,
+            "cache_write_1h": 99510,
+            "cache_read": 386235,
+            "output": 1528,
+            "tokens": 487281
           }
         },
         "unattributed": 0
@@ -5452,15 +5493,15 @@
     "title": "Create five shareable branding mock\u0173",
     "days": {
       "2026-10-02": {
-        "tokens": 914506,
+        "tokens": 1918339,
         "cost_usd": 0.0,
-        "unpriced_tokens": 914506,
+        "unpriced_tokens": 1918339,
         "models": {
           "gpt-6.1-sol": {
-            "input": 91379,
-            "cache_read": 812800,
-            "output": 10327,
-            "tokens": 914506
+            "input": 96959,
+            "cache_read": 1808896,
+            "output": 12484,
+            "tokens": 1918339
           }
         },
         "unattributed": 0
@@ -6675,6 +6716,27 @@
     }
   },
   {
+    "key": "cx-9b70da309680",
+    "tool": "codex",
+    "title": "Add cloud usage to summary report",
+    "days": {
+      "2026-10-02": {
+        "tokens": 4221254,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 4221254,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 236804,
+            "cache_read": 3949056,
+            "output": 35394,
+            "tokens": 4221254
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-9d08670e0211",
     "tool": "codex",
     "title": "Commit Victor reference documents",
@@ -6919,6 +6981,20 @@
             "cache_read": 799744,
             "output": 3545,
             "tokens": 906575
+          }
+        },
+        "unattributed": 0
+      },
+      "2026-10-02": {
+        "tokens": 6620042,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 6620042,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 435095,
+            "cache_read": 6165376,
+            "output": 19571,
+            "tokens": 6620042
           }
         },
         "unattributed": 0

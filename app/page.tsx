@@ -101,6 +101,7 @@ function formatRefreshed(iso: string) {
 }
 
 export default function TokenBurnDashboard() {
+  const collectors = (meta as { collectors?: { machine_id: string; collected_at: string; sources_available: Record<string, boolean> }[] }).collectors || [];
   const [showDateFilters, setShowDateFilters] = useState(false);
   const [windowKey, setWindowKey] = useState<WindowKey | "custom">("all");
   const [range, setRange] = useState<DateRange>(() => getWindowRange(rows, "all"));
@@ -608,6 +609,14 @@ export default function TokenBurnDashboard() {
       </section>
 
       <p className="footerNote">Last log collection: {meta.collected_at ? formatRefreshed(meta.collected_at) : "unknown"} (America/Chicago). Data build time is shown separately below.</p>
+      {collectors.length > 0 && <div className="footerNote" aria-label="Machine collection status">
+        <p>Combined usage from {collectors.length} collectors. The freshness warning follows the oldest collector.</p>
+        <ul>{collectors.map((collector) => <li key={collector.machine_id}>
+          {collector.machine_id}: {formatRefreshed(collector.collected_at)} (America/Chicago)
+          {mounted && freshness(collector.collected_at, now) === "stale" ? " · overdue" : ""}
+          {Object.values(collector.sources_available).some((available) => !available) ? " · a source was unavailable" : ""}
+        </li>)}</ul>
+      </div>}
       <p className="footerNote">Pricing verified {pricing.verified_at}. {pricing.benchmark}</p>
       {overdueRates.length > 0 && <p className="ledgerWarn">Pricing review overdue for {overdueRates.join(", ")}. The stored rate may no longer apply.</p>}
       <p className="footerNote">

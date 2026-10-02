@@ -566,8 +566,10 @@ def build_threads(fresh: list[dict], captured: list[dict], rows: list[dict],
         days = {}
         for day in sorted(chosen[key]):
             entry = chosen[key][day]
+            # Firestore map fields arrive alphabetically. Keep the existing
+            # lifecycle order so a remote pull does not reformat all history.
             models = {
-                model: {k: v for k, v in counts.items() if k not in ("cost_usd", "unpriced_tokens")}
+                model: {k: counts[k] for k in ("calls", *TOKEN_TYPES, "tokens") if k in counts}
                 for model, counts in sorted((entry.get("models") or {}).items())
             }
             unattributed = entry.get("unattributed") or 0
@@ -651,9 +653,16 @@ def validate_rows(rows: list[dict]) -> None:
                 raise ValueError(f"{row['date']}: {tool} split does not reconcile")
 
 
-def main(repair_days: list[str] | None = None):
-    with open(DATA / "exact-daily.json") as fh:
-        exact = {row["date"]: row for row in json.load(fh)}
+def main(repair_days: list[str] | None = None, remote: bool = False):
+    bundle = None
+    if remote:
+        if repair_days:
+            raise ValueError("Local Codex repairs cannot modify the remote ledger")
+        bundle = json.loads((DATA / "private" / "remote-input.json").read_text())
+        exact = {row["date"]: row for row in bundle["exact"]}
+    else:
+        with open(DATA / "exact-daily.json") as fh:
+            exact = {row["date"]: row for row in json.load(fh)}
     out_path = DATA / "daily-burn.json"
     existing = load_existing(out_path)
     if repair_days:
@@ -716,7 +725,7 @@ def main(repair_days: list[str] | None = None):
     threads_path = DATA / "threads.json"
     fresh_threads_path = DATA / "private" / "thread-daily.json"
     threads = build_threads(
-        json.loads(fresh_threads_path.read_text()) if fresh_threads_path.exists() else [],
+        bundle["threads"] if bundle is not None else (json.loads(fresh_threads_path.read_text()) if fresh_threads_path.exists() else []),
         json.loads(threads_path.read_text()) if threads_path.exists() else [],
         rows,
         rates,
@@ -739,7 +748,7 @@ def main(repair_days: list[str] | None = None):
 
     now = datetime.now(ZoneInfo("America/Chicago"))
     collection_path = DATA / "private" / "collection.json"
-    collection = json.loads(collection_path.read_text()) if collection_path.exists() else {}
+    collection = bundle["collection"] if bundle is not None else (json.loads(collection_path.read_text()) if collection_path.exists() else {})
     meta = {
         "refreshed_at": now.isoformat(timespec="seconds"),
         "collected_at": collection.get("collected_at"),
@@ -757,6 +766,9 @@ def main(repair_days: list[str] | None = None):
             "unpriced_models": sorted(unpriced_days),
         },
     }
+    if bundle is not None:
+        meta["collection_mode"] = "firestore"
+        meta["collectors"] = collection["collectors"]
     with open(DATA / "meta.json", "w") as fh:
         json.dump(meta, fh)
 
@@ -806,5 +818,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repair-codex-days", nargs="+", default=[], metavar="YYYY-MM-DD",
                         help="Explicitly rebuild specified Codex splits from complete logs; originals backed up privately")
+    parser.add_argument("--remote", action="store_true", help="Build from the atomic Firestore bundle written by remote_usage.py pull")
     args = parser.parse_args()
-    main(args.repair_codex_days)
+    main(args.repair_codex_days, remote=args.remote)

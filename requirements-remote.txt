@@ -1,0 +1,2 @@
+# Optional collector dependency; install with Python 3.10+ in .venv-remote.
+google-cloud-firestore>=2.21,<3

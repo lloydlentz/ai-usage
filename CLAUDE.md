@@ -11,6 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Deployment**: GitHub Pages at `/ai-usage` base path; triggered by changes to data files or source code
 - **Data refresh**: Hourly cron job via `scripts/refresh_and_push.sh` (SSH-authenticated git push)
 - **Data strategy**: Additive ledger—once exact data is captured, it's frozen even if source logs are pruned
+- **Optional remote collection**: Firestore combines measured usage from trusted machines; setup, migration boundaries, credentials, and cloud import contract are in [REMOTE_USAGE.md](./REMOTE_USAGE.md). No private remote configuration means the existing local-only pipeline.
 
 ## Commands
 
@@ -36,6 +37,12 @@ python3 scripts/extract_exact.py    # Extract tokens from local logs into data/e
 python3 scripts/build_daily_burn.py # Merge exact + estimates, price against data/pricing.json
                                     # → data/daily-burn.json + data/meta.json
 bash scripts/refresh_and_push.sh    # Full pipeline: extract, build, commit, push
+
+# Optional Firestore (Python 3.10+ with requirements-remote.txt)
+.venv-remote/bin/python scripts/remote_usage.py initialize # Publisher: migrate once
+bash scripts/collect_usage.sh                            # Any machine: upload only
+.venv-remote/bin/python scripts/remote_usage.py pull       # Publisher: atomic private bundle
+python3 scripts/build_daily_burn.py --remote              # Build from that bundle
 ```
 
 ## Architecture
@@ -198,6 +205,7 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 
 **refresh_and_push.sh**: Cron entry point
 - Runs extract → build → commit → push via SSH
+- If `data/private/remote-config.json` exists, instead runs Firestore collect → pull → `build_daily_burn.py --remote` → validate → commit → push. Only one publisher runs this script; other machines run `collect_usage.sh`. The SDK uses `.venv-remote/bin/python` or an absolute `REMOTE_PYTHON` override; the local builder and cron tests retain Python 3.9 compatibility.
 - Stages only `data/daily-burn.json`, `data/meta.json` and `data/threads.json`; skips the push if nothing changed
 - Installed in `crontab -e` as: `0 * * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh`
 - Uses SSH key authentication (not stored credentials)
@@ -236,6 +244,30 @@ of its captured and freshly extracted value. This protects both fully pruned
 and partially pruned days. Estimates and driver labels refresh on every run;
 costs are always recomputed. A merged split that exceeds its aggregate fails
 validation and requires an explicit audited correction.
+
+### Optional remote ledger
+
+`scripts/remote_usage.py` stores scrubbed measurements in Firestore. Claude
+requests have provider-identity hashes; Codex snapshots have session/day hashes.
+Mirrored requests count once, and Codex keeps a whole nondecreasing snapshot,
+not per-leaf maxima. Contradictory splits stop collection. The extractor's
+high-water/restart rules remain the authority. The private queue survives upload
+failures, and only a complete successful upload advances a collector heartbeat.
+
+Migration pins the existing published daily/thread measurements and the currently
+available migration-day record identities. The combined input is that baseline plus only
+distinct post-baseline contributions. Unseen pre-migration identities are excluded
+to avoid guessing overlap with pruned logs. Historical backfill requires an audit.
+Read REMOTE_USAGE.md before migrating or interpreting migration-day exclusions.
+
+`pull` atomically replaces `data/private/remote-input.json` (exact rows, thread
+splits, collection metadata). `--remote` consumes that bundle without mixing it
+with local extraction, then uses the same validation, estimates, freezing and
+rate card as before. `meta.json` includes non-sensitive collector IDs and scan
+times; the dashboard lists them and uses the oldest collector for freshness.
+The public page remains a static export. Credentials, retry queues, migration
+drafts, and SDK environments are never committed. Server SDK access uses IAM,
+not browser Security Rules; this version assumes trusted personal machines.
 
 ### Activity Calendar Heatmap
 - GitHub-style layout: rows = days of week (Mon–Sun), columns = weeks

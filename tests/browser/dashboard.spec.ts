@@ -101,6 +101,25 @@ test("stale collection does not claim live or invent today's readings", async ({
   await expect(page.locator(".ledgerWarn").first()).toContainText("Today’s missing readings are unknown");
 });
 
+test("combined reports identify each collector and disclose overdue scans", async ({ page }) => {
+  const meta = JSON.parse(readFileSync("data/meta.json", "utf8"));
+  const collectors = meta.collectors || [];
+  if (collectors.length) {
+    const latest = Math.max(...collectors.map((collector: { collected_at: string }) => Date.parse(collector.collected_at)));
+    await page.clock.install({ time: new Date(latest + 24 * 60 * 60_000) });
+  }
+  await openDashboard(page);
+  const status = page.getByLabel("Machine collection status");
+  if (!collectors.length) {
+    await expect(status).toHaveCount(0);
+    return;
+  }
+  await expect(status.locator("li")).toHaveCount(collectors.length);
+  for (const collector of collectors) {
+    await expect(status.locator("li").filter({ hasText: collector.machine_id })).toContainText("overdue");
+  }
+});
+
 test("today column reads the viewer's Chicago day", async ({ page }) => {
   const lastDay = JSON.parse(readFileSync("data/daily-burn.json", "utf8")).at(-1);
   // 18:00 UTC is midday in Chicago under both CST and CDT.

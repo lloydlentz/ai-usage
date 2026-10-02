@@ -45,8 +45,15 @@ trap 'exit 143' TERM
 # Missing source directories are a collector failure, not a zero-usage day.
 [[ -d "$HOME/.claude/projects" ]]
 [[ -d "$HOME/.codex/sessions" || -d "$HOME/.codex/archived_sessions" ]]
-python3 scripts/extract_exact.py
-python3 scripts/build_daily_burn.py
+if [[ -f data/private/remote-config.json ]]; then
+  REMOTE_RUNTIME="${REMOTE_PYTHON:-$REPO/.venv-remote/bin/python}"
+  "$REMOTE_RUNTIME" scripts/remote_usage.py collect
+  "$REMOTE_RUNTIME" scripts/remote_usage.py pull
+  python3 scripts/build_daily_burn.py --remote
+else
+  python3 scripts/extract_exact.py
+  python3 scripts/build_daily_burn.py
+fi
 # Cron has a minimal PATH; the Python-only pipeline must not depend on npm.
 python3 -m unittest discover -s tests -t . -v
 validated=1

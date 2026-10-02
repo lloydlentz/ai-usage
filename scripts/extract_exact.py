@@ -228,7 +228,8 @@ def _codex_thread_meta() -> dict:
     return meta
 
 
-def extract_claude_code(threads: dict | None = None):
+def extract_claude_code(threads: dict | None = None, records: list | None = None,
+                       record_since: str | None = None):
     """Per-day exact tokens, API call counts and per-model type splits.
 
     Pass a dict as `threads` to collect the same counts per conversation as
@@ -323,6 +324,26 @@ def extract_claude_code(threads: dict | None = None):
                 tokens = inp + cache_write + cache_read + out
                 day = local_date(ts)
                 model = message.get("model") or "<unknown>"
+                if records is not None and (record_since is None or day >= record_since):
+                    # Without a provider identity a mirrored request cannot be
+                    # deduplicated safely. Fail remote collection explicitly.
+                    if key == (None, None):
+                        if tokens:
+                            raise ValueError("Claude usage lacks a request/message ID; cannot upload safely")
+                        # Local synthetic/error turns report zero tokens but
+                        # are still calls. Give those a deterministic identity.
+                        identity = json.dumps([session_id, ts, model, usage], sort_keys=True)
+                    else:
+                        identity = json.dumps(key, separators=(",", ":"))
+                    counts = {"calls": 1, "input": inp, "cache_write_5m": write_5m,
+                              "cache_write_1h": write_1h, "cache_read": cache_read,
+                              "output": out, "tokens": tokens}
+                    records.append({
+                        "id": "cc-" + hashlib.sha256(identity.encode()).hexdigest(),
+                        "tool": "claude_code", "date": day, "first_at": _instant(ts).isoformat(),
+                        "thread": thread_key("claude_code", session_id),
+                        "counts": {"models": {model: counts}, "unattributed": 0},
+                    })
 
                 daily_tokens[day] += tokens
                 daily_calls[day] += 1
@@ -347,7 +368,8 @@ def extract_claude_code(threads: dict | None = None):
     return daily_tokens, daily_calls, day_projects, day_models
 
 
-def extract_codex(threads: dict | None = None):
+def extract_codex(threads: dict | None = None, records: list | None = None,
+                  record_since: str | None = None):
     """Per-day exact tokens and per-model type splits from ~/.codex rollouts.
 
     Pass a dict as `threads` to collect the same counts per conversation as
@@ -516,6 +538,8 @@ def extract_codex(threads: dict | None = None):
             model = None
             session_id = None
             thread = None
+            record_days = defaultdict(_new_thread_day)
+            record_first = {}
             with open(path) as fh:
                 for line in fh:
                     try:
@@ -603,6 +627,10 @@ def extract_codex(threads: dict | None = None):
                         day_unattributed[day] += unattributed
 
                     buckets = [day_models[day][model or "<unknown>"]]
+                    if records is not None and (record_since is None or day >= record_since):
+                        record_first.setdefault(day, _instant(ts).isoformat())
+                        record_days[day]["unattributed"] += unattributed
+                        buckets.append(record_days[day]["models"][model or "<unknown>"])
                     if threads is not None:
                         if thread is None:
                             thread = _codex_thread(threads, codex_meta, session_id or path.stem)
@@ -613,6 +641,19 @@ def extract_codex(threads: dict | None = None):
                         bucket["input"] += uncached_input
                         bucket["cache_read"] += cache_read
                         bucket["output"] += output
+            if records is not None:
+                if not session_id and record_days:
+                    raise ValueError("Codex usage lacks a session ID; cannot upload safely")
+                for day, counts in sorted(record_days.items()):
+                    identity = json.dumps([session_id, day], separators=(",", ":"))
+                    records.append({
+                        "id": "cx-" + hashlib.sha256(identity.encode()).hexdigest(),
+                        "tool": "codex", "date": day, "first_at": record_first[day],
+                        "thread": (thread_key("codex", session_id) if thread is None else
+                                   next(key for key, value in threads.items() if value is thread)),
+                        "counts": tool_breakdown(counts["models"], CODEX_TYPES,
+                                                 unattributed=counts["unattributed"]),
+                    })
             if file_restarts:
                 restarts += file_restarts
                 restarted_files += 1
@@ -650,10 +691,10 @@ def tool_breakdown(models: dict, types: tuple, unattributed: int = 0,
     return {"models": out, "unattributed": unattributed}
 
 
-def main():
+def main(records: list | None = None, record_since: str | None = None):
     threads = {}
-    cc_tokens, cc_calls, day_projects, cc_models = extract_claude_code(threads)
-    codex_tokens, codex_day_projects, codex_models, codex_unattributed = extract_codex(threads)
+    cc_tokens, cc_calls, day_projects, cc_models = extract_claude_code(threads, records, record_since)
+    codex_tokens, codex_day_projects, codex_models, codex_unattributed = extract_codex(threads, records, record_since)
 
     for day, projects in codex_day_projects.items():
         for project, tokens in projects.items():
@@ -715,6 +756,9 @@ def main():
     ]
     with open(PRIVATE_DIR / "thread-daily.json", "w") as fh:
         json.dump(thread_rows, fh, indent=2)
+    if records is not None:
+        for record in records:
+            record["title"] = threads.get(record["thread"], {}).get("title")
 
     # This clock is independent of repricing/building the ledger. Never claim
     # a fresh collection merely because build_daily_burn ran again.
