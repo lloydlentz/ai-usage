@@ -6133,27 +6133,27 @@
   {
     "date": "2026-10-02",
     "codex_tokens": 18405018,
-    "claude_code_tokens": 2378503,
-    "claude_code_calls": 31,
+    "claude_code_tokens": 11896830,
+    "claude_code_calls": 117,
     "claude_chat_est": 30000,
     "chatgpt_est": 15000,
     "gemini_est": 8000,
-    "total": 20836521,
+    "total": 30354848,
     "driver": "unlabeled",
     "evidence": "exact logs; add a driver label for this day",
     "breakdown": {
       "claude_code": {
         "models": {
           "claude-opus-5-5": {
-            "calls": 31,
-            "input": 62,
+            "calls": 117,
+            "input": 234,
             "cache_write_5m": 0,
-            "cache_write_1h": 231012,
-            "cache_read": 2136852,
-            "output": 10577,
-            "tokens": 2378503,
+            "cache_write_1h": 458407,
+            "cache_read": 11384985,
+            "output": 53204,
+            "tokens": 11896830,
             "cost_usd": null,
-            "unpriced_tokens": 2378503
+            "unpriced_tokens": 11896830
           }
         },
         "unattributed": 0
@@ -6186,7 +6186,7 @@
         "cache_read": 0.0,
         "output": 0.0
       },
-      "unpriced_tokens": 20783521
+      "unpriced_tokens": 30301848
     }
   }
 ]

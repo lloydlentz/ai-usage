@@ -2859,18 +2859,18 @@
     "title": "Bayesian predictor for transaction categorization",
     "days": {
       "2026-10-02": {
-        "tokens": 233402,
+        "tokens": 6614105,
         "cost_usd": 0.0,
-        "unpriced_tokens": 233402,
+        "unpriced_tokens": 6614105,
         "models": {
           "claude-opus-5-5": {
-            "calls": 3,
-            "input": 6,
+            "calls": 56,
+            "input": 112,
             "cache_write_5m": 0,
-            "cache_write_1h": 39103,
-            "cache_read": 192950,
-            "output": 1343,
-            "tokens": 233402
+            "cache_write_1h": 103813,
+            "cache_read": 6480219,
+            "output": 29961,
+            "tokens": 6614105
           }
         },
         "unattributed": 0
@@ -2912,6 +2912,30 @@
             "cache_read": 9993477,
             "output": 49117,
             "tokens": 10578717
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-d8683d6c3d82",
+    "tool": "claude_code",
+    "title": "Machine setup review (fork)",
+    "days": {
+      "2026-10-02": {
+        "tokens": 2787346,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 2787346,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 29,
+            "input": 58,
+            "cache_write_5m": 0,
+            "cache_write_1h": 114381,
+            "cache_read": 2660994,
+            "output": 11913,
+            "tokens": 2787346
           }
         },
         "unattributed": 0
@@ -3121,6 +3145,30 @@
             "cache_read": 1562087,
             "output": 15689,
             "tokens": 1671953
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-ebf01eca9688",
+    "tool": "claude_code",
+    "title": "Machine setup review",
+    "days": {
+      "2026-10-02": {
+        "tokens": 350278,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 350278,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 4,
+            "input": 8,
+            "cache_write_5m": 0,
+            "cache_write_1h": 48304,
+            "cache_read": 299870,
+            "output": 2096,
+            "tokens": 350278
           }
         },
         "unattributed": 0
