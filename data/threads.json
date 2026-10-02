@@ -2493,18 +2493,18 @@
     "title": "Slate Push HTML part not found error",
     "days": {
       "2026-10-02": {
-        "tokens": 1420972,
+        "tokens": 1657820,
         "cost_usd": 0.0,
-        "unpriced_tokens": 1420972,
+        "unpriced_tokens": 1657820,
         "models": {
           "claude-opus-5-5": {
-            "calls": 21,
-            "input": 42,
+            "calls": 24,
+            "input": 48,
             "cache_write_5m": 0,
-            "cache_write_1h": 87096,
-            "cache_read": 1327073,
-            "output": 6761,
-            "tokens": 1420972
+            "cache_write_1h": 92399,
+            "cache_read": 1557667,
+            "output": 7706,
+            "tokens": 1657820
           }
         },
         "unattributed": 0
@@ -6637,15 +6637,15 @@
     "title": "Brainstorm domains and project ideas",
     "days": {
       "2026-10-02": {
-        "tokens": 134414,
+        "tokens": 406008,
         "cost_usd": 0.0,
-        "unpriced_tokens": 134414,
+        "unpriced_tokens": 406008,
         "models": {
           "gpt-6.1-sol": {
-            "input": 36747,
-            "cache_read": 96896,
-            "output": 771,
-            "tokens": 134414
+            "input": 73326,
+            "cache_read": 330496,
+            "output": 2186,
+            "tokens": 406008
           }
         },
         "unattributed": 0
@@ -6742,15 +6742,15 @@
     "title": "Add cloud usage to summary report",
     "days": {
       "2026-10-02": {
-        "tokens": 6033161,
+        "tokens": 7303391,
         "cost_usd": 0.0,
-        "unpriced_tokens": 6033161,
+        "unpriced_tokens": 7303391,
         "models": {
           "gpt-6.1-sol": {
-            "input": 256150,
-            "cache_read": 5733888,
-            "output": 43123,
-            "tokens": 6033161
+            "input": 264357,
+            "cache_read": 6992384,
+            "output": 46650,
+            "tokens": 7303391
           }
         },
         "unattributed": 0
