@@ -196,7 +196,7 @@ def _codex_thread_meta() -> dict:
     meta = {}
     index = HOME / ".codex" / "session_index.jsonl"
     if index.exists():
-        for line in index.open():
+        for line in index.open(encoding="utf-8"):
             try:
                 entry = json.loads(line)
             except json.JSONDecodeError:
@@ -274,7 +274,7 @@ def extract_claude_code(threads: dict | None = None, records: list | None = None
         parts = path.relative_to(root).parts
         project = parts[0]
         session_id = parts[1] if len(parts) > 2 else path.stem
-        with open(path) as fh:
+        with open(path, encoding="utf-8") as fh:
             for line in fh:
                 try:
                     entry = json.loads(line)
@@ -540,7 +540,7 @@ def extract_codex(threads: dict | None = None, records: list | None = None,
             thread = None
             record_days = defaultdict(_new_thread_day)
             record_first = {}
-            with open(path) as fh:
+            with open(path, encoding="utf-8") as fh:
                 for line in fh:
                     try:
                         entry = json.loads(line)
@@ -725,14 +725,14 @@ def main(records: list | None = None, record_since: str | None = None):
     OUT_DIR.mkdir(exist_ok=True)
     PRIVATE_DIR.mkdir(exist_ok=True)
 
-    with open(OUT_DIR / "exact-daily.json", "w") as fh:
+    with open(OUT_DIR / "exact-daily.json", "w", encoding="utf-8") as fh:
         json.dump(rows, fh, indent=2)
 
     detail = {
         day: dict(sorted(projects.items(), key=lambda kv: -kv[1]))
         for day, projects in sorted(day_projects.items())
     }
-    with open(PRIVATE_DIR / "day-detail.json", "w") as fh:
+    with open(PRIVATE_DIR / "day-detail.json", "w", encoding="utf-8") as fh:
         json.dump(detail, fh, indent=2)
 
     # The same counts per thread, titles included. build_daily_burn.py
@@ -754,7 +754,7 @@ def main(records: list | None = None, record_since: str | None = None):
         }
         for key, thread in sorted(threads.items())
     ]
-    with open(PRIVATE_DIR / "thread-daily.json", "w") as fh:
+    with open(PRIVATE_DIR / "thread-daily.json", "w", encoding="utf-8") as fh:
         json.dump(thread_rows, fh, indent=2)
     if records is not None:
         for record in records:
@@ -769,7 +769,7 @@ def main(records: list | None = None, record_since: str | None = None):
             "codex": any((HOME / ".codex" / folder).is_dir() for folder in ("sessions", "archived_sessions")),
         },
     }
-    (PRIVATE_DIR / "collection.json").write_text(json.dumps(collection))
+    (PRIVATE_DIR / "collection.json").write_text(json.dumps(collection), encoding="utf-8")
 
     total_cc = sum(cc_tokens.values())
     total_codex = sum(codex_tokens.values())

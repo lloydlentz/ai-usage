@@ -19,12 +19,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("export", type=Path)
     args = parser.parse_args()
-    dates = {r["date"] for r in json.loads((ROOT / "data/daily-burn.json").read_text())}
-    labels = validate_labels(json.loads(args.export.read_text()), dates)
+    dates = {r["date"] for r in json.loads((ROOT / "data/daily-burn.json").read_text(encoding="utf-8"))}
+    labels = validate_labels(json.loads(args.export.read_text(encoding="utf-8")), dates)
     target = ROOT / "scripts/driver-labels.json"
-    current = json.loads(target.read_text()) if target.exists() else {}
+    current = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
     current.update(labels)
-    target.write_text(json.dumps(dict(sorted(current.items())), indent=2) + "\n")
+    target.write_text(json.dumps(dict(sorted(current.items())), indent=2) + "\n", encoding="utf-8")
     print(f"Imported {len(labels)} labels. Run python3 scripts/build_daily_burn.py to regenerate the dashboard.")
 
 if __name__ == "__main__":

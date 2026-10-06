@@ -167,7 +167,7 @@ def load_existing(path: Path) -> dict:
     """Load existing daily-burn.json keyed by date, or {} if absent."""
     if not path.exists():
         return {}
-    with open(path) as fh:
+    with open(path, encoding="utf-8") as fh:
         rows = json.load(fh)
     return {r["date"]: r for r in rows}
 
@@ -182,7 +182,7 @@ def load_pricing(path: Path | None = None) -> dict:
     path = path or PRICING_PATH
     if not path.exists():
         return {}
-    with open(path) as fh:
+    with open(path, encoding="utf-8") as fh:
         raw = json.load(fh)
     rates = {
         model: dict(entry.get("usd_per_million") or {})
@@ -627,7 +627,7 @@ def repair_codex_breakdowns(existing: dict, exact: dict, days: list[str]) -> dic
         folder = DATA / "private"
         folder.mkdir(parents=True, exist_ok=True)
         stamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
-        (folder / f"before-codex-repair-{stamp}.json").write_text(json.dumps(audit, indent=2))
+        (folder / f"before-codex-repair-{stamp}.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
     return repaired
 
 
@@ -658,10 +658,10 @@ def main(repair_days: list[str] | None = None, remote: bool = False):
     if remote:
         if repair_days:
             raise ValueError("Local Codex repairs cannot modify the remote ledger")
-        bundle = json.loads((DATA / "private" / "remote-input.json").read_text())
+        bundle = json.loads((DATA / "private" / "remote-input.json").read_text(encoding="utf-8"))
         exact = {row["date"]: row for row in bundle["exact"]}
     else:
-        with open(DATA / "exact-daily.json") as fh:
+        with open(DATA / "exact-daily.json", encoding="utf-8") as fh:
             exact = {row["date"]: row for row in json.load(fh)}
     out_path = DATA / "daily-burn.json"
     existing = load_existing(out_path)
@@ -669,7 +669,7 @@ def main(repair_days: list[str] | None = None, remote: bool = False):
         existing = repair_codex_breakdowns(existing, exact, repair_days)
     rates = load_pricing()
     labels_path = ROOT / "scripts" / "driver-labels.json"
-    labels = json.loads(labels_path.read_text()) if labels_path.exists() else {}
+    labels = json.loads(labels_path.read_text(encoding="utf-8")) if labels_path.exists() else {}
     if any(value not in {"shipping", "research", "review", "video", "admin", "unlabeled"} for value in labels.values()):
         raise ValueError("Driver labels must be preset categories")
     if not rates:
@@ -725,19 +725,19 @@ def main(repair_days: list[str] | None = None, remote: bool = False):
     threads_path = DATA / "threads.json"
     fresh_threads_path = DATA / "private" / "thread-daily.json"
     threads = build_threads(
-        bundle["threads"] if bundle is not None else (json.loads(fresh_threads_path.read_text()) if fresh_threads_path.exists() else []),
-        json.loads(threads_path.read_text()) if threads_path.exists() else [],
+        bundle["threads"] if bundle is not None else (json.loads(fresh_threads_path.read_text(encoding="utf-8")) if fresh_threads_path.exists() else []),
+        json.loads(threads_path.read_text(encoding="utf-8")) if threads_path.exists() else [],
         rows,
         rates,
     )
     validate_threads(threads, rows)
 
     staged_path = out_path.with_suffix(".tmp")
-    with open(staged_path, "w") as fh:
+    with open(staged_path, "w", encoding="utf-8") as fh:
         json.dump(rows, fh, indent=2)
     staged_path.replace(out_path)
     staged_threads = threads_path.with_suffix(".tmp")
-    with open(staged_threads, "w") as fh:
+    with open(staged_threads, "w", encoding="utf-8") as fh:
         json.dump(threads, fh, indent=2)
     staged_threads.replace(threads_path)
 
@@ -748,7 +748,7 @@ def main(repair_days: list[str] | None = None, remote: bool = False):
 
     now = datetime.now(ZoneInfo("America/Chicago"))
     collection_path = DATA / "private" / "collection.json"
-    collection = bundle["collection"] if bundle is not None else (json.loads(collection_path.read_text()) if collection_path.exists() else {})
+    collection = bundle["collection"] if bundle is not None else (json.loads(collection_path.read_text(encoding="utf-8")) if collection_path.exists() else {})
     meta = {
         "refreshed_at": now.isoformat(timespec="seconds"),
         "collected_at": collection.get("collected_at"),
@@ -769,7 +769,7 @@ def main(repair_days: list[str] | None = None, remote: bool = False):
     if bundle is not None:
         meta["collection_mode"] = "firestore"
         meta["collectors"] = collection["collectors"]
-    with open(DATA / "meta.json", "w") as fh:
+    with open(DATA / "meta.json", "w", encoding="utf-8") as fh:
         json.dump(meta, fh)
 
     print(f"wrote {len(rows)} rows  ({frozen_count} frozen from previous capture, {new_count} live/new)")

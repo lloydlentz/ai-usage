@@ -132,6 +132,37 @@ once. An OS file lock prevents concurrent operations on a machine. The upload
 queue is bound to its project, namespace, database, and machine ID, so a
 configuration change cannot silently send pending data to another destination.
 
+### Windows collectors
+
+A Windows machine can collect (not publish). The extractor reads
+`%USERPROFILE%\.claude\projects` and `%USERPROFILE%\.codex`, and the collector
+lock uses `msvcrt` instead of `fcntl`. Windows ships no time zone database, so
+install `tzdata` into the venv alongside the SDK:
+
+```powershell
+python -m venv .venv-remote
+.venv-remote\Scripts\python.exe -m pip install -r requirements-remote.txt tzdata
+```
+
+Set `GOOGLE_APPLICATION_CREDENTIALS` to a service account key stored outside the
+repository (or use `gcloud auth application-default login`), create
+`data/private/remote-config.json` with a distinct machine ID, then verify once:
+
+```powershell
+.venv-remote\Scripts\python.exe scripts\remote_usage.py collect
+```
+
+`scripts/collect_usage.sh` also works under Git Bash; it falls back to
+`.venv-remote/Scripts/python.exe` when there is no `bin/python`. Schedule the
+hourly run with Task Scheduler instead of cron, giving the task the credentials
+variable explicitly:
+
+```powershell
+schtasks /Create /TN "ai-usage collect" /SC HOURLY /TR "cmd /c cd /d C:\code\ai-usage && set GOOGLE_APPLICATION_CREDENTIALS=C:\path\to\key.json && .venv-remote\Scripts\python.exe scripts\remote_usage.py collect >> data\private\collect.log 2>&1"
+```
+
+Never run `initialize` or `refresh_and_push.sh` on a collector.
+
 ## Accounting contract
 
 Firestore documents live below `<namespace>/ledger`:
