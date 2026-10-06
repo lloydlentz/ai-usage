@@ -18,22 +18,25 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
   to Firestore, without a Git commit or push. Unrelated cron entries are intact.
 - Public Firestore snapshot and rules are deployed. Anonymous public reads work;
   private-ledger reads and browser writes were verified denied (403).
-- UI changes are ready for GitHub deployment. The page loads complete snapshots
+- Implementation deployed from `0902487`; live browser verification passed.
+  The page loads complete snapshots
   on mount and every five minutes while visible, verifies SHA-256, and keeps the
   last loaded snapshot with a warning on failure. Theme/custom dates survive.
 - Usage-only JSON changes no longer trigger GitHub Pages deployment. Bundled
   files remain an initial/offline fallback; pricing is still maintained only in
   `data/pricing.json` and copied into each derived snapshot.
-- Uncommitted: runtime data/UI/publisher changes, tests, rules, and operating docs.
-  Commit/deployment and a full publisher-script verification are next.
+- Full publisher script succeeded: public snapshot advanced to the 14:11 build
+  without a Git commit/push or another Pages deployment. The deployed UI loaded
+  that newer snapshot and showed 40.4M Codex tokens for today.
+- Uncommitted generated outputs: `data/daily-burn.json`, `data/meta.json`,
+  `data/threads.json`, from the verified refresh. Remote refresh intentionally
+  leaves these local build outputs unstaged; GitHub retains its bundled fallback.
 
 ## Next Steps
 
-1. Commit/push the implementation and verify the GitHub-hosted page loads the
-   current public snapshot without a fallback warning.
-2. Run `scripts/refresh_and_push.sh` from the clean main checkout; verify public
-   data advances without a Git push or Pages redeploy.
-3. On the former publisher, update its checkout and replace its publisher job
+1. Check `/tmp/token-burn-refresh.log` after the next scheduled publisher run
+   (the full entry point has already succeeded manually).
+2. On the former publisher, update its checkout and replace its publisher job
    with `scripts/collect_usage.sh` if it remains active. It cannot be controlled
    from this Mac; updated code enforces the new publisher ownership.
 
@@ -65,7 +68,10 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
 - 2026-10-06 — Public publisher/frontend split: `npm run check` passed (210
   Python tests, 13 frontend tests, lint, production build). Browser tests: 21
   passed, one skipped, including live polling and failure retention. Live rules
-  checks confirmed public read/private read denial/write denial.
+  checks confirmed public read/private read denial/write denial. GitHub Pages
+  deployment succeeded; a real browser loaded manifest/chunk responses (200),
+  showed the newer Firestore snapshot, and reported no page errors or fallback
+  warning. Publisher refresh advanced data independently of deployment.
 - 2026-10-06 — Restored blocked publication by fixing zero-usage missing-tool
   validation; deployed today’s 31.8M Codex tokens. Verified the 14:00 collector
   cron upload. The first new public Firestore snapshot includes later usage.
