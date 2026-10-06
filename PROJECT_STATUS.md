@@ -19,23 +19,27 @@ Migration Assistant-restored Mac `mac-m1-pro`.
 - This Mac's copied hourly publisher cron was replaced by hourly upload-only
   `scripts/collect_usage.sh`, logged to `/tmp/token-burn-collect.log`.
   Unrelated cron entries were preserved.
-- Publication fix and refreshed data are ready to commit with the continuity
-  documentation. Local configuration/scheduler changes and private backups
-  remain gitignored.
+- Publication fix and refreshed data were committed and pushed as `5833675`.
+  GitHub Pages deployment succeeded; the live page shows October 6 usage
+  (31.8M Codex tokens at publication) and the `mac-m1-pro` collector.
+- The 14:00 local cron collection succeeded, verified in
+  `/tmp/token-burn-collect.log`. Local configuration and backups remain gitignored.
 
 ## Next Steps
 
-1. On the original publisher, run its normal `scripts/refresh_and_push.sh` or
-   confirm the next scheduled refresh includes all three collectors.
-2. After the next hourly collection on this Mac, check
-   `/tmp/token-burn-collect.log` for a successful unattended upload.
+1. Resolve publisher ownership: user was asked whether this Mac should take
+   over hourly publication; no answer yet. It currently remains upload-only.
+2. If keeping the original publisher, update its checkout with `git pull` so
+   the corrected shipped-data check runs in `scripts/refresh_and_push.sh`.
+   Its next unattended publication has not been verified.
 3. When enrolling another restored machine, follow the Migration Assistant
    section in `REMOTE_USAGE.md` before running collection.
 
 ## Open Questions / Blockers
 
-- This session verified a manual upload. The next unattended cron run and
-  the original publisher's next publication have not yet been verified.
+- Collection is verified both manually and through cron. Ongoing dashboard
+  publication still needs a confirmed active publisher; the original publisher
+  was failing validation before the fix and must update its checkout.
 
 ## Decisions
 
@@ -64,12 +68,14 @@ Migration Assistant-restored Mac `mac-m1-pro`.
   merged upstream Windows/UTF-8 support, and rebuilt the remote ledger. Today
   contains 31,756,182 measured Codex tokens. `npm run check` passed (209 Python
   tests, 12 frontend tests, lint, production build). Browser checks: 19 passed,
-  one skipped. Deployment verification is in progress.
+  one skipped. GitHub deployment succeeded and a live HTTP check confirmed
+  October 6 and `mac-m1-pro`. The 14:00 cron upload also succeeded.
 
 - 2026-10-06 — Enrolled `mac-m1-pro`, changed its scheduler, and documented
   restored-Mac setup. Verified live Firestore registration under the distinct
   ID, unchanged ledger primary, and empty retry queue. All 12 tests in
-  `python3 -m unittest tests.test_remote_usage -v` passed. No commit or push.
+  `python3 -m unittest tests.test_remote_usage -v` passed. Documentation was
+  subsequently included in the publication-fix commit.
 
 ## Key Files
 
