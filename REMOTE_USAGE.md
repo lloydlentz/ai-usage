@@ -2,16 +2,17 @@
 
 The optional Firestore ledger sits behind the existing static dashboard. Each
 machine extracts measured usage locally and uploads scrubbed records. One
-publisher pulls the ledger, applies the rate card, builds the public JSON, and
-pushes the report. With no `data/private/remote-config.json`, the hourly refresh
+publisher pulls the ledger, applies the rate card, validates the public JSON, and
+publishes a public Firestore snapshot. GitHub Pages serves the interface, which
+loads that snapshot independently of deployments. With no `data/private/remote-config.json`, the hourly refresh
 continues to use local logs exactly as before.
 
 ## Current deployment
 
 The initial ledger is in Firebase project `ai-usage-ledger-lentz`, the `(default)`
 Firestore Native mode database in US multi-region `nam5`. Namespace: `ai_usage`.
-The publisher is `primary-mac`; additional collectors include `windows-dell-xps`
-and `mac-m1-pro`. Private configuration and credentials stay
+The publisher is `mac-m1-pro`; other collectors include `windows-dell-xps`
+and `primary-mac`. Private configuration and credentials stay
 on each machine. The project
 [console](https://console.firebase.google.com/project/ai-usage-ledger-lentz/firestore)
 shows the private ledger to authorized users.
@@ -20,7 +21,9 @@ shows the private ledger to authorized users.
 
 Use a dedicated Firebase project with a Firestore Native mode database. Record
 its project ID and database ID (`(default)` unless you choose a named database).
-Keep browser access denied; this integration uses the Python server SDK and IAM.
+Keep browser access to the measurement ledger denied. Only the validated
+`public_reports/ai_usage` snapshot and its chunks permit anonymous `get` reads;
+listing and all browser writes are denied. Collectors use the server SDK and IAM.
 Firebase CLI login alone does **not** authenticate the Python SDK. Configure
 Application Default Credentials, or point `GOOGLE_APPLICATION_CREDENTIALS` at a
 service account credential stored outside this repository. For unattended cron,
@@ -104,11 +107,52 @@ day's snapshot is eligible. The collector reports exclusions among submitted mig
 days are outside the upload window.
 
 After verification, resume `scripts/refresh_and_push.sh`. When private remote
-configuration is present it performs collect → pull → remote build → validation
-→ push. It uses `.venv-remote/bin/python` by default; set `REMOTE_PYTHON` to an
+configuration is present it checks publisher ownership, then performs collect
+→ pull → remote build → validation → public Firestore publication. It never
+commits or pushes usage updates. It uses `.venv-remote/bin/python` by default; set `REMOTE_PYTHON` to an
 absolute interpreter path if the environment is elsewhere. A network or
 validation failure stops publication and retains the previous public files.
-Only this publisher should run the push script.
+Only the designated publisher should run this refresh script.
+
+## Public dashboard and publisher ownership
+
+The private `<namespace>/ledger` document's `publisher` field selects the active
+publisher. If absent, the original `primary` is used. A handover updates only
+`publisher`; `primary` remains the immutable migration provenance. This ledger's
+publisher is `mac-m1-pro`. Its hourly cron runs `scripts/refresh_and_push.sh` and
+logs to `/tmp/token-burn-refresh.log`. Other machines run `collect_usage.sh`.
+Update an old publisher's checkout and scheduler when handing over; the new
+publisher check prevents updated former publishers from publishing.
+
+`remote_usage.py publish` validates the same four public dashboard files, then
+writes immutable, checksum-addressed chunks under
+`public_reports/ai_usage/versions/<sha256>/chunks/<index>`. Each chunk contains a
+JSON string below Firestore's document size limit. The public manifest at
+`public_reports/ai_usage` switches only after every chunk succeeds. Twenty-four
+older generations are retained for in-flight readers. Failed uploads leave the
+last good manifest intact.
+
+The bundle contains daily rows, threads (including their already-public titles),
+pricing, and collection metadata. It contains no raw measurement identities,
+transcripts, paths, credentials, or migration data. `firestore.rules` grants only
+anonymous `get` access to the public snapshot paths. The frontend uses the
+[Firestore REST API](https://firebase.google.com/docs/firestore/use-rest-api)
+without a credential. Deploy rules with:
+
+```sh
+firebase deploy --only firestore:rules --project ai-usage-ledger-lentz
+```
+
+`lib/dashboard-source.ts` loads a complete generation and verifies its SHA-256.
+The page fetches on load, every five minutes while visible, and on returning to
+the tab; unchanged versions need only the manifest read. An unavailable report
+keeps the last loaded snapshot with a visible warning. Bundled JSON is the
+initial/offline fallback, not live data. Theme and custom dates survive updates;
+preset dates follow the updated ledger. Collector age still determines staleness.
+
+GitHub builds deploy interface changes. Usage JSON changes alone no longer trigger
+the Pages workflow. `data/pricing.json` remains the sole hand-maintained rate
+card; rebuilding and publishing reprices the full public snapshot.
 
 ## Add another machine
 
@@ -178,8 +222,10 @@ queue needs reconciliation before changing identity, because it belongs to the
 original collector. Do not reinitialize the existing ledger or change the
 historical migration draft to the new ID.
 
-Replace this Mac's copied `refresh_and_push.sh` schedule with an hourly
-`collect_usage.sh` job, leaving unrelated cron entries intact. Run collection
+For an additional collector, replace its copied `refresh_and_push.sh` schedule
+with an hourly `collect_usage.sh` job, leaving unrelated cron entries intact.
+`mac-m1-pro` has since taken over publication and runs the publisher schedule
+described above. Run collection
 once and verify that Firestore has a separate `collectors/<machine_id>`
 document. The publisher will include it on its next pull. Copied logs retain
 their original record IDs so shared measurements are deduplicated across Macs.

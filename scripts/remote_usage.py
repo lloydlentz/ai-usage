@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -376,9 +378,65 @@ def pull(root):
     print(f"Pulled {len(rows)} days from {len(collectors)} collectors")
 
 
+def check_publisher(settings, root):
+    state = root.get().to_dict() or {}
+    if state.get("publisher", state.get("primary")) != settings["machine_id"]:
+        raise ValueError("This machine is not the designated dashboard publisher")
+
+
+def publish(settings, root):
+    """Publish only the validated dashboard files, switching generations last.
+
+    Chunks are UTF-8-safe JSON strings below Firestore's 1 MiB document limit.
+    A failed upload cannot expose a partial report or replace the last good one.
+    Browser rules permit reads here, never on the private measurement ledger.
+    """
+    check_publisher(settings, root)
+    spec = importlib.util.spec_from_file_location("public_build", ROOT / "scripts/build_daily_burn.py")
+    build = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build)
+    data = ROOT / "data"
+    rows = json.loads((data / "daily-burn.json").read_text(encoding="utf-8"))
+    threads = json.loads((data / "threads.json").read_text(encoding="utf-8"))
+    meta = json.loads((data / "meta.json").read_text(encoding="utf-8"))
+    pricing = json.loads((data / "pricing.json").read_text(encoding="utf-8"))
+    build.validate_rows(rows)
+    build.validate_threads(threads, rows)
+    if meta.get("collection_mode") != "firestore":
+        raise ValueError("Public report requires a Firestore build")
+    bundle = {"schema": 1, "rows": rows, "threads": threads, "pricing": pricing,
+              "meta": {key: meta[key] for key in ("refreshed_at", "collected_at", "sources_available", "cost", "collection_mode", "collectors") if key in meta}}
+    # ensure_ascii keeps each character one byte even for non-ASCII thread titles.
+    payload = json.dumps(bundle, separators=(",", ":"), sort_keys=True, ensure_ascii=True)
+    version = hashlib.sha256(payload.encode()).hexdigest()
+    report = root._client.collection("public_reports").document(settings.get("namespace", "ai_usage"))
+    current = report.get().to_dict()
+    if current and current.get("version") == version:
+        print("Public dashboard already current")
+        return
+    chunks = [payload[i:i + 250_000] for i in range(0, len(payload), 250_000)]
+    generation = report.collection("versions").document(version)
+    for index, chunk in enumerate(chunks):
+        generation.collection("chunks").document(str(index)).set({"payload": chunk})
+    previous = ([{"version": current["version"], "chunks": current["chunks"]}] + current.get("previous", [])) if current else []
+    previous = [item for item in previous if item["version"] != version]
+    check_publisher(settings, root)
+    report.set({"schema": 1, "version": version, "chunks": len(chunks),
+                "refreshed_at": meta["refreshed_at"], "publisher": settings["machine_id"], "previous": previous[:24]})
+    # Retain 24 older generations so in-flight readers have ample time to finish.
+    # Cleanup failure cannot invalidate a successfully switched public report.
+    for old in previous[24:]:
+        try:
+            for index in range(old["chunks"]):
+                report.collection("versions").document(old["version"]).collection("chunks").document(str(index)).delete()
+        except Exception as error:
+            print(f"Old public snapshot cleanup deferred: {type(error).__name__}")
+    print(f"Published dashboard {version[:12]} ({len(chunks)} chunks); no GitHub deployment needed")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("initialize", "collect", "pull"))
+    parser.add_argument("command", choices=("initialize", "collect", "pull", "check-publisher", "publish"))
     parser.add_argument("--input", type=Path, help="For collect: normalized measured usage from a cloud adapter, instead of local logs")
     args = parser.parse_args()
     if args.input and args.command != "collect":
@@ -392,6 +450,10 @@ def main():
             initialize(settings, root, sdk)
         elif args.command == "collect":
             upload(settings, root, sdk, json.loads(args.input.read_text(encoding="utf-8")) if args.input else None)
+        elif args.command == "check-publisher":
+            check_publisher(settings, root)
+        elif args.command == "publish":
+            publish(settings, root)
         else:
             pull(root)
 

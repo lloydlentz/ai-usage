@@ -5,16 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 import { BasisPill, CostAmount, CellCost, UnpricedNote } from "./components/cost";
 import { ModelShare } from "./components/model-share";
 import { UsageTimeline } from "./components/usage-timeline";
-import rawRows from "../data/daily-burn.json";
-import pricing from "../data/pricing.json";
 import { UsageExplorer } from "./components/usage-explorer";
 import { ThreadDrilldown } from "./components/thread-drilldown";
-import meta from "../data/meta.json";
-import rawThreads from "../data/threads.json";
-import { normalizeThreads } from "../lib/threads";
+import { useDashboardData } from "./use-dashboard-data";
 import {
   emptyByType,
-  normalizeRows,
+  type BurnRow,
   sourceColumns,
   sumByModel,
   subtotalCost,
@@ -40,9 +36,6 @@ import {
   sumTokens,
 } from "../lib/token-math";
 
-const rows = normalizeRows(rawRows);
-const modelNames = [...new Set(rows.flatMap((row) => row.breakdown?.flatMap((tool) => tool.models.map((model) => model.model)) || []))].sort();
-const threads = normalizeThreads(rawThreads);
 
 type Theme = "ticker" | "printrun";
 const THEME_STORAGE_KEY = "dashboard-theme";
@@ -101,11 +94,14 @@ function formatRefreshed(iso: string) {
 }
 
 export default function TokenBurnDashboard() {
+  const { data: { rows, threads, meta, pricing }, status: dataStatus } = useDashboardData();
+  const modelNames = useMemo(() => [...new Set(rows.flatMap((row) => row.breakdown?.flatMap((tool) => tool.models.map((model) => model.model)) || []))].sort(), [rows]);
   const collectors = (meta as { collectors?: { machine_id: string; collected_at: string; sources_available: Record<string, boolean> }[] }).collectors || [];
   const [showDateFilters, setShowDateFilters] = useState(false);
   const [windowKey, setWindowKey] = useState<WindowKey | "custom">("all");
-  const [range, setRange] = useState<DateRange>(() => getWindowRange(rows, "all"));
+  const [customRange, setRange] = useState<DateRange>(() => getWindowRange(rows, "all"));
   const bounds = getWindowRange(rows, "all");
+  const range = windowKey === "custom" ? customRange : getWindowRange(rows, windowKey);
   const selectRange = (next: DateRange) => { setRange(next); setWindowKey(next.start === bounds.start && next.end === bounds.end ? "all" : "custom"); };
   const [now, setNow] = useState(() => Date.parse(meta.collected_at || meta.refreshed_at));
   const [theme, setTheme] = useState<Theme>("printrun");
@@ -150,7 +146,7 @@ export default function TokenBurnDashboard() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const selectedRows = useMemo(() => rows.filter((row) => row.date >= range.start && row.date <= range.end), [range]);
+  const selectedRows = useMemo(() => rows.filter((row) => row.date >= range.start && row.date <= range.end), [rows, range]);
   const overdueRates = Object.entries(pricing.models).filter(([, entry]) => "review_after" in entry && String(entry.review_after) < today).map(([name]) => name);
   const refreshState = mounted ? freshness(meta.collected_at || "", now) : "unknown";
   const refreshLabel = refreshState === "fresh" ? "Recently refreshed" : refreshState === "stale" ? "Refresh overdue" : (mounted ? "Collection time unavailable" : "Checking refresh");
@@ -264,6 +260,7 @@ export default function TokenBurnDashboard() {
   return (
     <main className="page" data-theme={theme}>
       <ThemeToggle theme={theme} onChange={setTheme} />
+      {dataStatus !== "live" && <p className="ledgerWarn" role="status">{dataStatus === "loading" ? "Checking for updated usage… Showing the saved snapshot." : "Live usage is unavailable. Showing the last loaded snapshot; readings may be out of date."}</p>}
       {mounted && Object.values(meta.sources_available).some((available) => !available) && <p className="ledgerWarn">A usage source was unavailable during collection. Missing readings are unknown.</p>}
       {refreshState === "stale" && <p className="ledgerWarn">No successful refresh in over two hours. Collection or publication may be delayed. Today’s missing readings are unknown, not zero usage.</p>}
       {!selectedRows.length && <p role="status">No recorded days in this date range.</p>}
@@ -1002,7 +999,7 @@ function TickerTape({
   totalToday: number;
   totalYesterday: number;
   total: number;
-  peakDay: (typeof rows)[number] | undefined;
+  peakDay: BurnRow | undefined;
   lastAverage: number;
 }) {
   const totalDelta = pctDelta(totalToday, totalYesterday);
@@ -1112,7 +1109,7 @@ function Sparkline({ data, color }: { data: (number | null)[]; color: string }) 
   </div>;
 }
 
-function buildDriverRows(selectedRows: typeof rows, total: number) {
+function buildDriverRows(selectedRows: BurnRow[], total: number) {
   const totals = new Map<string, number>();
 
   for (const row of selectedRows) {

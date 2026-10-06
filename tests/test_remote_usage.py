@@ -43,6 +43,9 @@ class Store:
     def transaction(self):
         return self
 
+    def collection(self, name):
+        return Collection(self, name)
+
     def set(self, ref, value):
         ref.set(value)
 
@@ -81,6 +84,40 @@ class SDK:
     @staticmethod
     def transactional(fn):
         return fn
+
+
+class PublicReportTests(unittest.TestCase):
+    def test_publisher_switch_and_failed_generation_preserve_current_report(self):
+        store = Store()
+        root = store.collection("ai_usage").document("ledger")
+        root.set({"primary": "old-mac", "publisher": "mac-m1-pro"})
+        settings = {"machine_id": "mac-m1-pro", "namespace": "ai_usage"}
+        with self.assertRaisesRegex(ValueError, "designated"):
+            remote.check_publisher({"machine_id": "old-mac"}, root)
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            (base / "scripts").symlink_to(remote.ROOT / "scripts", target_is_directory=True)
+            shutil.copytree(remote.ROOT / "data", base / "data", ignore=shutil.ignore_patterns("private", "exact-daily.json"))
+            meta_path = base / "data/meta.json"
+            meta = json.loads(meta_path.read_text())
+            meta["private_path"] = "/secret/local/project"
+            meta_path.write_text(json.dumps(meta))
+            with patch.object(remote, "ROOT", base):
+                remote.publish(settings, root)
+                report = store.collection("public_reports").document("ai_usage")
+                good = report.get().to_dict()
+                chunks = report.collection("versions").document(good["version"]).collection("chunks").stream()
+                payload = json.loads("".join(c.to_dict()["payload"] for c in chunks))
+                self.assertNotIn("private_path", payload["meta"])
+                self.assertEqual(payload["rows"], json.loads((base / "data/daily-burn.json").read_text()))
+                rows_path = base / "data/daily-burn.json"
+                rows = json.loads(rows_path.read_text())
+                rows[-1]["driver"] = "x" * 300_000
+                rows_path.write_text(json.dumps(rows))
+                store.fail = "/chunks/1"
+                with self.assertRaises(ConnectionError):
+                    remote.publish(settings, root)
+                self.assertEqual(report.get().to_dict(), good)
 
 
 class RemoteAccountingTests(unittest.TestCase):

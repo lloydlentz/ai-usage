@@ -8,6 +8,37 @@ import { modelTokenShares, UNATTRIBUTED_MODEL } from "../lib/model-share";
 import { parseDriverLabels } from "../lib/driver-labels";
 import { normalizeThreads, summarizeThreads } from "../lib/threads";
 import { CellCost, BasisPill } from "../app/components/cost";
+import { loadDashboard } from "../lib/dashboard-source";
+import rawRows from "../data/daily-burn.json";
+import rawThreads from "../data/threads.json";
+import reportMeta from "../data/meta.json";
+import reportPricing from "../data/pricing.json";
+import { createHash } from "node:crypto";
+
+test("public report loads one coherent generation and skips unchanged payloads", async () => {
+  const payload = JSON.stringify({ schema: 1, rows: rawRows, threads: rawThreads, meta: reportMeta, pricing: reportPricing });
+  const version = createHash("sha256").update(payload).digest("hex");
+  const pieces = [payload.slice(0, 100), payload.slice(100)];
+  let calls = 0;
+  const request: typeof fetch = async (url) => {
+    calls++;
+    const index = String(url).match(/chunks\/(\d+)$/)?.[1];
+    return Response.json({ fields: index === undefined ? {
+      schema: { integerValue: "1" }, version: { stringValue: version }, chunks: { integerValue: "2" },
+    } : { payload: { stringValue: pieces[Number(index)] } } });
+  };
+  const loaded = await loadDashboard(undefined, undefined, request);
+  assert.equal(loaded?.data.rows.at(-1)?.date, rawRows.at(-1)?.date);
+  assert.equal(calls, 3);
+  assert.equal(await loadDashboard(version, undefined, request), null);
+  assert.equal(calls, 4);
+  await assert.rejects(loadDashboard(undefined, undefined, async () => Response.json({ fields: {} })), /manifest/);
+  await assert.rejects(loadDashboard(undefined, undefined, async (url, init) => {
+    if (String(url).includes("chunks/")) return Response.json({ fields: { payload: { stringValue: "corrupt" } } });
+    return request(url, init);
+  }), /checksum/);
+  await assert.rejects(loadDashboard(undefined, undefined, async () => new Response("", { status: 503 })), /503/);
+});
 
 const rows = normalizeRows([
   { date: "2026-03-01", codex_tokens: 700, driver: "research" },

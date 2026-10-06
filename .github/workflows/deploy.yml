@@ -4,12 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "data/daily-burn.json"
-      - "data/meta.json"
-      - "data/threads.json"
-      # Costs are precomputed into daily-burn.json, so a rate change normally
-      # arrives with a data refresh. Listed anyway so a pricing-only correction
-      # (edit the rate card, re-run the build, commit) still triggers a deploy.
+      # Usage refreshes publish to Firestore without rebuilding the interface.
+      # Keep the bundled fallback rate card aligned on intentional rate changes.
       - "data/pricing.json"
       - "app/**"
       - "lib/**"

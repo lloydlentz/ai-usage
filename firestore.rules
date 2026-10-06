@@ -1,8 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Trusted Python collectors authenticate through IAM. The public report
-    // reads exported JSON, so browser clients need no database access.
+    // Browser reads are limited to validated public dashboard snapshots.
+    match /public_reports/ai_usage {
+      allow get: if true;
+      match /versions/{version}/chunks/{chunk} {
+        allow get: if true;
+      }
+    }
+    // Trusted Python collectors authenticate through IAM; the ledger stays private.
     match /{document=**} {
       allow read, write: if false;
     }

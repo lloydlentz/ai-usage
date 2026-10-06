@@ -47,6 +47,7 @@ trap 'exit 143' TERM
 [[ -d "$HOME/.codex/sessions" || -d "$HOME/.codex/archived_sessions" ]]
 if [[ -f data/private/remote-config.json ]]; then
   REMOTE_RUNTIME="${REMOTE_PYTHON:-$REPO/.venv-remote/bin/python}"
+  "$REMOTE_RUNTIME" scripts/remote_usage.py check-publisher
   "$REMOTE_RUNTIME" scripts/remote_usage.py collect
   "$REMOTE_RUNTIME" scripts/remote_usage.py pull
   python3 scripts/build_daily_burn.py --remote
@@ -56,6 +57,11 @@ else
 fi
 # Cron has a minimal PATH; the Python-only pipeline must not depend on npm.
 python3 -m unittest discover -s tests -t . -v
+if [[ -f data/private/remote-config.json ]]; then
+  "$REMOTE_RUNTIME" scripts/remote_usage.py publish
+  validated=1
+  exit 0
+fi
 validated=1
 git add data/daily-burn.json data/meta.json data/threads.json
 if git diff --cached --quiet; then

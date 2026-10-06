@@ -3,9 +3,65 @@ import { test, expect, type Page } from "@playwright/test";
 import { normalizeRows, sumTokensByType } from "../../lib/burn-data";
 import { formatTokens } from "../../lib/token-math";
 import { dayNumber } from "../../lib/date-windows";
+import { createHash } from "node:crypto";
+
+function savedReport() {
+  return {
+    schema: 1,
+    rows: JSON.parse(readFileSync("data/daily-burn.json", "utf8")),
+    threads: JSON.parse(readFileSync("data/threads.json", "utf8")),
+    meta: JSON.parse(readFileSync("data/meta.json", "utf8")),
+    pricing: JSON.parse(readFileSync("data/pricing.json", "utf8")),
+  };
+}
+
+test.beforeEach(async ({ page }) => {
+  const payload = JSON.stringify(savedReport());
+  const version = createHash("sha256").update(payload).digest("hex");
+  await page.route("https://firestore.googleapis.com/**", async (route) => {
+    await route.fulfill({ json: { fields: route.request().url().includes("/chunks/") ?
+      { payload: { stringValue: payload } } :
+      { schema: { integerValue: "1" }, version: { stringValue: version }, chunks: { integerValue: "1" } },
+    } });
+  });
+});
+
+test("usage refreshes without navigation and retains selected dates and theme", async ({ page }) => {
+  const report = savedReport();
+  const last = report.rows.at(-1);
+  await page.clock.install({ time: new Date(`${last.date}T18:00:00Z`) });
+  await page.unroute("https://firestore.googleapis.com/**");
+  let unavailable = false;
+  await page.route("https://firestore.googleapis.com/**", async (route) => {
+    if (unavailable) { await route.fulfill({ status: 503, body: "Unavailable" }); return; }
+    const payload = JSON.stringify(report);
+    const version = createHash("sha256").update(payload).digest("hex");
+    await route.fulfill({ json: { fields: route.request().url().includes("/chunks/") ?
+      { payload: { stringValue: payload } } :
+      { schema: { integerValue: "1" }, version: { stringValue: version }, chunks: { integerValue: "1" } },
+    } });
+  });
+  await openDashboard(page);
+  await expect(page.getByText("Checking for updated usage… Showing the saved snapshot.")).toHaveCount(0);
+  await page.getByRole("button", { name: /ticker/i }).click();
+  await page.locator(".refreshToggle").click();
+  await page.getByLabel("From", { exact: true }).fill(last.date);
+  const selectedStart = await page.getByRole("slider", { name: "Range start", exact: true }).getAttribute("aria-valuetext");
+  last.codex_tokens = 123_456_789;
+  last.total = last.codex_tokens + last.claude_code_tokens + last.claude_chat_est + last.chatgpt_est + last.gemini_est;
+  await page.clock.fastForward(5 * 60_000);
+  await expect(page.locator(".toolToday").last()).toHaveText(formatTokens(last.codex_tokens));
+  await expect(page.locator("main")).toHaveAttribute("data-theme", "ticker");
+  await expect(page.getByRole("slider", { name: "Range start", exact: true })).toHaveAttribute("aria-valuetext", selectedStart!);
+  unavailable = true;
+  await page.clock.fastForward(5 * 60_000);
+  await expect(page.getByRole("status").filter({ hasText: "Live usage is unavailable" })).toBeVisible();
+  await expect(page.locator(".toolToday").last()).toHaveText(formatTokens(last.codex_tokens));
+});
 
 async function openDashboard(page: Page) {
   await page.goto("/");
+  await expect(page.getByText("Checking for updated usage… Showing the saved snapshot.")).toHaveCount(0);
   // A fresh CI browser can reach server-rendered markup before hydration and
   // ResizeObserver apply the real chart size. Pointer coordinates must use it.
   await expect(page.locator(".refreshToggle")).not.toHaveText("Checking refresh");

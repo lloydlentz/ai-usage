@@ -5021,15 +5021,15 @@
     "title": "Check transcript preprocessing and",
     "days": {
       "2026-10-06": {
-        "tokens": 31506974,
+        "tokens": 32396378,
         "cost_usd": 0.0,
-        "unpriced_tokens": 31506974,
+        "unpriced_tokens": 32396378,
         "models": {
           "gpt-6.1-sol": {
-            "input": 590752,
-            "cache_read": 30750464,
-            "output": 165758,
-            "tokens": 31506974
+            "input": 623566,
+            "cache_read": 31604480,
+            "output": 168332,
+            "tokens": 32396378
           }
         },
         "unattributed": 0
@@ -5839,15 +5839,15 @@
     "title": "Add unique mac-m1-pro device ID",
     "days": {
       "2026-10-06": {
-        "tokens": 249208,
+        "tokens": 2802891,
         "cost_usd": 0.0,
-        "unpriced_tokens": 249208,
+        "unpriced_tokens": 2802891,
         "models": {
           "gpt-6.1-sol": {
-            "input": 34704,
-            "cache_read": 213120,
-            "output": 1384,
-            "tokens": 249208
+            "input": 71962,
+            "cache_read": 2722816,
+            "output": 8113,
+            "tokens": 2802891
           }
         },
         "unattributed": 0

@@ -6,12 +6,12 @@ Current status and next steps: see [PROJECT_STATUS.md](./PROJECT_STATUS.md).
 
 ## Project Overview
 
-**Token Burn Dashboard** — a local AI token-usage tracker that measures exact consumption from Claude Code and Codex through local logs, plus estimated usage from Claude chat, ChatGPT, and Gemini. The dashboard auto-deploys to GitHub Pages and updates hourly via cron.
+**Token Burn Dashboard** — a local AI token-usage tracker that measures exact consumption from Claude Code and Codex through local logs, plus estimated usage from Claude chat, ChatGPT, and Gemini. The interface auto-deploys to GitHub Pages; hourly cron publishes usage snapshots to Firestore independently.
 
 ### Key properties
 - **Framework**: Next.js 16 with static export (`output: "export"`)
-- **Deployment**: GitHub Pages at `/ai-usage` base path; triggered by changes to data files or source code
-- **Data refresh**: Hourly cron job via `scripts/refresh_and_push.sh` (SSH-authenticated git push)
+- **Deployment**: GitHub Pages at `/ai-usage` base path; triggered by interface/source changes; usage-only changes do not redeploy
+- **Data refresh**: Hourly cron via `scripts/refresh_and_push.sh` publishes validated snapshots to Firestore in remote mode; local-only mode still commits/pushes
 - **Data strategy**: Additive ledger—once exact data is captured, it's frozen even if source logs are pruned
 - **Optional remote collection**: Firestore combines measured usage from trusted machines; setup, migration boundaries, credentials, and cloud import contract are in [REMOTE_USAGE.md](./REMOTE_USAGE.md). No private remote configuration means the existing local-only pipeline.
 
@@ -38,7 +38,7 @@ python3 scripts/extract_exact.py    # Extract tokens from local logs into data/e
                                     # (+ data/private/day-detail.json, local only)
 python3 scripts/build_daily_burn.py # Merge exact + estimates, price against data/pricing.json
                                     # → data/daily-burn.json + data/meta.json
-bash scripts/refresh_and_push.sh    # Full pipeline: extract, build, commit, push
+bash scripts/refresh_and_push.sh    # Publisher: collect, build, validate, publish
 
 # Optional Firestore (Python 3.10+ with requirements-remote.txt)
 .venv-remote/bin/python scripts/remote_usage.py initialize # Publisher: migrate once
@@ -52,7 +52,7 @@ python3 scripts/build_daily_burn.py --remote              # Build from that bund
 ### Frontend (Next.js App Router)
 
 **File:** `app/page.tsx` composes the dashboard. Cost rendering, the keyboard-accessible timeline, and the day explorer are extracted into `app/components/`. `app/layout.tsx` only sets metadata and the basePath-prefixed favicon.
-`data/daily-burn.json` and `data/meta.json` are imported directly, so they're baked in at build time.
+`app/use-dashboard-data.ts` loads the public Firestore report on mount and every five minutes while visible. `lib/dashboard-source.ts` verifies and normalizes a complete snapshot. Bundled daily/meta/thread/pricing JSON provides the initial fallback; a visible warning marks loading/fetch failure. Remote updates preserve the theme and custom dates; preset dates follow current data.
 
 **Themes:** two switchable looks selected by `ThemeToggle`:
 - `"printrun"` (default) — paper stock, condensed display face
@@ -206,9 +206,9 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 - Output: `data/daily-burn.json` (full merged dataset) + `data/meta.json` (refreshed_at timestamp) + `data/threads.json` (the priced thread split; see "Thread drilldown")
 
 **refresh_and_push.sh**: Cron entry point
-- Runs extract → build → commit → push via SSH
-- If `data/private/remote-config.json` exists, instead runs Firestore collect → pull → `build_daily_burn.py --remote` → validate → commit → push. Only one publisher runs this script; other machines run `collect_usage.sh`. The SDK uses `.venv-remote/bin/python` or an absolute `REMOTE_PYTHON` override; the local builder and cron tests retain Python 3.9 compatibility.
-- Stages only `data/daily-burn.json`, `data/meta.json` and `data/threads.json`; skips the push if nothing changed
+- Local-only mode runs extract → build → commit → push via SSH
+- If `data/private/remote-config.json` exists, instead checks publisher ownership and runs Firestore collect → pull → `build_daily_burn.py --remote` → validate → publish. Usage updates make no Git commit or push. Only the designated publisher (`mac-m1-pro`) runs this script; other machines run `collect_usage.sh`. The SDK uses `.venv-remote/bin/python` or an absolute `REMOTE_PYTHON` override; the local builder and cron tests retain Python 3.9 compatibility.
+- Local-only mode stages only `data/daily-burn.json`, `data/meta.json` and `data/threads.json`; remote mode exits after Firestore publication
 - Installed in `crontab -e` as: `0 * * * * /Users/lentz/code/ai-usage-claude/scripts/refresh_and_push.sh`
 - Uses SSH key authentication (not stored credentials)
 - Runs pipeline tests directly with Python, so cron does not need Node/npm or
@@ -223,7 +223,7 @@ Gotchas the types are built to prevent: a Codex model entry has **no** `cache_wr
 ### Deployment
 
 **GitHub Actions** (`.github/workflows/deploy.yml`)
-- Triggered by pushes to main that touch `data/daily-burn.json`, `data/meta.json`, `data/threads.json`, `data/pricing.json`, `app/**`, `lib/**`, `public/**`, `next.config.ts`, or `package.json` — plus manual `workflow_dispatch`
+- Triggered by interface, source, test, workflow, or rate-card changes (see `.github/workflows/deploy.yml`), plus manual `workflow_dispatch`. Usage JSON changes alone do not trigger deployment.
 - Costs are precomputed into `daily-burn.json`, so a rate change normally arrives with a data refresh; `data/pricing.json` is listed so a pricing-only correction still rebuilds
 - Builds with Node 22 and Python 3.12 → `npm ci` → `npm run check` → browser tests → out/. Pull requests run the same checks in `check.yml`.
 - Deploys out/ to GitHub Pages
@@ -267,7 +267,7 @@ splits, collection metadata). `--remote` consumes that bundle without mixing it
 with local extraction, then uses the same validation, estimates, freezing and
 rate card as before. `meta.json` includes non-sensitive collector IDs and scan
 times; the dashboard lists them and uses the oldest collector for freshness.
-The public page remains a static export. Credentials, retry queues, migration
+The public page remains a GitHub-hosted static export and reads only the validated `public_reports/ai_usage` Firestore snapshot. The private ledger's `publisher` field controls ownership; the original `primary` preserves migration provenance. Read REMOTE_USAGE.md before changing ownership or browser access. Credentials, retry queues, migration
 drafts, and SDK environments are never committed. Server SDK access uses IAM,
 not browser Security Rules; this version assumes trusted personal machines.
 
