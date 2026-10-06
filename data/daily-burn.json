@@ -6188,5 +6188,164 @@
       },
       "unpriced_tokens": 30905421
     }
+  },
+  {
+    "date": "2026-10-03",
+    "codex_tokens": 0,
+    "claude_code_tokens": 485712,
+    "claude_code_calls": 6,
+    "claude_chat_est": 0,
+    "chatgpt_est": 0,
+    "gemini_est": 0,
+    "total": 485712,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day",
+    "breakdown": {
+      "claude_code": {
+        "models": {
+          "claude-opus-5-5": {
+            "cache_read": 431192,
+            "cache_write_1h": 52657,
+            "cache_write_5m": 0,
+            "calls": 6,
+            "input": 12,
+            "output": 1851,
+            "tokens": 485712,
+            "cost_usd": null,
+            "unpriced_tokens": 485712
+          }
+        },
+        "unattributed": 0
+      }
+    },
+    "cost_usd": {
+      "basis": "api_list_price_counterfactual",
+      "total": 0.0,
+      "by_tool": {
+        "claude_code": 0.0,
+        "codex": 0.0
+      },
+      "by_type": {
+        "input": 0.0,
+        "cache_write_5m": 0.0,
+        "cache_write_1h": 0.0,
+        "cache_read": 0.0,
+        "output": 0.0
+      },
+      "unpriced_tokens": 485712
+    }
+  },
+  {
+    "date": "2026-10-05",
+    "codex_tokens": 1723353,
+    "claude_code_tokens": 5178309,
+    "claude_code_calls": 47,
+    "claude_chat_est": 30000,
+    "chatgpt_est": 15000,
+    "gemini_est": 8000,
+    "total": 6954662,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day",
+    "breakdown": {
+      "claude_code": {
+        "models": {
+          "claude-opus-5": {
+            "cache_read": 40753,
+            "cache_write_1h": 29106,
+            "cache_write_5m": 0,
+            "calls": 1,
+            "input": 2,
+            "output": 751,
+            "tokens": 70612,
+            "cost_usd": 0.330222,
+            "unpriced_tokens": 0
+          },
+          "claude-opus-5-5": {
+            "cache_read": 4892431,
+            "cache_write_1h": 171104,
+            "cache_write_5m": 0,
+            "calls": 46,
+            "input": 92,
+            "output": 44070,
+            "tokens": 5107697,
+            "cost_usd": null,
+            "unpriced_tokens": 5107697
+          }
+        },
+        "unattributed": 0
+      },
+      "codex": {
+        "models": {
+          "gpt-6-luna": {
+            "cache_read": 1567488,
+            "input": 146362,
+            "output": 9503,
+            "tokens": 1723353,
+            "cost_usd": null,
+            "unpriced_tokens": 1723353
+          }
+        },
+        "unattributed": 0
+      }
+    },
+    "cost_usd": {
+      "basis": "api_list_price_counterfactual",
+      "total": 0.330222,
+      "by_tool": {
+        "claude_code": 0.330222,
+        "codex": 0.0
+      },
+      "by_type": {
+        "input": 1e-05,
+        "cache_write_5m": 0.0,
+        "cache_write_1h": 0.29106,
+        "cache_read": 0.020376,
+        "output": 0.018775
+      },
+      "unpriced_tokens": 6831050
+    }
+  },
+  {
+    "date": "2026-10-06",
+    "codex_tokens": 31756182,
+    "claude_code_tokens": 0,
+    "claude_code_calls": 0,
+    "claude_chat_est": 30000,
+    "chatgpt_est": 0,
+    "gemini_est": 50000,
+    "total": 31836182,
+    "driver": "unlabeled",
+    "evidence": "exact logs; add a driver label for this day",
+    "breakdown": {
+      "codex": {
+        "models": {
+          "gpt-6.1-sol": {
+            "cache_read": 30963584,
+            "input": 625456,
+            "output": 167142,
+            "tokens": 31756182,
+            "cost_usd": null,
+            "unpriced_tokens": 31756182
+          }
+        },
+        "unattributed": 0
+      }
+    },
+    "cost_usd": {
+      "basis": "api_list_price_counterfactual",
+      "total": 0.0,
+      "by_tool": {
+        "claude_code": 0.0,
+        "codex": 0.0
+      },
+      "by_type": {
+        "input": 0.0,
+        "cache_write_5m": 0.0,
+        "cache_write_1h": 0.0,
+        "cache_read": 0.0,
+        "output": 0.0
+      },
+      "unpriced_tokens": 31756182
+    }
   }
 ]

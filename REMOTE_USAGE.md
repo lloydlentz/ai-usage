@@ -10,7 +10,8 @@ continues to use local logs exactly as before.
 
 The initial ledger is in Firebase project `ai-usage-ledger-lentz`, the `(default)`
 Firestore Native mode database in US multi-region `nam5`. Namespace: `ai_usage`.
-The first collector is `primary-mac`; private configuration and credentials stay
+The publisher is `primary-mac`; additional collectors include `windows-dell-xps`
+and `mac-m1-pro`. Private configuration and credentials stay
 on each machine. The project
 [console](https://console.firebase.google.com/project/ai-usage-ledger-lentz/firestore)
 shows the private ledger to authorized users.
@@ -162,6 +163,26 @@ schtasks /Create /TN "ai-usage collect" /SC HOURLY /TR "cmd /c cd /d C:\code\ai-
 ```
 
 Never run `initialize` or `refresh_and_push.sh` on a collector.
+
+### A Mac restored with Migration Assistant
+
+Migration Assistant can copy `data/private/remote-config.json`, the retry queue,
+credentials, and the publisher's crontab. The integration uses the configured
+`machine_id`, not the Mac's hostname or hardware identity, so the restored Mac
+must get its own ID before collection. `mac-m1-pro` uses that exact ID.
+
+Pause the copied usage job and ensure no collection is running. Preserve a
+private backup of the configuration and queue, then set the new `machine_id`.
+An empty copied `remote-pending.json` can be archived and removed; a nonempty
+queue needs reconciliation before changing identity, because it belongs to the
+original collector. Do not reinitialize the existing ledger or change the
+historical migration draft to the new ID.
+
+Replace this Mac's copied `refresh_and_push.sh` schedule with an hourly
+`collect_usage.sh` job, leaving unrelated cron entries intact. Run collection
+once and verify that Firestore has a separate `collectors/<machine_id>`
+document. The publisher will include it on its next pull. Copied logs retain
+their original record IDs so shared measurements are deduplicated across Macs.
 
 ## Accounting contract
 

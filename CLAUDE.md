@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Current status and next steps: see [PROJECT_STATUS.md](./PROJECT_STATUS.md).
+
 ## Project Overview
 
 **Token Burn Dashboard** — a local AI token-usage tracker that measures exact consumption from Claude Code and Codex through local logs, plus estimated usage from Claude chat, ChatGPT, and Gemini. The dashboard auto-deploys to GitHub Pages and updates hourly via cron.

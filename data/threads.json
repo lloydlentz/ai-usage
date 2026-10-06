@@ -367,6 +367,30 @@
     }
   },
   {
+    "key": "cc-1fd5104bbd8d",
+    "tool": "claude_code",
+    "title": "Slate-tips repository cleanup and PDF article",
+    "days": {
+      "2026-10-05": {
+        "tokens": 4297952,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 4297952,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 37,
+            "input": 74,
+            "cache_write_5m": 0,
+            "cache_write_1h": 116766,
+            "cache_read": 4142533,
+            "output": 38579,
+            "tokens": 4297952
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-203448e569be",
     "tool": "claude_code",
     "title": "Scanned documents organization",
@@ -935,6 +959,30 @@
     }
   },
   {
+    "key": "cc-55ba2f2d069d",
+    "tool": "claude_code",
+    "title": "Video download from Ceramic Arts Network",
+    "days": {
+      "2026-10-05": {
+        "tokens": 70612,
+        "cost_usd": 0.330222,
+        "unpriced_tokens": 0,
+        "models": {
+          "claude-opus-5": {
+            "calls": 1,
+            "input": 2,
+            "cache_write_5m": 0,
+            "cache_write_1h": 29106,
+            "cache_read": 40753,
+            "output": 751,
+            "tokens": 70612
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cc-571cb96dbc0b",
     "tool": "claude_code",
     "title": "AI frontier models for document extraction",
@@ -1473,6 +1521,30 @@
             "cache_read": 26828154,
             "output": 89437,
             "tokens": 27344702
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-7b04d37cf63c",
+    "tool": "claude_code",
+    "title": "Registration page CSS improvements",
+    "days": {
+      "2026-10-05": {
+        "tokens": 809745,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 809745,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 9,
+            "input": 18,
+            "cache_write_5m": 0,
+            "cache_write_1h": 54338,
+            "cache_read": 749898,
+            "output": 5491,
+            "tokens": 809745
           }
         },
         "unattributed": 0
@@ -2553,6 +2625,30 @@
             "cache_read": 372997,
             "output": 3987,
             "tokens": 414072
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
+    "key": "cc-b96a14bfe0ee",
+    "tool": "claude_code",
+    "title": "Granola nightly sync",
+    "days": {
+      "2026-10-03": {
+        "tokens": 485712,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 485712,
+        "models": {
+          "claude-opus-5-5": {
+            "calls": 6,
+            "input": 12,
+            "cache_write_5m": 0,
+            "cache_write_1h": 52657,
+            "cache_read": 431192,
+            "output": 1851,
+            "tokens": 485712
           }
         },
         "unattributed": 0
@@ -3807,6 +3903,27 @@
     }
   },
   {
+    "key": "cx-078a4ba690e2",
+    "tool": "codex",
+    "title": "Fix empty SFTP download folder check",
+    "days": {
+      "2026-10-05": {
+        "tokens": 263388,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 263388,
+        "models": {
+          "gpt-6-luna": {
+            "input": 43301,
+            "cache_read": 218624,
+            "output": 1463,
+            "tokens": 263388
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-09ba7cf627b1",
     "tool": "codex",
     "title": "Brainstorm Slate unique IDs",
@@ -4899,6 +5016,27 @@
     }
   },
   {
+    "key": "cx-3a45dfe30e52",
+    "tool": "codex",
+    "title": "Check transcript preprocessing and",
+    "days": {
+      "2026-10-06": {
+        "tokens": 31506974,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 31506974,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 590752,
+            "cache_read": 30750464,
+            "output": 165758,
+            "tokens": 31506974
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-3b4c3ee3fd3f",
     "tool": "codex",
     "title": "Clean up portal",
@@ -5584,6 +5722,27 @@
     }
   },
   {
+    "key": "cx-5aa8ef0924ad",
+    "tool": "codex",
+    "title": "Investigate org events render error",
+    "days": {
+      "2026-10-05": {
+        "tokens": 1459965,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 1459965,
+        "models": {
+          "gpt-6-luna": {
+            "input": 103061,
+            "cache_read": 1348864,
+            "output": 8040,
+            "tokens": 1459965
+          }
+        },
+        "unattributed": 0
+      }
+    }
+  },
+  {
     "key": "cx-5e08972a6bb9",
     "tool": "codex",
     "title": "Create five shareable branding mock\u0173",
@@ -5671,6 +5830,27 @@
         "unpriced_tokens": 8662,
         "models": {},
         "unattributed": 8662
+      }
+    }
+  },
+  {
+    "key": "cx-635419598964",
+    "tool": "codex",
+    "title": "Add unique mac-m1-pro device ID",
+    "days": {
+      "2026-10-06": {
+        "tokens": 249208,
+        "cost_usd": 0.0,
+        "unpriced_tokens": 249208,
+        "models": {
+          "gpt-6.1-sol": {
+            "input": 34704,
+            "cache_read": 213120,
+            "output": 1384,
+            "tokens": 249208
+          }
+        },
+        "unattributed": 0
       }
     }
   },

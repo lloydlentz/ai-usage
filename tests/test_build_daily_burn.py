@@ -1212,9 +1212,26 @@ class RealDataBreakdownTests(unittest.TestCase):
         for row in self.split:
             for tool, column in build_daily_burn.BREAKDOWN_TOOLS.items():
                 with self.subTest(date=row["date"], tool=tool):
-                    entry = row["breakdown"][tool]
+                    entry = row["breakdown"].get(tool)
+                    if entry is None:
+                        self.assertEqual(row[column], 0)
+                        continue
                     typed = sum(m["tokens"] for m in entry["models"].values())
                     self.assertEqual(typed + entry["unattributed"], row[column])
+
+    def test_single_tool_day_reconciles(self):
+        original = self.split
+        try:
+            self.split = [{
+                "date": "2026-10-06", "codex_tokens": 10,
+                "claude_code_tokens": 0,
+                "breakdown": {"codex": {
+                    "models": {"test-model": {"tokens": 10}}, "unattributed": 0,
+                }},
+            }]
+            self.test_every_breakdown_reconciles_with_its_aggregate()
+        finally:
+            self.split = original
 
     def test_every_model_entry_sums_to_its_tokens(self):
         for row in self.split:
