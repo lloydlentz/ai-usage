@@ -114,6 +114,54 @@ absolute interpreter path if the environment is elsewhere. A network or
 validation failure stops publication and retains the previous public files.
 Only the designated publisher should run this refresh script.
 
+## Incremental collection and publisher sync
+
+Each collector keeps `data/private/remote-acknowledged.json`, scoped to its
+project, database, namespace, machine ID and migration cutover. It remembers the
+last successfully submitted snapshot for each measurement. Unchanged or fully
+smaller/pruned copies need no measurement reads or writes. New and changed
+records still use the existing Firestore transaction and whole-snapshot conflict
+checks; this is not a blind merge or increment of daily totals.
+
+The durable `remote-pending.json` queue is saved before uploads. Acknowledgments
+are saved every 100 successful transactions and on normal/error exit. A hard
+crash can repeat at most the last uncheckpointed batch of successful uploads;
+transactions keep retries from adding tokens twice. Failed uploads or heartbeats
+leave the queue available even if source logs disappear. Historical exclusions
+are remembered as well. Deleting the acknowledgment cache safely causes another
+full submission; do not delete a nonempty pending queue.
+
+Changed canonical records receive a Firestore server `updated_at` timestamp.
+Upgraded collector heartbeats declare `sync_schema: 1`. The publisher's first
+pull scans the complete ledger, including older records without timestamps.
+Later pulls query only records updated after the previous successful cursor,
+replacing those entries in its private local ledger cache. Immutable migration
+baselines are read only during bootstrap. Aggregation and pricing still operate
+on the complete combined history.
+
+The cache and cursor live in the `sync` field of
+`data/private/remote-input.json`, alongside the aggregated rows, thread splits
+and collection metadata. They advance together in one atomic file replacement
+only after fetching and accounting validation succeed. The cursor uses a server
+read time after reading collector heartbeats and before querying usage. Changes
+committed during the query remain eligible next time; rereading them cannot
+double-count usage. A failed build/publication can retry from this complete
+bundle. Losing the bundle safely triggers another full bootstrap.
+
+**Rollout:** update the publisher and every active collector's checkout. The
+first upgraded collection checks existing measurements once and stamps legacy
+records it observes; the first publisher pull bootstraps once. No rules changes,
+database migration, or dashboard redeployment are required. Older collectors
+remain compatible: whenever their heartbeat changes, the publisher does a full
+usage scan because their writes do not maintain `updated_at`. Idle older
+collectors do not force scans. Full savings require all active collectors to
+upgrade. A depleted Firestore quota must recover before bootstrap can succeed.
+
+All caches remain gitignored in `data/private/`. The `sync` cache and heartbeat
+protocol marker are excluded from public dashboard snapshots. Measurements and
+migration baselines are append-only; manual edits must maintain `updated_at`,
+and deleting remote history requires an audited rebuild rather than delta sync.
+
 ## Public dashboard and publisher ownership
 
 The private `<namespace>/ledger` document's `publisher` field selects the active
@@ -237,8 +285,10 @@ Firestore documents live below `<namespace>/ledger`:
 - `baseline_days/<date>`: immutable migrated daily history.
 - `baseline_threads/<thread key>`: immutable migrated thread splits.
 - `usage/<record ID>`: a canonical measurement, optional pinned baseline counts,
-  and the machine IDs that have observed it.
-- `collectors/<machine ID>`: successful collection time and source availability.
+  the machine IDs that have observed it, and a server `updated_at` on records
+  written by upgraded collectors.
+- `collectors/<machine ID>`: successful collection time, source availability,
+  and `sync_schema: 1` for collectors maintaining commit timestamps.
 
 Claude record IDs are `cc-` plus SHA-256 of compact JSON `[message_id, request_id]`.
 One record represents one request, so mirrored/forked transcripts cannot add it

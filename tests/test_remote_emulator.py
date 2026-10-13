@@ -5,6 +5,7 @@ FIRESTORE_EMULATOR_HOST=127.0.0.1:8287 .venv-remote/bin/python -m unittest tests
 from __future__ import annotations
 
 import copy
+import io
 import json
 import os
 import tempfile
@@ -14,6 +15,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
 from unittest.mock import patch
+from contextlib import redirect_stdout
 
 from tests._loader import load_script
 from tests.test_remote_usage import record
@@ -74,6 +76,21 @@ class FirestoreIntegrationTests(unittest.TestCase):
             self.assertEqual(bundle["exact"][0]["codex_tokens"], 1250)
             self.assertEqual(len(bundle["collection"]["collectors"]), 2)
             self.assertEqual(root.collection("usage").document(grown["id"]).get().to_dict()["collectors"], ["desktop", "laptop"])
+            # Real commit timestamps and server read times must drive the delta
+            # query, including a growing existing record and an unchanged one.
+            newer = record(tokens=175)
+            with patch.object(remote, "PRIVATE", private), patch.object(remote, "capture", return_value={newer["id"]: newer, second["id"]: second}):
+                remote.upload({**settings, "machine_id": "desktop"}, root, sdk)
+                output = io.StringIO()
+                with redirect_stdout(output):
+                    remote.pull(root)
+                self.assertIn("incremental: 1 usage records read", output.getvalue())
+                output = io.StringIO()
+                with redirect_stdout(output):
+                    remote.pull(root)
+                self.assertIn("incremental: 0 usage records read", output.getvalue())
+            bundle = json.loads((private / "remote-input.json").read_text())
+            self.assertEqual(bundle["exact"][0]["codex_tokens"], 1275)
             # Exercise the actual builder against the atomic bundle; no local
             # logs or exact-daily.json exist here, and unknown models stay unknown.
             source = build.ROOT / "data/pricing.json"
@@ -82,14 +99,14 @@ class FirestoreIntegrationTests(unittest.TestCase):
                 build.main(remote=True)
             published = json.loads((Path(directory) / "daily-burn.json").read_text())
             row = next(r for r in published if r["date"] == "2026-10-02")
-            self.assertEqual(row["codex_tokens"], 1250)
-            self.assertEqual(row["cost_usd"]["unpriced_tokens"], 1250)
+            self.assertEqual(row["codex_tokens"], 1275)
+            self.assertEqual(row["cost_usd"]["unpriced_tokens"], 1275)
             self.assertEqual(json.loads((Path(directory) / "meta.json").read_text())["collection_mode"], "firestore")
             before = copy.deepcopy(bundle)
             # A corrupt remote split must not replace the last good bundle.
             invalid = record(number="c")
             invalid["counts"]["models"]["test-model"]["input"] = -1
-            root.collection("usage").document(invalid["id"]).set({"record": invalid})
+            root.collection("usage").document(invalid["id"]).set({"record": invalid, "updated_at": sdk.SERVER_TIMESTAMP})
             with patch.object(remote, "PRIVATE", private), self.assertRaises(ValueError):
                 remote.pull(root)
             self.assertEqual(json.loads((private / "remote-input.json").read_text()), before)

@@ -6,6 +6,7 @@ import json
 import shutil
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -27,9 +28,11 @@ def record(tool="codex", number="a", tokens=100, day="2026-10-02"):
 
 
 class Snapshot:
-    def __init__(self, data):
+    def __init__(self, data, key=None):
         self.data = copy.deepcopy(data)
         self.exists = data is not None
+        self.id = key
+        self.read_time = datetime.now(timezone.utc)
 
     def to_dict(self):
         return copy.deepcopy(self.data)
@@ -39,6 +42,10 @@ class Store:
     def __init__(self):
         self.values = {}
         self.fail = None
+        self.reads = []
+        self.scans = []
+        self.fail_stream = None
+        self.on_scan = None
 
     def transaction(self):
         return self
@@ -51,16 +58,34 @@ class Store:
 
 
 class Collection:
-    def __init__(self, store, path):
+    def __init__(self, store, path, filters=()):
         self.store, self.path = store, path
         self.id = path.split("/")[-1]
+        self.filters = filters
+
+    def where(self, field, op, value):
+        return Collection(self.store, self.path, self.filters + ((field, op, value),))
 
     def document(self, key):
         return Ref(self.store, self.path + "/" + key)
 
     def stream(self):
-        return [Snapshot(value) for path, value in sorted(self.store.values.items())
-                if path.startswith(self.path + "/") and path.count("/") == self.path.count("/") + 1]
+        self.store.scans.append((self.path, self.filters))
+        if self.store.fail_stream == self.path:
+            raise ConnectionError("Simulated scan outage")
+        if self.store.on_scan:
+            self.store.on_scan(self.path)
+        def matches(value):
+            for field, op, bound in self.filters:
+                actual = value.get(field)
+                if actual is None or (op == ">" and actual <= bound) or (op == "<=" and actual > bound):
+                    return False
+            return True
+        documents = [Snapshot(value, path.split("/")[-1]) for path, value in sorted(self.store.values.items())
+                     if path.startswith(self.path + "/") and path.count("/") == self.path.count("/") + 1
+                     and matches(value)]
+        self.store.reads.extend(self.path + "/" + doc.id for doc in documents)
+        return documents
 
 
 class Ref:
@@ -69,21 +94,197 @@ class Ref:
         self.parent = Collection(store, path.rsplit("/", 1)[0])
 
     def get(self, transaction=None):
+        self._client.reads.append(self.path)
         return Snapshot(self._client.values.get(self.path))
 
     def set(self, value):
         if self._client.fail and self._client.fail in self.path:
             raise ConnectionError("Simulated outage")
-        self._client.values[self.path] = copy.deepcopy(value)
+        self._client.values[self.path] = {
+            k: datetime.now(timezone.utc) if v is SDK.SERVER_TIMESTAMP else copy.deepcopy(v)
+            for k, v in value.items()
+        }
 
     def collection(self, name):
         return Collection(self._client, self.path + "/" + name)
 
 
 class SDK:
+    SERVER_TIMESTAMP = object()
+
     @staticmethod
     def transactional(fn):
         return fn
+
+
+class IncrementalSyncTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.private = Path(self.directory.name)
+        private_patch = patch.object(remote, "PRIVATE", self.private)
+        private_patch.start()
+        self.addCleanup(private_patch.stop)
+        self.store = Store()
+        self.root = Ref(self.store, "test/ledger")
+        self.root.set({"schema": 1, "cutover": "2026-10-02T12:00:00+00:00", "primary": "primary"})
+        self.settings = {"project_id": "test-project", "machine_id": "remote"}
+        (self.private / "collection.json").write_text(json.dumps({"sources_available": {"codex": True}}))
+
+    def upload(self, *records, settings=None):
+        with patch.object(remote, "capture", return_value={r["id"]: r for r in records}):
+            remote.upload(settings or self.settings, self.root, SDK)
+
+    def bundle(self):
+        return json.loads((self.private / "remote-input.json").read_text())
+
+    def usage_reads(self):
+        return [path for path in self.store.reads if "/usage/" in path]
+
+    def test_unchanged_uploads_read_no_measurements_and_only_growth_is_sent(self):
+        self.upload(record(), record(number="b"))
+        self.store.reads.clear()
+        self.upload(record(), record(number="b"))
+        self.assertEqual(self.usage_reads(), [])
+        self.upload(record(tokens=150), record(number="b"))
+        self.assertEqual(len(self.usage_reads()), 1)
+        self.store.reads.clear()
+        self.upload(record(tokens=100), record(number="b"))
+        self.assertEqual(self.usage_reads(), [])
+
+    def test_second_pull_reads_only_changes_and_keeps_older_days(self):
+        self.upload(record(), record(number="b", day="2026-10-03"))
+        remote.pull(self.root)
+        before = self.bundle()["exact"]
+        self.store.reads.clear()
+        self.store.scans.clear()
+        remote.pull(self.root)
+        self.assertEqual(self.usage_reads(), [])
+        self.assertFalse(any("baseline_" in path for path, _ in self.store.scans))
+        self.assertEqual(self.bundle()["exact"], before)
+        self.upload(record(tokens=150), record(number="b", day="2026-10-03"))
+        self.store.reads.clear()
+        remote.pull(self.root)
+        self.assertEqual(len(self.usage_reads()), 1)
+        self.assertEqual([row["codex_tokens"] for row in self.bundle()["exact"]], [150, 100])
+
+    def test_partial_upload_retries_only_unacknowledged_records_without_logs(self):
+        self.store.fail = "b" * 64
+        with self.assertRaises(ConnectionError):
+            self.upload(record(), record(number="b"))
+        self.assertEqual(len(json.loads((self.private / "remote-pending.json").read_text())["records"]), 2)
+        self.store.fail = None
+        self.store.reads.clear()
+        self.upload()
+        self.assertEqual(len(self.usage_reads()), 1)
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 200)
+
+    def test_failed_heartbeat_retries_without_resending_measurements(self):
+        self.store.fail = "/collectors/"
+        with self.assertRaises(ConnectionError):
+            self.upload(record())
+        self.store.fail = None
+        self.store.reads.clear()
+        self.upload()
+        self.assertEqual(self.usage_reads(), [])
+        self.assertTrue(self.root.collection("collectors").document("remote").get().exists)
+
+    def test_failed_scan_validation_or_save_preserves_bundle_and_cursor(self):
+        self.upload(record())
+        remote.pull(self.root)
+        before = (self.private / "remote-input.json").read_bytes()
+        self.upload(record(tokens=150))
+        self.store.fail_stream = "test/ledger/usage"
+        with self.assertRaises(ConnectionError):
+            remote.pull(self.root)
+        self.assertEqual((self.private / "remote-input.json").read_bytes(), before)
+        self.store.fail_stream = None
+        with patch.object(remote, "write_json", side_effect=OSError("Disk full")), self.assertRaises(OSError):
+            remote.pull(self.root)
+        self.assertEqual((self.private / "remote-input.json").read_bytes(), before)
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 150)
+        before = (self.private / "remote-input.json").read_bytes()
+        invalid = record(number="c")
+        invalid["counts"]["models"]["test-model"]["input"] = -1
+        self.root.collection("usage").document(invalid["id"]).set({"record": invalid, "updated_at": SDK.SERVER_TIMESTAMP})
+        with self.assertRaises(ValueError):
+            remote.pull(self.root)
+        self.assertEqual((self.private / "remote-input.json").read_bytes(), before)
+
+    def test_commit_after_cursor_boundary_is_not_lost_or_double_counted(self):
+        self.upload(record())
+        remote.pull(self.root)
+        def concurrent_upload(path):
+            if path == "test/ledger/usage":
+                self.store.on_scan = None
+                self.upload(record(tokens=150), record(number="b"))
+        self.store.on_scan = concurrent_upload
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 250)
+        self.store.reads.clear()
+        remote.pull(self.root)
+        self.assertEqual(len(self.usage_reads()), 2)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 250)
+
+    def test_fence_includes_uploads_observed_in_heartbeats(self):
+        self.upload(record())
+        remote.pull(self.root)
+        def concurrent_upload(path):
+            if path == "test/ledger/collectors":
+                self.store.on_scan = None
+                self.upload(record(tokens=150))
+        self.store.on_scan = concurrent_upload
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 150)
+
+    def test_legacy_collectors_scan_only_when_their_heartbeat_changes(self):
+        self.upload(record())
+        old = self.root.collection("collectors").document("old")
+        old.set({"machine_id": "old", "collected_at": "2026-10-02T18:00:00+00:00", "sources_available": {"codex": True}})
+        legacy_record = record(number="b")
+        self.root.collection("usage").document(legacy_record["id"]).set({"record": legacy_record})
+        remote.pull(self.root)
+        self.store.reads.clear()
+        remote.pull(self.root)
+        self.assertEqual(self.usage_reads(), [])
+        self.root.collection("usage").document(legacy_record["id"]).set({"record": record(number="b", tokens=150)})
+        old.set({"machine_id": "old", "collected_at": "2026-10-02T19:00:00+00:00", "sources_available": {"codex": True}})
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 250)
+
+    def test_mirrored_machine_does_not_double_count_or_reduce_canonical_usage(self):
+        self.upload(record(tokens=150))
+        (self.private / "remote-pending.json").unlink()
+        self.upload(record(tokens=100), settings={**self.settings, "machine_id": "other"})
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"][0]["codex_tokens"], 150)
+        self.store.reads.clear()
+        self.upload(record(tokens=100), settings={**self.settings, "machine_id": "other"})
+        self.assertEqual(self.usage_reads(), [])
+
+    def test_old_bundle_and_missing_acknowledgments_bootstrap_safely(self):
+        self.upload(record())
+        remote.pull(self.root)
+        before = self.bundle()
+        before.pop("sync")
+        remote.write_json(self.private / "remote-input.json", before)
+        (self.private / "remote-acknowledged.json").unlink()
+        self.upload(record())
+        remote.pull(self.root)
+        self.assertEqual(self.bundle()["exact"], before["exact"])
+        self.assertEqual(self.bundle()["threads"], before["threads"])
+
+    def test_publisher_cache_cannot_follow_a_project_change(self):
+        self.store.project = "first-project"
+        self.upload(record())
+        remote.pull(self.root)
+        self.store.project = "second-project"
+        self.store.reads.clear()
+        remote.pull(self.root)
+        self.assertEqual(len(self.usage_reads()), 1)
+        self.assertEqual(self.bundle()["sync"]["source"]["project_id"], "second-project")
 
 
 class PublicReportTests(unittest.TestCase):

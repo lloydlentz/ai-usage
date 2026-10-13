@@ -1,6 +1,6 @@
 # Token Burn Dashboard — Status
 
-Last updated: 2026-10-06 by Codex
+Last updated: 2026-10-13 by Codex
 
 ## Objective
 
@@ -9,6 +9,16 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
 
 ## Current State
 
+- Incremental collection and publisher sync are implemented locally. Collectors
+  remember successful submissions; the publisher caches the complete private
+  ledger and fetches changes by server commit timestamp. See REMOTE_USAGE.md for
+  bootstrap, interrupted-run recovery, and compatibility with older collectors.
+- Production Firestore currently returns HTTP 429 (`Quota exceeded`), including
+  public report reads and the publisher ownership check. The repeated historical
+  reads in the former pipeline are the likely cause; quota metrics have not been
+  inspected. Live bootstrap is pending quota recovery. Other collectors must
+  receive this code update for full savings; advancing legacy heartbeats still
+  trigger compatibility scans.
 - `mac-m1-pro` is the designated publisher in the private ledger's `publisher`
   field. The original `primary: primary-mac` remains migration provenance.
 - Collectors: `mac-m1-pro`, `primary-mac`, `windows-dell-xps`. This Mac's unique
@@ -37,10 +47,11 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
 
 ## Next Steps
 
-1. Check `/tmp/token-burn-refresh.log` after the next scheduled publisher run
-   (the full entry point has already succeeded manually). The current log ends
-   with the inherited 13:00 validation failure, before this session's fix. The
-   successful 14:11 manual run is in `data/private/public-refresh-verification.log`.
+1. After quota recovery, check `/tmp/token-burn-refresh.log` for successful
+   incremental collection and pull. The first upgraded upload and pull each
+   bootstrap once; unchanged later runs should report zero usage records read.
+   The publisher skips uncommitted tracked source changes, so save source work
+   before expecting cron to resume. Share this update with active collectors.
 2. On the former publisher, update its checkout and replace its publisher job
    with `scripts/collect_usage.sh` if it remains active. It cannot be controlled
    from this Mac; updated code enforces the new publisher ownership.
@@ -50,8 +61,9 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
 
 ## Open Questions / Blockers
 
-- No implementation blocker. The former publisher's scheduler is not accessible
-  from this session; its continued collection determines its freshness status.
+- Production quota exhaustion blocks live bootstrap and publication. Local tests
+  and Firestore emulator checks pass. Other collectors' schedulers are not
+  accessible from this session; their checkouts still need the sync update.
 
 ## Decisions
 
@@ -79,6 +91,13 @@ GitHub Pages serves the interface; Firestore serves independently refreshed data
 
 ## Recently Completed
 
+- 2026-10-13 — Added durable upload acknowledgments, server commit timestamps,
+  and an atomic publisher ledger cache/cursor. Eleven regression tests cover
+  unchanged reads, changed records, retries, concurrency, legacy collectors and
+  cache scoping. Pipeline suite: 219 passed, two emulator tests skipped in the
+  offline run; both passed separately against the real Firestore emulator.
+  Pipeline compatibility was also checked with Python 3.9. Production remains
+  quota-blocked; no database rules or dashboard changes were required.
 - 2026-10-06 — Public publisher/frontend split: `npm run check` passed (210
   Python tests, 13 frontend tests, lint, production build). Browser tests: 21
   passed, one skipped, including live polling and failure retention. Live rules

@@ -293,6 +293,12 @@ def upload(settings, root, sdk, exported=None):
                    "database": settings.get("database", "(default)"), "machine_id": settings["machine_id"]}
     if queue.get("destination", destination) != destination:
         raise ValueError("Pending uploads belong to another destination or machine")
+    acknowledged_path = PRIVATE / "remote-acknowledged.json"
+    acknowledged = json.loads(acknowledged_path.read_text(encoding="utf-8")) if acknowledged_path.exists() else {}
+    if (acknowledged.get("schema") != 1 or acknowledged.get("destination") != destination or
+            acknowledged.get("cutover") != state["cutover"]):
+        acknowledged = {"schema": 1, "destination": destination, "cutover": state["cutover"], "records": {}}
+    accepted = acknowledged["records"]
     if exported is None:
         captured = capture(since=cutover_day)
         scan = json.loads((PRIVATE / "collection.json").read_text(encoding="utf-8"))
@@ -317,7 +323,10 @@ def upload(settings, root, sdk, exported=None):
     if set(scan["sources_available"]) - COLUMNS.keys() or any(type(v) is not bool for v in scan["sources_available"].values()):
         raise ValueError("Invalid collector source availability")
     for key, record in captured.items():
-        queue["records"][key] = choose(queue["records"].get(key), record)
+        previous = accepted.get(key, {}).get("record")
+        observed = choose(previous, record)
+        if observed != previous:
+            queue["records"][key] = choose(queue["records"].get(key), observed)
     queue.update({"destination": destination, "collected_at": scan.get("collected_at", datetime.now(timezone.utc).isoformat()),
                   "sources_available": scan["sources_available"]})
     write_json(queue_path, queue)
@@ -335,47 +344,111 @@ def upload(settings, root, sdk, exported=None):
         value = dict(doc or {})
         value["record"] = selected
         value["collectors"] = sorted(set(value.get("collectors", [])) | {settings["machine_id"]})
-        if value != doc:
+        if value != doc or "updated_at" not in value:
+            value["updated_at"] = sdk.SERVER_TIMESTAMP
             transaction.set(ref, value)
         return True
 
-    skipped = 0
-    for key, record in sorted(queue["records"].items()):
-        if not put(root._client.transaction(), root.collection("usage").document(key), record):
-            skipped += 1
+    uploaded = 0
+    try:
+        for key, record in sorted(queue["records"].items()):
+            previous = accepted.get(key, {}).get("record")
+            observed = choose(previous, record)
+            if observed == previous:
+                continue
+            included = put(root._client.transaction(), root.collection("usage").document(key), observed)
+            accepted[key] = {"record": observed, "skipped": not included}
+            uploaded += 1
+            # Bound repeat reads after a hard crash without rewriting this cache
+            # for every record. Transactions keep those repeats idempotent.
+            if uploaded % 100 == 0:
+                write_json(acknowledged_path, acknowledged)
+    finally:
+        # Save successful transactions even if a later record fails. The durable
+        # pending queue stays intact until the entire upload and heartbeat succeed.
+        write_json(acknowledged_path, acknowledged)
+    skipped = sum(entry["skipped"] for entry in accepted.values())
     # A machine's heartbeat moves only when the entire upload succeeds.
     root.collection("collectors").document(settings["machine_id"]).set({
         "machine_id": settings["machine_id"], "collected_at": queue["collected_at"],
         "sources_available": queue["sources_available"],
         "skipped_historical_records": skipped,
+        "sync_schema": 1,
     })
     write_json(queue_path, {"destination": destination, "records": {}})
-    print(f"Usage uploaded; {skipped} pre-migration records excluded from historical backfill")
+    print(f"Usage uploaded: {uploaded} new/changed records; {skipped} pre-migration records excluded from historical backfill")
 
 
 def pull(root):
-    state = root.get().to_dict()
+    """Keep a private ledger cache and advance its cursor with the built bundle.
+
+    The cursor uses a server read time before the query: later commits are
+    eligible again next time, even if this query already sees them. A full scan
+    bootstraps legacy records without updated_at. Older collectors do not
+    maintain that timestamp, so their advancing heartbeats
+    trigger a compatibility scan; idle legacy collectors do not force rereads.
+    """
+    snapshot = root.get()
+    state = snapshot.to_dict()
     if not state or state.get("schema") != 1:
         raise ValueError("Remote ledger is not initialized")
     # Read heartbeats first: an upload completing during the scan cannot make
     # the metadata claim a newer collection than the records we actually read.
     collectors = sorted([d.to_dict() for d in root.collection("collectors").stream()], key=lambda c: c["machine_id"])
-    rows, threads = aggregate(
-        [d.to_dict() for d in root.collection("baseline_days").stream()],
-        [d.to_dict() for d in root.collection("baseline_threads").stream()],
-        [d.to_dict() for d in root.collection("usage").stream()],
-    )
     if not collectors:
         raise ValueError("No successful remote collectors; run collect first")
+    bundle_path = PRIVATE / "remote-input.json"
+    source = {"project_id": getattr(root._client, "project", None),
+              "database": getattr(root._client, "_database", "(default)"),
+              "path": root.path, "cutover": state.get("cutover")}
+    previous = json.loads(bundle_path.read_text(encoding="utf-8")) if bundle_path.exists() else {}
+    cached = previous.get("sync", {})
+    bootstrap = cached.get("schema") != 1 or cached.get("source") != source
+    # Fence after reading heartbeats: every upload claimed by that metadata
+    # committed its measurements before this server timestamp.
+    boundary = root.get().read_time
+    if not bootstrap:
+        cursor = datetime.fromisoformat(cached["cursor"])
+        if boundary < cursor:
+            raise ValueError("Firestore sync time moved backwards")
+    legacy = {c["machine_id"]: c for c in collectors if c.get("sync_schema") != 1}
+    full_scan = bootstrap or any(cached.get("legacy_collectors", {}).get(key) != value
+                                 for key, value in legacy.items())
+    if bootstrap:
+        cached = {"schema": 1, "source": source,
+                  "baseline_days": [d.to_dict() for d in root.collection("baseline_days").stream()],
+                  "baseline_threads": [d.to_dict() for d in root.collection("baseline_threads").stream()],
+                  "usage": {}}
+    query = root.collection("usage")
+    if not full_scan:
+        # No upper filter: a record updated both before and after the cursor
+        # boundary must still appear. Re-reading a later commit next time is
+        # harmless because the cached document is replaced, never added twice.
+        query = query.where("updated_at", ">", cursor)
+    documents = list(query.stream())
+    if full_scan:
+        cached["usage"] = {}
+    for document in documents:
+        value = document.to_dict()
+        # The commit timestamp belongs to sync, not to accounting. Excluding it
+        # also keeps the private JSON cache independent of SDK datetime types.
+        value.pop("updated_at", None)
+        cached["usage"][document.id] = value
+    rows, threads = aggregate(cached["baseline_days"], cached["baseline_threads"], cached["usage"].values())
+    # Floor to microseconds for portable JSON/Python parsing. Any nanosecond
+    # remainder may be fetched twice but cannot be skipped at this boundary.
+    cached.update({"cursor": boundary.isoformat(timespec="microseconds"), "legacy_collectors": legacy})
+    public_collectors = [{k: v for k, v in c.items() if k != "sync_schema"} for c in collectors]
     collection = {"collected_at": min((c["collected_at"] for c in collectors), key=datetime.fromisoformat),
                   "sources_available": {tool: all(c["sources_available"][tool] for c in collectors
                                                   if tool in c["sources_available"])
                                         for tool in COLUMNS
                                         if any(tool in c["sources_available"] for c in collectors)},
-                  "collectors": collectors, "mode": "firestore"}
+                  "collectors": public_collectors, "mode": "firestore"}
     # One atomic bundle prevents the builder from mixing a new total with old threads.
-    write_json(PRIVATE / "remote-input.json", {"exact": rows, "threads": threads, "collection": collection})
-    print(f"Pulled {len(rows)} days from {len(collectors)} collectors")
+    write_json(bundle_path, {"exact": rows, "threads": threads, "collection": collection, "sync": cached})
+    mode = "full scan" if full_scan else "incremental"
+    print(f"Pulled {len(rows)} days from {len(collectors)} collectors ({mode}: {len(documents)} usage records read)")
 
 
 def check_publisher(settings, root):
