@@ -36,29 +36,17 @@ import {
   sumTokens,
 } from "../lib/token-math";
 
-
-type Theme = "ticker" | "printrun";
-const THEME_STORAGE_KEY = "dashboard-theme";
-
 type ToolSource = {
   key: "claude" | "chatgpt";
   label: string;
-  ticker: string;
   color: string;
   today: number;
   todayKnown: boolean;
-  yesterdayKnown: boolean;
-  yesterday: number;
   week: number;
   total: number;
   selected: number;
   history: (number | null)[];
 };
-
-function pctDelta(curr: number, prev: number) {
-  if (prev === 0) return curr === 0 ? 0 : 100;
-  return ((curr - prev) / prev) * 100;
-}
 
 // Every row in daily-burn.json is bucketed to an America/Chicago day by the
 // Python pipeline, so the UI has to ask for dates in that same zone.
@@ -69,15 +57,6 @@ const DATA_TIME_ZONE = "America/Chicago";
 // from 7pm Chicago onward.
 function chicagoDay(instant: Date) {
   return instant.toLocaleDateString("en-CA", { timeZone: DATA_TIME_ZONE });
-}
-
-// Step whole days off a YYYY-MM-DD string. The anchor is deliberately UTC: UTC
-// days are always exactly 24h, so a DST transition cannot slide the result the
-// way subtracting milliseconds from a local-midnight Date would.
-function addDays(day: string, delta: number) {
-  const anchor = new Date(`${day}T00:00:00Z`);
-  anchor.setUTCDate(anchor.getUTCDate() + delta);
-  return anchor.toISOString().slice(0, 10);
 }
 
 function formatRefreshed(iso: string) {
@@ -104,7 +83,6 @@ export default function TokenBurnDashboard() {
   const range = windowKey === "custom" ? customRange : getWindowRange(rows, windowKey);
   const selectRange = (next: DateRange) => { setRange(next); setWindowKey(next.start === bounds.start && next.end === bounds.end ? "all" : "custom"); };
   const [now, setNow] = useState(() => Date.parse(meta.collected_at || meta.refreshed_at));
-  const [theme, setTheme] = useState<Theme>("printrun");
   const [mounted, setMounted] = useState(false);
 
   // "Today" depends on when the page is viewed, but this page is statically
@@ -116,15 +94,9 @@ export default function TokenBurnDashboard() {
   const [today, setToday] = useState(() => chicagoDay(new Date(meta.refreshed_at)));
 
   useEffect(() => {
-    let saved: string | null = null;
-    try { saved = localStorage.getItem(THEME_STORAGE_KEY); } catch { /* Storage is optional. */ }
-    // SSR-safe hydration correction: this page is a static export, so the first
-    // client render must be byte-identical to the prerendered HTML. The stored
-    // theme and the viewer's real Chicago day are only knowable on the client,
-    // so they can only be applied after mount. Restructuring this to avoid
-    // setState-in-effect would reintroduce a hydration mismatch.
+    // Correct the static build's date only after hydration, when the viewer's
+    // real Chicago day is available.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (saved === "ticker" || saved === "printrun") setTheme(saved);
     setToday(chicagoDay(new Date()));
     setMounted(true);
     setNow(Date.now());
@@ -134,17 +106,6 @@ export default function TokenBurnDashboard() {
     }, 60_000);
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* Keep the in-memory preference. */ }
-    }
-  }, [theme, mounted]);
-
-  // Mirror the theme onto <html> so body background (outside .page) matches too.
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
 
   const selectedRows = useMemo(() => rows.filter((row) => row.date >= range.start && row.date <= range.end), [rows, range]);
   const overdueRates = Object.entries(pricing.models).filter(([, entry]) => "review_after" in entry && String(entry.review_after) < today).map(([name]) => name);
@@ -176,28 +137,19 @@ export default function TokenBurnDashboard() {
   const sourceTotal = sourceColumns.reduce((sum, source) => sum + sumSource(selectedRows, source.key), 0);
   const tableRows = lastCalendarDays(selectedRows, 30).reverse();
 
-  const yesterday = addDays(today, -1);
-
   const todayRows = rows.filter((r) => r.date === today);
-  const yesterdayRows = rows.filter((r) => r.date === yesterday);
   const weekRows = lastCalendarDays(rows, 7);
   const historyDates = Array.from({ length: 14 }, (_, i) => dayString(dayNumber(bounds.end) - 13 + i));
   const toolHistory = (key: "claude_code_tokens" | "codex_tokens") => historyDates.map((date) => rows.find((row) => row.date === date)?.[key] ?? null);
 
   const todayKnown = todayRows.length > 0;
-  const yesterdayKnown = yesterdayRows.length > 0;
 
   const claudeToday = sumSource(todayRows, "claude_code_tokens");
   const codexToday = sumSource(todayRows, "codex_tokens");
-  const claudeYesterday = sumSource(yesterdayRows, "claude_code_tokens");
-  const codexYesterday = sumSource(yesterdayRows, "codex_tokens");
   const claudeWeek = sumSource(weekRows, "claude_code_tokens");
   const codexWeek = sumSource(weekRows, "codex_tokens");
   const claudeTotal = sumSource(rows, "claude_code_tokens");
   const codexTotal = sumSource(rows, "codex_tokens");
-
-  const totalToday = todayRows.reduce((sum, r) => sum + r.total, 0);
-  const totalYesterday = yesterdayRows.reduce((sum, r) => sum + r.total, 0);
 
   // The cost side of the ledger. Only measured tokens are ever priced, so the
   // token figure shown beside the dollars counts the same universe — pairing
@@ -229,18 +181,18 @@ export default function TokenBurnDashboard() {
 
   const toolSources: ToolSource[] = [
     {
-      key: "claude", label: "Claude Code", ticker: "CLDE", color: "var(--accent)",
-      todayKnown, yesterdayKnown,
-      today: claudeToday, yesterday: claudeYesterday, week: claudeWeek, total: claudeTotal,
+      key: "claude", label: "Claude Code", color: "var(--accent)",
+      todayKnown,
+      today: claudeToday, week: claudeWeek, total: claudeTotal,
       selected: sumSource(selectedRows, "claude_code_tokens"), history: toolHistory("claude_code_tokens"),
     },
     {
       // Exact Codex CLI tokens. Labelled "Codex", not "ChatGPT": the ChatGPT app
       // is a separate, estimated column and conflating the two made the exact
       // number look like it counted chat usage.
-      key: "chatgpt", label: "Codex", ticker: "CDX", color: "var(--good)",
-      todayKnown, yesterdayKnown,
-      today: codexToday, yesterday: codexYesterday, week: codexWeek, total: codexTotal,
+      key: "chatgpt", label: "Codex", color: "var(--good)",
+      todayKnown,
+      today: codexToday, week: codexWeek, total: codexTotal,
       selected: sumSource(selectedRows, "codex_tokens"), history: toolHistory("codex_tokens"),
     },
   ];
@@ -258,31 +210,15 @@ export default function TokenBurnDashboard() {
   );
 
   return (
-    <main className="page" data-theme={theme}>
-      <ThemeToggle theme={theme} onChange={setTheme} />
+    <main className="page">
       {dataStatus !== "live" && <p className="ledgerWarn" role="status">{dataStatus === "loading" ? "Checking for updated usage… Showing the saved snapshot." : "Live usage is unavailable. Showing the last loaded snapshot; readings may be out of date."}</p>}
       {mounted && Object.values(meta.sources_available).some((available) => !available) && <p className="ledgerWarn">A usage source was unavailable during collection. Missing readings are unknown.</p>}
       {refreshState === "stale" && <p className="ledgerWarn">No successful refresh in over two hours. Collection or publication may be delayed. Today’s missing readings are unknown, not zero usage.</p>}
       {!selectedRows.length && <p role="status">No recorded days in this date range.</p>}
 
-      {theme === "ticker" && (
-        <TickerTape
-          toolSources={toolSources}
-          totalToday={totalToday}
-          totalYesterday={totalYesterday}
-          total={total}
-          peakDay={peakDay}
-          lastAverage={lastAverage}
-        />
-      )}
-
       <section className="heroRow">
         <div className="heroCol">
-          {theme === "ticker" ? (
-            <TickerHeroContent refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
-          ) : (
-            <PrintRunHero issueNo={rows.length} refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
-          )}
+          <PrintRunHero issueNo={rows.length} refreshedAt={meta.refreshed_at} refreshToggle={refreshToggle} />
         </div>
       </section>
 
@@ -348,12 +284,8 @@ export default function TokenBurnDashboard() {
       <section className="calendarRow">
         <Panel
           label="Daily burn"
-          title={theme === "ticker" ? "Trading calendar" : "Activity calendar"}
-          note={
-            theme === "ticker"
-              ? "Tile color marks the day's leading tool."
-              : "Log color scale so quiet days and spikes can share one surface."
-          }
+          title="Activity calendar"
+          note="Log color scale so quiet days and spikes can share one surface."
         >
           <div className="heatmapTimeframe">
             {selectedRows.length > 0 && (
@@ -617,9 +549,7 @@ export default function TokenBurnDashboard() {
       <p className="footerNote">Pricing verified {pricing.verified_at}. {pricing.benchmark}</p>
       {overdueRates.length > 0 && <p className="ledgerWarn">Pricing review overdue for {overdueRates.join(", ")}. The stored rate may no longer apply.</p>}
       <p className="footerNote">
-        {theme === "ticker"
-          ? `${refreshLabel} · hourly collection · `
-          : "Run on a laser printer that pretends to be a riso · "}
+        Run on a laser printer that pretends to be a riso ·{" "}
         Data built:{" "}
         {new Date(meta.refreshed_at).toLocaleString("en-US", {
           month: "short", day: "numeric", year: "numeric",
@@ -630,19 +560,6 @@ export default function TokenBurnDashboard() {
         })}
       </p>
     </main>
-  );
-}
-
-function ThemeToggle({ theme, onChange }: { theme: Theme; onChange: (t: Theme) => void }) {
-  return (
-    <div className="themeToggle" role="group" aria-label="Dashboard style">
-      <button type="button" aria-pressed={theme === "ticker"} onClick={() => onChange("ticker")}>
-        Ticker
-      </button>
-      <button type="button" aria-pressed={theme === "printrun"} onClick={() => onChange("printrun")}>
-        Print Run
-      </button>
-    </div>
   );
 }
 
@@ -982,83 +899,6 @@ function ShapeShift({
         </svg>
       </div>
     </div>
-  );
-}
-
-// --- Ticker theme: hero + tool-use quote board -----------------------------
-
-function TickerTape({
-  toolSources,
-  totalToday,
-  totalYesterday,
-  total,
-  peakDay,
-  lastAverage,
-}: {
-  toolSources: ToolSource[];
-  totalToday: number;
-  totalYesterday: number;
-  total: number;
-  peakDay: BurnRow | undefined;
-  lastAverage: number;
-}) {
-  const totalDelta = pctDelta(totalToday, totalYesterday);
-  const comparable = toolSources.every((source) => source.todayKnown && source.yesterdayKnown);
-
-  const tapeItems = (
-    <>
-      {toolSources.map((s) => {
-        const d = pctDelta(s.today, s.yesterday);
-        return (
-          <span className="tkTapeItem" key={s.ticker}>
-            {s.ticker} <b>{s.todayKnown ? formatTokens(s.today) : "no reading"}</b>{" "}
-            <span className={d >= 0 ? "tkUp" : "tkDown"}>
-              {s.todayKnown && s.yesterdayKnown ? (s.yesterday === 0 && s.today > 0 ? "new usage" : `${d >= 0 ? "▲" : "▼"} ${Math.abs(d).toFixed(1)}%`) : "comparison unavailable"}
-            </span>
-          </span>
-        );
-      })}
-      <span className="tkTapeItem">
-        TOTAL <b>{formatTokens(total)}</b>{" "}
-        <span className={totalDelta >= 0 ? "tkUp" : "tkDown"}>
-          {comparable ? (totalYesterday === 0 && totalToday > 0 ? "new usage today" : `${totalDelta >= 0 ? "▲" : "▼"} ${Math.abs(totalDelta).toFixed(1)}% today`) : "daily comparison unavailable"}
-        </span>
-      </span>
-      <span className="tkTapeItem">
-        PEAK <b>{formatTokens(peakDay?.total || 0)}</b> · {peakDay?.date}
-      </span>
-      <span className="tkTapeItem">
-        7D AVG <b>{formatTokens(lastAverage)}</b>
-      </span>
-    </>
-  );
-
-  return (
-    <div className="tkTape" aria-hidden="true">
-      <div className="tkTapeTrack">
-        <span className="tkTapeGroup">{tapeItems}</span>
-        <span className="tkTapeGroup">{tapeItems}</span>
-      </div>
-    </div>
-  );
-}
-
-function TickerHeroContent({ refreshedAt, refreshToggle }: { refreshedAt: string; refreshToggle: React.ReactNode }) {
-  return (
-    <section className="hero tkHero">
-      <div className="tkHeroRow">
-        <div>
-          <p className="eyebrow">Token Burn — Daily Sheet</p>
-          <h1>Lloyd&apos;s token usage.</h1>
-        </div>
-        <div className="tkAsOf">
-          Updated {formatRefreshed(refreshedAt)} · {refreshToggle}
-        </div>
-      </div>
-      <p className="lead">
-        Data from Claude Code and Codex logs, quoted like a burn rate — because that&apos;s exactly what it is.
-      </p>
-    </section>
   );
 }
 

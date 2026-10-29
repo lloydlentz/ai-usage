@@ -26,7 +26,7 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("usage refreshes without navigation and retains selected dates and theme", async ({ page }) => {
+test("usage refreshes without navigation and retains selected dates", async ({ page }) => {
   const report = savedReport();
   const last = report.rows.at(-1);
   await page.clock.install({ time: new Date(`${last.date}T18:00:00Z`) });
@@ -43,7 +43,6 @@ test("usage refreshes without navigation and retains selected dates and theme", 
   });
   await openDashboard(page);
   await expect(page.getByText("Checking for updated usage… Showing the saved snapshot.")).toHaveCount(0);
-  await page.getByRole("button", { name: /ticker/i }).click();
   await page.locator(".refreshToggle").click();
   await page.getByLabel("From", { exact: true }).fill(last.date);
   const selectedStart = await page.getByRole("slider", { name: "Range start", exact: true }).getAttribute("aria-valuetext");
@@ -51,7 +50,6 @@ test("usage refreshes without navigation and retains selected dates and theme", 
   last.total = last.codex_tokens + last.claude_code_tokens + last.claude_chat_est + last.chatgpt_est + last.gemini_est;
   await page.clock.fastForward(5 * 60_000);
   await expect(page.locator(".toolToday").last()).toHaveText(formatTokens(last.codex_tokens));
-  await expect(page.locator("main")).toHaveAttribute("data-theme", "ticker");
   await expect(page.getByRole("slider", { name: "Range start", exact: true })).toHaveAttribute("aria-valuetext", selectedStart!);
   unavailable = true;
   await page.clock.fastForward(5 * 60_000);
@@ -71,10 +69,16 @@ async function openDashboard(page: Page) {
   })).toBeLessThan(.5);
 }
 
-test("presets position the range without shrinking the timeline in either theme", async ({ page }) => {
+test("presets position the range without shrinking the timeline in Print Run", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem("dashboard-theme", "ticker"));
   await openDashboard(page);
+  await expect(page.getByRole("group", { name: "Dashboard style" })).toHaveCount(0);
+  await expect(page.locator(".prHero")).toBeVisible();
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(238, 234, 226)");
+  await page.reload();
+  await expect(page.locator(".prHero")).toBeVisible();
   const filters = page.locator("#date-filters");
   const toggle = page.locator(".refreshToggle");
   await expect(filters).toBeHidden();
@@ -105,8 +109,6 @@ test("presets position the range without shrinking the timeline in either theme"
   await expect(page.getByRole("slider", { name: "Range start", exact: true })).toHaveAttribute("aria-valuetext", lastDay.date);
   await expect(page.locator("path.timelineAreaClaude")).toHaveAttribute("d", overview!);
   await page.getByRole("button", { name: "Reset dates" }).click();
-  await page.getByRole("button", { name: /ticker/i }).click();
-  await expect(page.locator("main")).toHaveAttribute("data-theme", "ticker");
   await page.locator(".refreshToggle").click();
   await expect(filters).toBeHidden();
   await page.locator(".refreshToggle").focus();
@@ -149,7 +151,10 @@ test("explorer filters and sanitized labels persist and export", async ({ page }
 
 test("stale collection does not claim live or invent today's readings", async ({ page }) => {
   const meta = JSON.parse(readFileSync("data/meta.json", "utf8"));
-  await page.clock.install({ time: new Date(Date.parse(meta.collected_at) + 24 * 60 * 60_000) });
+  // The oldest collector can lag behind days already reported by other machines.
+  const lastDay = savedReport().rows.at(-1).date;
+  const afterHistory = Math.max(Date.parse(meta.collected_at), Date.parse(`${lastDay}T23:59:59-06:00`));
+  await page.clock.install({ time: new Date(afterHistory + 24 * 60 * 60_000) });
   await openDashboard(page);
   await expect(page.getByRole("button", { name: "Refresh overdue", exact: true })).toBeVisible();
   await expect(page.locator(".toolSummaryNote")).toContainText(JSON.parse(readFileSync("data/daily-burn.json", "utf8")).at(-1).date);
@@ -349,7 +354,6 @@ test("thread drilldown ranks threads within the selected dates", async ({ page }
     await panel.getByRole("button", { name: `Show all ${allTime.length} threads` }).click();
     await expect(rows).toHaveCount(allTime.length);
   }
-  await page.getByRole("button", { name: /ticker/i }).click();
   await expect(panel.getByRole("heading", { name: "Which threads burned it" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(errors).toEqual([]);

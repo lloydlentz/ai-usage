@@ -52,28 +52,24 @@ python3 scripts/build_daily_burn.py --remote              # Build from that bund
 ### Frontend (Next.js App Router)
 
 **File:** `app/page.tsx` composes the dashboard. Cost rendering, the keyboard-accessible timeline, and the day explorer are extracted into `app/components/`. `app/layout.tsx` only sets metadata and the basePath-prefixed favicon.
-`app/use-dashboard-data.ts` loads the public Firestore report on mount and every five minutes while visible. `lib/dashboard-source.ts` verifies and normalizes a complete snapshot. Bundled daily/meta/thread/pricing JSON provides the initial fallback; a visible warning marks loading/fetch failure. Remote updates preserve the theme and custom dates; preset dates follow current data.
+`app/use-dashboard-data.ts` loads the public Firestore report on mount and every five minutes while visible. `lib/dashboard-source.ts` verifies and normalizes a complete snapshot. Bundled daily/meta/thread/pricing JSON provides the initial fallback; a visible warning marks loading/fetch failure. Remote updates preserve custom dates; preset dates follow current data.
 
-**Themes:** two switchable looks selected by `ThemeToggle`:
-- `"printrun"` (default) — paper stock, condensed display face
-- `"ticker"` — black trading-desk sheet, monospace, scrolling tape
-
-The choice persists to `localStorage` under `dashboard-theme`, and is applied both as
-`data-theme` on `<main className="page">` and mirrored onto `<html>` via
-`document.documentElement.dataset.theme` so the body background outside `.page` matches.
+**Appearance:** Print Run is the sole layout: paper stock, condensed display
+face, flat inks and hard keylines. Its CSS variables live on `:root`, so the
+page and body share the palette before hydration. There is no layout switcher
+or stored theme preference.
 
 **Sections, in render order:**
-1. `ThemeToggle`, then `TickerTape` (ticker theme only)
-2. **Hero row** (`.heroRow`): full-width `TickerHeroContent` / `PrintRunHero`
-3. **Usage timeline** (`.timelineRow`): "Daily burn" labels the compact tool totals and "Usage timeline" sits above the selected dates;, all-time chart with a movable date selection, and the selected period's model-share bar
-4. **Ledger** (`.ledger`): the `ShapeShift` chart shows selected-period token volume beside its cost at API list prices. See "The ledger" below
-5. **Thread drilldown** (`.threadRow`): "Which threads burned it" ranks Claude Code and Codex conversation threads by their tokens inside the selected dates. See "Thread drilldown" below
-6. **Activity calendar** (`.calendarRow`, "Trading calendar" in the ticker theme): three heatmaps (Total, Claude Code, Codex CLI) + legend
-7. **Stats**: total burn, peak day, 7d average, active days
-8. **Where the money went** (cost by model) + **Which agent spent it** (cost by tool)
-9. **Exact beside estimated** (source split) + **What is burning tokens** (drivers)
-10. **How much of it was writing** (fermi equivalents) + **Peak day**
-11. **Last 30 days** moving-average table, then the footer note
+1. **Hero row** (`.heroRow`): full-width `PrintRunHero`
+2. **Usage timeline** (`.timelineRow`): "Daily burn" labels the compact tool totals and "Usage timeline" sits above the selected dates;, all-time chart with a movable date selection, and the selected period's model-share bar
+3. **Ledger** (`.ledger`): the `ShapeShift` chart shows selected-period token volume beside its cost at API list prices. See "The ledger" below
+4. **Thread drilldown** (`.threadRow`): "Which threads burned it" ranks Claude Code and Codex conversation threads by their tokens inside the selected dates. See "Thread drilldown" below
+5. **Activity calendar** (`.calendarRow`): three heatmaps (Total, Claude Code, Codex CLI) + legend
+6. **Stats**: total burn, peak day, 7d average, active days
+7. **Where the money went** (cost by model) + **Which agent spent it** (cost by tool)
+8. **Exact beside estimated** (source split) + **What is burning tokens** (drivers)
+9. **How much of it was writing** (fermi equivalents) + **Peak day**
+10. **Last 30 days** moving-average table, then the footer note
 
 ### The ledger
 
@@ -125,20 +121,19 @@ one. Table columns carry the qualifier in the column header
 - `BasisPill` / `CostAmount` / `CellCost` / `UnpricedNote`: the four renderings of `CostKnowledge` — large figure, table cell, and the lower-bound disclosure
 - `UsageTimeline`: SVG stacked-area chart (Claude Code under Codex CLI) with a hover crosshair, per-series dots, and a tooltip positioned in real pixels so its fixed width can't overflow a narrow container
 - `GitHubHeatmap`: GitHub-style calendar grid (days-of-week rows, weeks columns)
-- Ticker-only: `TickerTape`, `TickerHeroContent`
-- Print Run-only: `PrintRunHero`
-- `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with today's, last-seven-day, selected-period and all-time measured tokens. "Today" is the viewer's America/Chicago day (the same `today` state the ticker tape reads); a day with no row shows "no reading", never 0. Recent trends span 14 calendar days; missing days break the line.
+- `PrintRunHero`: issue stamp, title and refresh/date-filter control
+- `ToolSummary` / `Sparkline`: compact two-tool overview inside the timeline panel, with today's, last-seven-day, selected-period and all-time measured tokens. "Today" is the viewer's America/Chicago day (the dashboard’s `today` state); a day with no row shows "no reading", never 0. Recent trends span 14 calendar days; missing days break the line.
 - `ThreadDrilldown` (`app/components/thread-drilldown.tsx`): top-10 table of threads for the selected dates, with Tool and Order (most tokens / most recent) selects, a "Show all" toggle, cost with the `.thBasis` header, and a "Not attributed to a thread" footer row so the table adds up to the period's measured tokens
-- Shared: `ThemeToggle`, `Metric`, `Panel`, and the `buildDriverRows()` helper
+- Shared: `Metric`, `Panel`, and the `buildDriverRows()` helper
 
 **Styling:** `app/globals.css`
-- Everything themes through CSS custom properties. `:root` holds the ticker palette (bg #000000, panel #0a0a0a, monospace `--font-body`); `[data-theme="printrun"]` overrides it (bg #eeeae2, ink #1a1a1a, sans body + condensed `--font-display`, thicker `--border-w`, visible `--cell-border`)
-- Tool colors: `--accent` = Claude Code (#ff8c42 ticker / #f0653b print run), `--good` = Codex CLI (#8957e5 / #7a4fc2). The CSS variable names are historical
+- CSS custom properties on `:root` define the Print Run palette (bg #eeeae2, ink #1a1a1a, sans body, condensed display face and hard keylines).
+- Tool colors: `--accent` = Claude Code (#f0653b), `--good` = Codex CLI (#7a4fc2).
 - Token-type ramp: `--t-input`, `--t-cache-write-5m`, `--t-cache-write-1h`, `--t-cache-read`, `--t-output`. Deliberately *not* the tool colors, which already mean "Claude" and "Codex". The ramp encodes the thesis — the huge, cheap type (`cache_read`) is the quietest color on the page and the tiny, expensive ones (`cache_write_1h`, `output`) are the loudest
-- `--basis` colors the "at API list" pill; `--seam` is the hairline between adjacent bar segments (page background on ticker, ink on print run)
+- `--basis` colors the "at API list" pill; `--seam` is the hairline between adjacent bar segments (ink)
 - Layout: `.heroRow` is a block (full-width title); `.timelineRow` and `.calendarRow` are full width; `.heatmapContainer` is a 3-column grid
 - Heat classes: neutral `heat0`–`heat5`, plus `heatclaude0`–`heatclaude5` and `heatchatgpt0`–`heatchatgpt5`
-- Responsive breakpoints at 880px, 800px, 560px, and 480px, plus a `min-width: 640px` tweak for the Print Run lead. The ticker tape's scroll animation is disabled under `prefers-reduced-motion`
+- Responsive breakpoints at 880px, 800px, 560px, and 480px, plus a `min-width: 640px` tweak for the Print Run lead
 
 ### Data Layer (`lib/`)
 
@@ -312,8 +307,8 @@ not browser Security Rules; this version assumes trusted personal machines.
 - Edit the `ZoneInfo()` calls in both Python scripts
 
 ### Adjust color scheme
-- Update the CSS custom properties in `app/globals.css`: `:root { --accent, --good, ... }` is the ticker theme, `[data-theme="printrun"] { ... }` overrides it for print run
-- Both themes must be edited together or one of them drifts
+- Update the CSS custom properties in `app/globals.css`: `:root { --accent, --good, ... }` defines the Print Run palette
+- Print Run is the only layout
 - Adjust responsive breakpoints there too
 
 ### Test data changes locally
@@ -340,7 +335,7 @@ not browser Security Rules; this version assumes trusted personal machines.
   remain lower bounds in per-model, per-tool, table and detail views. Every
   dollar display keeps an inline basis or an API-list table header.
 - Date controls set the timeline selection and are hidden by default. The refresh
-  wording after the updated timestamp toggles them in both themes. Tool and model filters apply to the
+  wording after the updated timestamp toggles them in Print Run. Tool and model filters apply to the
   explorer; expanding a day reveals token types and priced/unknown subtotals.
   Preset labels can be saved locally, exported and imported with
   `python3 scripts/import_driver_labels.py /path/to/driver-labels.json`.
@@ -354,7 +349,7 @@ not browser Security Rules; this version assumes trusted personal machines.
   page can detect staleness but cannot know the exact local failure reason.
   A lock left by a forced kill can be removed from `.git/token-burn-refresh.lock`
   after verifying that no refresh is running.
-- Browser tests cover both themes, mobile layout, filters, label export and
+- Browser tests cover Print Run, mobile layout, filters, label export and
   keyboard navigation. Frontend tests cover calendar math and cost states;
   pipeline regression fixtures cover contradictory advancing token counters
   and mid-session counter restarts.

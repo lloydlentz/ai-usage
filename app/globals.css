@@ -1,43 +1,5 @@
 :root {
-  /* Ticker theme (default) */
-  --bg: #000000;
-  --panel: #0a0a0a;
-  --panel-2: #0f0f0f;
-  --line: #232323;
-  --ink: #e8e8e0;
-  --soft: #cfcfc8;
-  --muted: #6b6b63;
-  --accent: #ff8c42;
-  --good: #8957e5;
-  --up: #00d26a;
-  --down: #ff4b4b;
-  --warn: #ffdf43;
   --bad: #f2453d;
-  --font-body: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
-  --font-display: var(--font-body);
-  --border-w: 1px;
-  --cell-border: none;
-
-  /* Token-type ramp. Deliberately not the tool colours (orange/purple), which
-     already mean "Claude" and "Codex" elsewhere on the page. The ramp still
-     encodes the thesis — the huge, cheap type is the calmest colour and the
-     tiny, expensive ones are the loudest — but calm has a floor. Cache read
-     was previously so quiet (1.8:1 on this panel) that the widest band on the
-     chart read as empty track rather than data, and readers asked what the
-     grey area was. Every swatch now clears ~3.5:1 against the panel and every
-     pair is at least 20 dE apart. The two cache-write types are deliberately
-     one hue at two strengths, since they are the same thing at two durations. */
-  --t-input: #e8a33d;
-  --t-cache-write-5m: #2f9c93;
-  --t-cache-write-1h: #5fe3d6;
-  --t-cache-read: #8a97a3;
-  --t-output: #ff4f7b;
-
-  --basis: #59a5ff;
-  --seam: var(--bg);
-}
-
-[data-theme="printrun"] {
   --bg: #eeeae2;
   --panel: #f6f4ee;
   --panel-2: #f6f4ee;
@@ -49,8 +11,7 @@
   --good: #7a4fc2;
   --up: #1a7a3c;
   --down: #b3261e;
-  /* Yellow off the ticker palette is unreadable on cream; the estimated pill
-     and the unpriced pill both need a warning colour that holds on paper. */
+  /* Warning pills need an ink that holds on paper. */
   --warn: #9a6400;
   --font-body: -apple-system, "Helvetica Neue", Arial, sans-serif;
   --font-display: "Arial Narrow", "Helvetica Neue Condensed", Impact, sans-serif;
@@ -99,39 +60,6 @@ textarea {
   font-family: var(--font-body);
 }
 
-/* --- Theme toggle --- */
-
-.themeToggle {
-  display: inline-flex;
-  gap: 2px;
-  border: var(--border-w) solid var(--line);
-  padding: 3px;
-  margin-bottom: 18px;
-}
-
-.themeToggle button {
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  padding: 7px 14px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-family: var(--font-body);
-}
-
-.themeToggle button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--bg);
-}
-
-.themeToggle button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 /* --- Hero --- */
 
 .hero {
@@ -169,7 +97,7 @@ h1 {
   letter-spacing: -0.01em;
 }
 
-[data-theme="printrun"] h1 {
+h1 {
   max-width: none;
   font-size: clamp(24px, 5.2vw, 68px);
   font-weight: 900;
@@ -188,80 +116,17 @@ h1 {
   font-family: var(--font-body);
 }
 
-[data-theme="printrun"] .lead {
+.lead {
   max-width: none;
   font-style: italic;
 }
 
 @media (min-width: 640px) {
-  [data-theme="printrun"] .lead {
+  .lead {
     white-space: nowrap;
     overflow-x: auto;
   }
 }
-
-/* --- Ticker tape --- */
-
-.tkTape {
-  background: var(--panel-2);
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 9px 0;
-  margin-bottom: 26px;
-}
-
-.tkTapeTrack {
-  display: inline-flex;
-  animation: tkScroll 34s linear infinite;
-}
-
-@keyframes tkScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tkTapeTrack { animation: none; }
-}
-
-.tkTapeGroup {
-  display: inline-flex;
-  gap: 34px;
-  padding-left: 24px;
-}
-
-.tkTapeItem {
-  font-size: 11.5px;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-}
-
-.tkTapeItem b {
-  color: var(--ink);
-  font-weight: 600;
-  margin: 0 6px;
-}
-
-.tkUp { color: var(--up); }
-.tkDown { color: var(--down); }
-
-.tkHeroRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 14px;
-}
-
-.tkAsOf {
-  color: var(--muted);
-  font-size: 11.5px;
-  text-align: right;
-  line-height: 1.6;
-}
-
-.tkLive { color: var(--up); }
 
 /* --- Print Run hero --- */
 
@@ -398,7 +263,7 @@ h1 {
   font-family: var(--font-display);
 }
 
-[data-theme="printrun"] .panelHeader h2 {
+.panelHeader h2 {
   text-transform: uppercase;
   font-weight: 800;
   font-size: 14px;
@@ -1177,14 +1042,14 @@ h1 {
 
 /* Print Run: flat inks, hard keylines, and the registration-offset ghost the
    hero headline already uses — the ledger reads as another block on the sheet. */
-[data-theme="printrun"] .ledgerAmount,
-[data-theme="printrun"] .shiftAmount,
-[data-theme="printrun"] .statAmount {
+.ledgerAmount,
+.shiftAmount,
+.statAmount {
   font-weight: 900;
   letter-spacing: -0.02em;
 }
 
-[data-theme="printrun"] .ledgerGhost {
+.ledgerGhost {
   display: block;
   position: absolute;
   top: 2px;
@@ -1195,20 +1060,12 @@ h1 {
   white-space: nowrap;
 }
 
-[data-theme="printrun"] .shiftRibbon {
+.shiftRibbon {
   opacity: 0.5;
 }
 
-[data-theme="printrun"] .shiftRowName {
+.shiftRowName {
   color: var(--ink);
-}
-
-/* Ticker: hairline rules, monospace figures, ribbons kept dim so the two solid
-   bars stay the brightest thing in the block. */
-[data-theme="ticker"] .ledgerAmount,
-[data-theme="ticker"] .shiftAmount {
-  font-weight: 600;
-  letter-spacing: -0.02em;
 }
 
 /* --- Cost by model --- */
@@ -1337,14 +1194,6 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .tkHeroRow {
-    align-items: flex-start;
-  }
-
-  .tkAsOf {
-    text-align: left;
-  }
-
   .modelRow {
     grid-template-columns: minmax(0, 1fr) 100px;
   }
@@ -1402,7 +1251,7 @@ h1 {
 
   /* The registration offset is tuned to the 64px desktop figure; at phone sizes
      the same 4px reads as a printing fault rather than a flourish. */
-  [data-theme="printrun"] .ledgerGhost {
+  .ledgerGhost {
     top: 2px;
     left: 2px;
   }
@@ -1417,18 +1266,9 @@ h1 {
   .driver {
     grid-template-columns: 1fr;
   }
-
-  .tkQuoteRow {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-
-  .tkQuoteRight {
-    text-align: left;
-  }
 }
 
-/* Shared controls inherit both dashboard palettes. */
+/* Shared controls use the Print Run palette. */
 .dashboardControls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; }
 .dashboardControls label, .explorerDay > label { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; }
 .dashboardControls select, .dashboardControls input, .explorerDay select, .dashboardControls button {
