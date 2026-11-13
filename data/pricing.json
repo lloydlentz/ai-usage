@@ -21,7 +21,7 @@
     "input": "Uncached input tokens, billed at the model's base input rate.",
     "cache_write_5m": "Tokens written to a 5-minute ephemeral prompt cache (Anthropic: 1.25x base input).",
     "cache_write_1h": "Tokens written to a 1-hour ephemeral prompt cache (Anthropic: 2x base input).",
-    "cache_read": "Tokens served from prompt cache (Anthropic: 0.1x base input; OpenAI publishes its own cached-input rate).",
+    "cache_read": "Tokens served from prompt cache, billed at the model's published cached-input rate.",
     "output": "Output tokens. Includes OpenAI reasoning tokens, which bill at the output rate."
   },
   "models": {
@@ -35,7 +35,7 @@
         "output": 25.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10"
+      "source_date": "2026-11-13"
     },
     "claude-opus-4-8": {
       "provider": "anthropic",
@@ -47,7 +47,7 @@
         "output": 25.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10"
+      "source_date": "2026-11-13"
     },
     "claude-sonnet-5": {
       "provider": "anthropic",
@@ -59,7 +59,7 @@
         "output": 10.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10",
+      "source_date": "2026-11-13",
       "notes": "The launch price is now permanent; the previously announced September increase was cancelled."
     },
     "claude-sonnet-4-6": {
@@ -72,7 +72,7 @@
         "output": 15.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10"
+      "source_date": "2026-11-13"
     },
     "claude-haiku-4-5": {
       "provider": "anthropic",
@@ -84,7 +84,7 @@
         "output": 5.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10"
+      "source_date": "2026-11-13"
     },
     "claude-fable-5": {
       "provider": "anthropic",
@@ -96,7 +96,7 @@
         "output": 50.0
       },
       "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "source_date": "2026-09-10"
+      "source_date": "2026-11-13"
     },
     "gpt-5.5": {
       "provider": "openai",
@@ -106,7 +106,7 @@
         "output": 30.0
       },
       "source": "https://developers.openai.com/api/docs/models/gpt-5.5",
-      "source_date": "2026-09-10",
+      "source_date": "2026-11-13",
       "notes": "Standard short-context benchmark; no cache-write dimension in this legacy model rate."
     },
     "gpt-5.6-sol": {
@@ -117,10 +117,10 @@
         "output": 20
       },
       "published_cache_write_usd_per_million": 5,
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "source_date": "2026-09-10",
-      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified. Current promotional rate is available at least through 2026-11-21; review at expiry.",
-      "review_after": "2026-11-21"
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "source_date": "2026-11-13",
+      "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified. Current promotional rate is available until 2026-11-30; review at expiry.",
+      "review_after": "2026-11-30"
     },
     "gpt-5.6-terra": {
       "provider": "openai",
@@ -130,8 +130,8 @@
         "output": 12
       },
       "published_cache_write_usd_per_million": 2.5,
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "source_date": "2026-09-10",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+      "source_date": "2026-11-13",
       "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
     },
     "gpt-5.6-luna": {
@@ -142,8 +142,8 @@
         "output": 1.2
       },
       "published_cache_write_usd_per_million": 0.25,
-      "source": "https://developers.openai.com/api/docs/pricing",
-      "source_date": "2026-09-10",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "source_date": "2026-11-13",
       "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
     },
     "<synthetic>": {
@@ -167,13 +167,110 @@
       },
       "published_cache_write_usd_per_million": 12.5,
       "source": "https://developers.openai.com/api/docs/pricing",
-      "source_date": "2026-09-10",
+      "source_date": "2026-11-13",
       "notes": "Standard processing, short-context benchmark. Logs do not preserve per-request context tier. Published cache-write pricing is recorded separately: logs currently report zero writes and do not specify an Anthropic-style TTL. Nonzero Codex writes are treated as unattributed until their split can be verified."
+    },
+    "claude-fable-5-2": {
+      "provider": "anthropic",
+      "usd_per_million": {
+        "input": 8,
+        "cache_write_5m": 10,
+        "cache_write_1h": 16,
+        "cache_read": 0.2,
+        "output": 40
+      },
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-11-13"
+    },
+    "claude-opus-5-5": {
+      "provider": "anthropic",
+      "usd_per_million": {
+        "input": 4,
+        "cache_write_5m": 5,
+        "cache_write_1h": 8,
+        "cache_read": 0.2,
+        "output": 20
+      },
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-11-13"
+    },
+    "claude-sonnet-5-5": {
+      "provider": "anthropic",
+      "usd_per_million": {
+        "input": 2,
+        "cache_write_5m": 2.5,
+        "cache_write_1h": 4,
+        "cache_read": 0.1,
+        "output": 10
+      },
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-11-13"
+    },
+    "claude-haiku-5-5": {
+      "provider": "anthropic",
+      "usd_per_million": {
+        "input": 0.1,
+        "cache_write_5m": 0.125,
+        "cache_write_1h": 0.2,
+        "cache_read": 0.01,
+        "output": 0.5
+      },
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "source_date": "2026-11-13",
+      "notes": "Standard benchmark for prompts up to 100,000 input tokens. Higher rates apply above that threshold; the ledger does not retain per-request context tiers."
+    },
+    "gpt-6-sol": {
+      "provider": "openai",
+      "usd_per_million": {
+        "input": 2,
+        "cache_read": 0.2,
+        "output": 10
+      },
+      "published_cache_write_usd_per_million": 2.5,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6-sol",
+      "source_date": "2026-11-13",
+      "notes": "Standard short-context benchmark. The separate cache-write rate is for 30-minute retention and is not applied to the ledger."
+    },
+    "gpt-6-luna": {
+      "provider": "openai",
+      "usd_per_million": {
+        "input": 0.1,
+        "cache_read": 0.01,
+        "output": 0.5
+      },
+      "published_cache_write_usd_per_million": 0.125,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "source_date": "2026-11-13",
+      "notes": "Standard short-context benchmark. The separate cache-write rate is for 30-minute retention and is not applied to the ledger."
+    },
+    "gpt-6.1-sol": {
+      "provider": "openai",
+      "usd_per_million": {
+        "input": 2,
+        "cache_read": 0.1,
+        "output": 10
+      },
+      "published_cache_write_usd_per_million": 2.5,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "source_date": "2026-11-13",
+      "notes": "Standard short-context benchmark. The separate cache-write rate is for 30-minute retention and is not applied to the ledger."
+    },
+    "gpt-6.1-terra": {
+      "provider": "openai",
+      "usd_per_million": {
+        "input": 1,
+        "cache_read": 0.05,
+        "output": 5
+      },
+      "published_cache_write_usd_per_million": 1.25,
+      "source": "https://developers.openai.com/api/docs/models/gpt-6.1-terra",
+      "source_date": "2026-11-13",
+      "notes": "Standard short-context benchmark. The separate cache-write rate is for 30-minute retention and is not applied to the ledger."
     }
   },
   "aliases": {
     "claude-haiku-4-5-20251001": "claude-haiku-4-5"
   },
   "benchmark": "Current standard processing and short-context public rates applied to all recorded history; not a reconstruction of historical invoices. Context-tier, fast-mode, regional and tool charges are excluded.",
-  "verified_at": "2026-09-10"
+  "verified_at": "2026-11-13"
 }

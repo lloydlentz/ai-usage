@@ -703,13 +703,21 @@ class ShippedPricingTests(unittest.TestCase):
                 self.assertRegex(entry.get("source_date", ""), r"^\d{4}-\d{2}-\d{2}$")
 
     def test_anthropic_cache_rates_follow_the_documented_multipliers(self):
-        # read 0.1x, 5m write 1.25x, 1h write 2x of base input.
+        # Anthropic varies cache hit multipliers by model. The two write
+        # multipliers are shared. See the rate card's Anthropic pricing source.
+        cache_read_multipliers = {
+            "claude-fable-5-2": 0.025,
+            "claude-opus-5-5": 0.05,
+            "claude-sonnet-5-5": 0.05,
+        }
         for model, entry in self.raw["models"].items():
             if entry.get("provider") != "anthropic":
                 continue
             rates = entry["usd_per_million"]
             with self.subTest(model=model):
-                self.assertAlmostEqual(rates["cache_read"], rates["input"] * 0.1, 6)
+                self.assertAlmostEqual(
+                    rates["cache_read"], rates["input"] * cache_read_multipliers.get(model, 0.1), 6
+                )
                 self.assertAlmostEqual(rates["cache_write_5m"], rates["input"] * 1.25, 6)
                 self.assertAlmostEqual(rates["cache_write_1h"], rates["input"] * 2.0, 6)
 

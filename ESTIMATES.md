@@ -31,7 +31,7 @@ happening.
 | `input` | Uncached input tokens | base | base |
 | `cache_write_5m` | Written to a 5-minute ephemeral cache | 1.25× input | n/a — no cache-write premium |
 | `cache_write_1h` | Written to a 1-hour ephemeral cache | 2× input | n/a |
-| `cache_read` | Served from prompt cache | 0.1× input | published separately |
+| `cache_read` | Served from prompt cache | model-specific | model-specific |
 | `output` | Output tokens | base output | base output |
 
 **Claude Code** reports all five. The 5m/1h split comes from
@@ -70,14 +70,14 @@ needs no code change. Cost is *derived*, never frozen: every run reprices the
 whole ledger from the current rate card, so a correction propagates
 backwards. (Token counts are the opposite — see the ledger rules below.)
 
-Rates were re-verified on **2026-09-10** against the
+Rates were re-verified on **2026-11-13** against the
 [OpenAI pricing page](https://developers.openai.com/api/docs/pricing),
-[GPT-5.5 model page](https://developers.openai.com/api/docs/models/gpt-5.5), and
+[OpenAI model pages](https://developers.openai.com/api/docs/models), and
 [Anthropic pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
-The rate card records each source and verification date. Sonnet 5's launch
-price became permanent. Sol, Terra and Luna were updated and Astra was added.
-Sol's current promotion is available at least through November 21, 2026;
-`review_after` records the next check. Numeric prices live only in the card.
+This refresh adds GPT-6 Sol and Luna, GPT-6.1 Sol and Terra, and Claude
+Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5. GPT-5.6 Sol's promotion is
+published through November 30, 2026; `review_after` records the next check.
+Numeric prices live only in the card.
 
 This is a **current standard-processing, short-context benchmark applied to
 all history**, not the prices applicable on each original usage date. The
@@ -85,8 +85,8 @@ ledger does not preserve per-request context tiers, so long-context premiums,
 fast-mode premiums, regional uplifts and tool charges are excluded. The UI
 states this benchmark explicitly; it must not be described as a full API invoice.
 
-Anthropic cache multipliers apply to the models currently in the card; newer
-models may use different cache-read multipliers and need individual verification.
+Anthropic cache-hit rates vary by model. Haiku 5.5 uses the standard
+short-context rate for prompts up to 100,000 input tokens.
 OpenAI now publishes a cache-write rate, recorded separately in each current
 model's card. The local logs still report zero cache-write tokens. A future
 nonzero write event remains unattributed until its semantics are supported;
@@ -101,6 +101,10 @@ the model and every affected day. `meta.json → cost.unpriced_models` lists
 them. `cost_usd.total` is therefore a **lower bound** whenever
 `unpriced_tokens` is nonzero. Silent zeros are how a cost dashboard starts
 lying.
+
+`codex-auto-review` stays unpriced because the logged ID has no verified
+public API rate or model mapping. `qwen3.5:4b` is an Ollama model tag with
+no provider rate identifiable from the tag alone.
 
 ## Mixed fidelity — what "missing" means
 

@@ -5665,8 +5665,8 @@
             "cache_read": 20428204,
             "output": 138243,
             "tokens": 20881383,
-            "cost_usd": null,
-            "unpriced_tokens": 20881383
+            "cost_usd": 9.368925,
+            "unpriced_tokens": 0
           },
           "claude-sonnet-5": {
             "calls": 115,
@@ -5698,19 +5698,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 22.713287,
+      "total": 32.082212,
       "by_tool": {
-        "claude_code": 6.395092,
+        "claude_code": 15.764017,
         "codex": 16.318195
       },
       "by_type": {
-        "input": 3.982572,
+        "input": 3.983636,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 1.7449,
-        "cache_read": 13.102035,
-        "output": 3.88378
+        "cache_write_1h": 4.26226,
+        "cache_read": 17.187676,
+        "output": 6.64864
       },
-      "unpriced_tokens": 20881383
+      "unpriced_tokens": 0
     }
   },
   {
@@ -5735,8 +5735,8 @@
             "cache_read": 6720720,
             "output": 47967,
             "tokens": 7127310,
-            "cost_usd": null,
-            "unpriced_tokens": 7127310
+            "cost_usd": 5.172004,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5757,19 +5757,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 20.428522,
+      "total": 25.600526,
       "by_tool": {
-        "claude_code": 0.0,
+        "claude_code": 5.172004,
         "codex": 20.428522
       },
       "by_type": {
-        "input": 3.57576,
+        "input": 3.576224,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 14.526822,
-        "output": 2.32594
+        "cache_write_1h": 2.868056,
+        "cache_read": 15.870966,
+        "output": 3.28528
       },
-      "unpriced_tokens": 7127310
+      "unpriced_tokens": 0
     }
   },
   {
@@ -5794,8 +5794,8 @@
             "cache_read": 2303130,
             "output": 8714,
             "tokens": 2402231,
-            "cost_usd": null,
-            "unpriced_tokens": 2402231
+            "cost_usd": 1.357842,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5815,8 +5815,8 @@
             "cache_read": 13705856,
             "output": 96970,
             "tokens": 14394085,
-            "cost_usd": null,
-            "unpriced_tokens": 14394085
+            "cost_usd": 0.244669,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5824,19 +5824,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.490962,
+      "total": 2.093473,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 0.490962
+        "claude_code": 1.357842,
+        "codex": 0.735631
       },
       "by_type": {
-        "input": 0.14792,
+        "input": 0.207206,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 0.194202,
-        "output": 0.14884
+        "cache_write_1h": 0.722776,
+        "cache_read": 0.791886,
+        "output": 0.371605
       },
-      "unpriced_tokens": 16796316
+      "unpriced_tokens": 0
     }
   },
   {
@@ -5862,8 +5862,8 @@
             "cache_read": 959488,
             "output": 17861,
             "tokens": 1032597,
-            "cost_usd": null,
-            "unpriced_tokens": 1032597
+            "cost_usd": 0.481004,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5871,19 +5871,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 0.481004,
       "by_tool": {
         "claude_code": 0.0,
-        "codex": 0.0
+        "codex": 0.481004
       },
       "by_type": {
-        "input": 0.0,
+        "input": 0.110496,
         "cache_write_5m": 0.0,
         "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_read": 0.191898,
+        "output": 0.17861
       },
-      "unpriced_tokens": 1032597
+      "unpriced_tokens": 0
     }
   },
   {
@@ -5917,8 +5917,8 @@
             "cache_read": 6819840,
             "output": 35834,
             "tokens": 7281199,
-            "cost_usd": null,
-            "unpriced_tokens": 7281199
+            "cost_usd": 0.128668,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5926,19 +5926,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 5.32025,
+      "total": 5.448918,
       "by_tool": {
         "claude_code": 0.0,
-        "codex": 5.32025
+        "codex": 5.448918
       },
       "by_type": {
-        "input": 1.512968,
+        "input": 1.555521,
         "cache_write_5m": 0.0,
         "cache_write_1h": 0.0,
-        "cache_read": 3.394202,
-        "output": 0.41308
+        "cache_read": 3.4624,
+        "output": 0.430997
       },
-      "unpriced_tokens": 7281199
+      "unpriced_tokens": 0
     }
   },
   {
@@ -5963,8 +5963,8 @@
             "cache_read": 721591,
             "output": 6048,
             "tokens": 803071,
-            "cost_usd": null,
-            "unpriced_tokens": 803071
+            "cost_usd": 0.86863,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -5984,24 +5984,24 @@
             "cache_read": 5731072,
             "output": 25267,
             "tokens": 6129610,
-            "cost_usd": null,
-            "unpriced_tokens": 6129610
+            "cost_usd": 0.107271,
+            "unpriced_tokens": 0
           },
           "gpt-6-sol": {
             "input": 248470,
             "cache_read": 4241408,
             "output": 21176,
             "tokens": 4511054,
-            "cost_usd": null,
-            "unpriced_tokens": 4511054
+            "cost_usd": 1.556982,
+            "unpriced_tokens": 0
           },
           "gpt-6.1-sol": {
             "input": 282997,
             "cache_read": 12282368,
             "output": 51602,
             "tokens": 12616967,
-            "cost_usd": null,
-            "unpriced_tokens": 12616967
+            "cost_usd": 2.310251,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6009,19 +6009,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 7.845419,
+      "total": 12.688553,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 7.845419
+        "claude_code": 0.86863,
+        "codex": 11.819923
       },
       "by_type": {
-        "input": 2.233652,
+        "input": 3.334017,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 5.007667,
-        "output": 0.6041
+        "cache_write_1h": 0.603248,
+        "cache_read": 7.285815,
+        "output": 1.465473
       },
-      "unpriced_tokens": 24060702
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6046,8 +6046,8 @@
             "cache_read": 8750023,
             "output": 60673,
             "tokens": 9107690,
-            "cost_usd": null,
-            "unpriced_tokens": 9107690
+            "cost_usd": 5.338801,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6059,8 +6059,8 @@
             "cache_read": 14367488,
             "output": 66880,
             "tokens": 15176187,
-            "cost_usd": null,
-            "unpriced_tokens": 15176187
+            "cost_usd": 3.589187,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6068,19 +6068,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 8.927987,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 0.0
+        "claude_code": 5.338801,
+        "codex": 3.589187
       },
       "by_type": {
-        "input": 0.0,
+        "input": 1.484254,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_write_1h": 2.37472,
+        "cache_read": 3.186753,
+        "output": 1.88226
       },
-      "unpriced_tokens": 24283877
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6106,8 +6106,8 @@
             "cache_read": 7734400,
             "output": 49401,
             "tokens": 8236780,
-            "cost_usd": null,
-            "unpriced_tokens": 8236780
+            "cost_usd": 2.173408,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6115,19 +6115,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 2.173408,
       "by_tool": {
         "claude_code": 0.0,
-        "codex": 0.0
+        "codex": 2.173408
       },
       "by_type": {
-        "input": 0.0,
+        "input": 0.905958,
         "cache_write_5m": 0.0,
         "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_read": 0.77344,
+        "output": 0.49401
       },
-      "unpriced_tokens": 8236780
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6152,8 +6152,8 @@
             "cache_read": 11944365,
             "output": 55245,
             "tokens": 12500403,
-            "cost_usd": null,
-            "unpriced_tokens": 12500403
+            "cost_usd": 7.499141,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6165,8 +6165,8 @@
             "cache_read": 17171456,
             "output": 87979,
             "tokens": 18405018,
-            "cost_usd": null,
-            "unpriced_tokens": 18405018
+            "cost_usd": 4.888102,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6174,19 +6174,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 12.387243,
       "by_tool": {
-        "claude_code": 0.0,
-        "codex": 0.0
+        "claude_code": 7.499141,
+        "codex": 4.888102
       },
       "by_type": {
-        "input": 0.0,
+        "input": 2.292142,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_write_1h": 4.004392,
+        "cache_read": 4.106019,
+        "output": 1.98469
       },
-      "unpriced_tokens": 30905421
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6211,8 +6211,8 @@
             "cache_read": 431192,
             "output": 1851,
             "tokens": 485712,
-            "cost_usd": null,
-            "unpriced_tokens": 485712
+            "cost_usd": 0.544562,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6220,19 +6220,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 0.544562,
       "by_tool": {
-        "claude_code": 0.0,
+        "claude_code": 0.544562,
         "codex": 0.0
       },
       "by_type": {
-        "input": 0.0,
+        "input": 4.8e-05,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_write_1h": 0.421256,
+        "cache_read": 0.086238,
+        "output": 0.03702
       },
-      "unpriced_tokens": 485712
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6268,8 +6268,8 @@
             "cache_read": 4892431,
             "output": 44070,
             "tokens": 5107697,
-            "cost_usd": null,
-            "unpriced_tokens": 5107697
+            "cost_usd": 3.229086,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6281,8 +6281,8 @@
             "cache_read": 1567488,
             "output": 9503,
             "tokens": 1723353,
-            "cost_usd": null,
-            "unpriced_tokens": 1723353
+            "cost_usd": 0.035063,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6290,19 +6290,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.330222,
+      "total": 3.59437,
       "by_tool": {
-        "claude_code": 0.330222,
-        "codex": 0.0
+        "claude_code": 3.559308,
+        "codex": 0.035063
       },
       "by_type": {
-        "input": 1e-05,
+        "input": 0.015014,
         "cache_write_5m": 0.0,
-        "cache_write_1h": 0.29106,
-        "cache_read": 0.020376,
-        "output": 0.018775
+        "cache_write_1h": 1.659892,
+        "cache_read": 1.014538,
+        "output": 0.904926
       },
-      "unpriced_tokens": 6831050
+      "unpriced_tokens": 0
     }
   },
   {
@@ -6324,8 +6324,8 @@
             "cache_read": 34327296,
             "output": 176445,
             "tokens": 35199269,
-            "cost_usd": null,
-            "unpriced_tokens": 35199269
+            "cost_usd": 6.588236,
+            "unpriced_tokens": 0
           }
         },
         "unattributed": 0
@@ -6333,19 +6333,19 @@
     },
     "cost_usd": {
       "basis": "api_list_price_counterfactual",
-      "total": 0.0,
+      "total": 6.588236,
       "by_tool": {
         "claude_code": 0.0,
-        "codex": 0.0
+        "codex": 6.588236
       },
       "by_type": {
-        "input": 0.0,
+        "input": 1.391056,
         "cache_write_5m": 0.0,
         "cache_write_1h": 0.0,
-        "cache_read": 0.0,
-        "output": 0.0
+        "cache_read": 3.43273,
+        "output": 1.76445
       },
-      "unpriced_tokens": 35199269
+      "unpriced_tokens": 0
     }
   }
 ]

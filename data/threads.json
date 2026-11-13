@@ -373,8 +373,8 @@
     "days": {
       "2026-10-05": {
         "tokens": 4297952,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 4297952,
+        "cost_usd": 2.534511,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 37,
@@ -1013,8 +1013,8 @@
     "days": {
       "2026-09-22": {
         "tokens": 923400,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 923400,
+        "cost_usd": 0.840562,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 12,
@@ -1534,8 +1534,8 @@
     "days": {
       "2026-10-05": {
         "tokens": 809745,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 809745,
+        "cost_usd": 0.694576,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 9,
@@ -1714,8 +1714,8 @@
     "days": {
       "2026-09-23": {
         "tokens": 269967,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 269967,
+        "cost_usd": 0.314999,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 4,
@@ -2287,8 +2287,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 5798690,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 5798690,
+        "cost_usd": 3.245723,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 42,
@@ -2311,8 +2311,8 @@
     "days": {
       "2026-09-23": {
         "tokens": 6724560,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 6724560,
+        "cost_usd": 4.599794,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 52,
@@ -2482,8 +2482,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 82529,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 82529,
+        "cost_usd": 0.355407,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 1,
@@ -2590,8 +2590,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 1657820,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1657820,
+        "cost_usd": 1.205037,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 24,
@@ -2638,8 +2638,8 @@
     "days": {
       "2026-10-03": {
         "tokens": 485712,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 485712,
+        "cost_usd": 0.544562,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 6,
@@ -2898,8 +2898,8 @@
     "days": {
       "2026-09-23": {
         "tokens": 132783,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 132783,
+        "cost_usd": 0.257211,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 2,
@@ -2922,8 +2922,8 @@
     "days": {
       "2026-09-29": {
         "tokens": 744991,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 744991,
+        "cost_usd": 0.594327,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 11,
@@ -2939,8 +2939,8 @@
       },
       "2026-09-30": {
         "tokens": 3309000,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 3309000,
+        "cost_usd": 2.093077,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 35,
@@ -2956,8 +2956,8 @@
       },
       "2026-10-02": {
         "tokens": 487281,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 487281,
+        "cost_usd": 0.903919,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 4,
@@ -2980,8 +2980,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 6922354,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 6922354,
+        "cost_usd": 2.7924,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 58,
@@ -3045,8 +3045,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 3000141,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 3000141,
+        "cost_usd": 1.75402,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 31,
@@ -3206,8 +3206,8 @@
     "days": {
       "2026-09-29": {
         "tokens": 58080,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 58080,
+        "cost_usd": 0.274304,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 1,
@@ -3278,8 +3278,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 350278,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 350278,
+        "cost_usd": 0.488358,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 4,
@@ -3350,8 +3350,8 @@
     "days": {
       "2026-09-22": {
         "tokens": 18789330,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 18789330,
+        "cost_usd": 7.73728,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 108,
@@ -3398,8 +3398,8 @@
     "days": {
       "2026-09-22": {
         "tokens": 1168653,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1168653,
+        "cost_usd": 0.791083,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 13,
@@ -3415,8 +3415,8 @@
       },
       "2026-09-24": {
         "tokens": 2402231,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 2402231,
+        "cost_usd": 1.357842,
+        "unpriced_tokens": 0,
         "models": {
           "claude-opus-5-5": {
             "calls": 20,
@@ -3909,8 +3909,8 @@
     "days": {
       "2026-10-05": {
         "tokens": 263388,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 263388,
+        "cost_usd": 0.007248,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 43301,
@@ -4007,8 +4007,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 794626,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 794626,
+        "cost_usd": 0.274362,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 85728,
@@ -4406,8 +4406,8 @@
     "days": {
       "2026-09-24": {
         "tokens": 880293,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 880293,
+        "cost_usd": 0.016123,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 62496,
@@ -4504,8 +4504,8 @@
     "days": {
       "2026-10-01": {
         "tokens": 2010077,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 2010077,
+        "cost_usd": 0.584242,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 113462,
@@ -4546,8 +4546,8 @@
     "days": {
       "2026-09-29": {
         "tokens": 12616967,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 12616967,
+        "cost_usd": 2.310251,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 282997,
@@ -4735,8 +4735,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 493174,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 493174,
+        "cost_usd": 0.207418,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 75265,
@@ -5022,8 +5022,8 @@
     "days": {
       "2026-10-06": {
         "tokens": 32396378,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 32396378,
+        "cost_usd": 6.0909,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 623566,
@@ -5281,8 +5281,8 @@
     "days": {
       "2026-09-24": {
         "tokens": 10125422,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 10125422,
+        "cost_usd": 0.172638,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 394622,
@@ -5295,8 +5295,8 @@
       },
       "2026-09-28": {
         "tokens": 7281199,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 7281199,
+        "cost_usd": 0.128668,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 425525,
@@ -5309,8 +5309,8 @@
       },
       "2026-09-29": {
         "tokens": 10640664,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 10640664,
+        "cost_usd": 1.664253,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 373271,
@@ -5728,8 +5728,8 @@
     "days": {
       "2026-10-05": {
         "tokens": 1459965,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1459965,
+        "cost_usd": 0.027815,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 103061,
@@ -5749,8 +5749,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 1918339,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1918339,
+        "cost_usd": 0.499648,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 96959,
@@ -5840,8 +5840,8 @@
     "days": {
       "2026-10-06": {
         "tokens": 2802891,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 2802891,
+        "cost_usd": 0.497336,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 71962,
@@ -6113,8 +6113,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 263705,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 263705,
+        "cost_usd": 0.095887,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 31575,
@@ -6441,8 +6441,8 @@
     "days": {
       "2026-10-01": {
         "tokens": 3586219,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 3586219,
+        "cost_usd": 0.742262,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 129031,
@@ -6517,8 +6517,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 827937,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 827937,
+        "cost_usd": 0.211088,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 44196,
@@ -6914,8 +6914,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 406008,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 406008,
+        "cost_usd": 0.201562,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 73326,
@@ -6998,8 +6998,8 @@
     "days": {
       "2026-09-25": {
         "tokens": 1032597,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1032597,
+        "cost_usd": 0.481004,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-sol": {
             "input": 55248,
@@ -7019,8 +7019,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 7591189,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 7591189,
+        "cost_usd": 1.939775,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 377540,
@@ -7158,8 +7158,8 @@
     "days": {
       "2026-09-24": {
         "tokens": 2535286,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 2535286,
+        "cost_usd": 0.040514,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 86583,
@@ -7256,8 +7256,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 674782,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 674782,
+        "cost_usd": 0.28451,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 94005,
@@ -7270,8 +7270,8 @@
       },
       "2026-10-01": {
         "tokens": 906575,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 906575,
+        "cost_usd": 0.321996,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 103286,
@@ -7284,8 +7284,8 @@
       },
       "2026-10-02": {
         "tokens": 6620042,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 6620042,
+        "cost_usd": 1.682438,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 435095,
@@ -7431,8 +7431,8 @@
     "days": {
       "2026-10-01": {
         "tokens": 1733909,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1733909,
+        "cost_usd": 0.524908,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 107200,
@@ -7606,8 +7606,8 @@
     "days": {
       "2026-10-02": {
         "tokens": 1272951,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1272951,
+        "cost_usd": 0.335025,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 75557,
@@ -7627,8 +7627,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 106065,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 106065,
+        "cost_usd": 0.06477,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 27069,
@@ -7648,8 +7648,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 8566564,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 8566564,
+        "cost_usd": 1.55764,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 181860,
@@ -7984,8 +7984,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 810067,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 810067,
+        "cost_usd": 0.253851,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 58014,
@@ -7998,8 +7998,8 @@
       },
       "2026-10-02": {
         "tokens": 596489,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 596489,
+        "cost_usd": 0.229655,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 87106,
@@ -8040,8 +8040,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 1226360,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1226360,
+        "cost_usd": 0.268819,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 57274,
@@ -8768,8 +8768,8 @@
     "days": {
       "2026-09-24": {
         "tokens": 853084,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 853084,
+        "cost_usd": 0.015393,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6-luna": {
             "input": 47558,
@@ -8908,8 +8908,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 144143,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 144143,
+        "cost_usd": 0.053217,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 17661,
@@ -9515,8 +9515,8 @@
     "days": {
       "2026-09-30": {
         "tokens": 1268764,
-        "cost_usd": 0.0,
-        "unpriced_tokens": 1268764,
+        "cost_usd": 0.317624,
+        "unpriced_tokens": 0,
         "models": {
           "gpt-6.1-sol": {
             "input": 69172,
